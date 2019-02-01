@@ -23,6 +23,10 @@ namespace ShareMyDay
 
             FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
             fab.Click += FabOnClick;
+
+            Database.Database db = new Database.Database();
+            db.CreateDatabase();
+            db.DatabaseDefaultSetup();
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)

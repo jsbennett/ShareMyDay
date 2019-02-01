@@ -9,25 +9,26 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using Java.Security;
+using ShareMyDay.Database.Models;
 using SQLite;
 using SQLiteNetExtensions.Attributes;
 
-namespace ShareMyDay.Database.Models
+namespace ShareMyDay.Database
 {
     /*
-     * Class Name: VoiceRecording
-     * Purpose: To be the blueprint of a voice recording 
+     * Class Name: Type
+     * Purpose: To be the blueprint of a type of card 
      * Created 31/01/2019
      */
-    public class VoiceRecording
+    class CardType
     {
         [PrimaryKey,AutoIncrement]
         public int Id { get; set; }
-       
-        [ForeignKey(typeof(NFCEvent))]
-        public int NfcEventId { get; set; }
 
-        public string Path { get; set; }
+        public string Type { get; set; }
+
+        [OneToMany]	        
+        public List<NFCEvent> NFcEvents { get; set; }
+        
     }
 }

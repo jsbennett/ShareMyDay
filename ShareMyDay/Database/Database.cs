@@ -10,8 +10,10 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using ShareMyDay.Database.Models;
 using SQLite;
 using Environment = System.Environment;
+using Picture = ShareMyDay.Database.Models.Picture;
 
 namespace ShareMyDay.Database
 {
@@ -26,18 +28,35 @@ namespace ShareMyDay.Database
 
         private readonly string _folderLocation = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
         private readonly string _dbName = "ShareMyDay.db3";
-
+        
         /*
          * Method Name: CreateDatabase
          * Purpose: To create the database on the phone 
          */
-        public Boolean CreateDatabase()
+        public void CreateDatabase()
         {
-            //define the path to the database 
             string dbLocation = System.IO.Path.Combine (
                 _folderLocation,_dbName);
+
             var db = new SQLiteConnection(dbLocation);
-            return true; 
+            db.CreateTable<CardType>();
+            db.CreateTable<NFCEvent>();
+            db.CreateTable<Picture>();
+            db.CreateTable<VoiceRecording>();
+            db.Close();
+        }
+
+        public void DatabaseDefaultSetup()
+        {
+            string dbLocation = System.IO.Path.Combine (
+                _folderLocation,_dbName);
+
+            Console.WriteLine("Location:" + dbLocation);
+            var db = new SQLiteConnection(dbLocation);
+            var type = new CardType();
+            type.Type = "Item";
+            Console.WriteLine(db.Insert(type));
+            db.Close();
         }
     }
 }
