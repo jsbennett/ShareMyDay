@@ -6,6 +6,7 @@ using Android.Support.Design.Widget;
 using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
+using Environment = System.Environment;
 
 namespace ShareMyDay
 {
@@ -24,7 +25,7 @@ namespace ShareMyDay
             FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
             fab.Click += FabOnClick;
 
-            Database.Database db = new Database.Database();
+            Database.Database db = new Database.Database(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             db.CreateDatabase();
             db.DatabaseDefaultSetup();
         }
