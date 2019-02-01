@@ -59,7 +59,7 @@ namespace ShareMyDay.Database
         public void DatabaseDefaultSetup()
         {
             var db = CreateConnection();
-            CardType[] types = {new CardType{Type = "Item"},new CardType{Type = "Teacher"},new CardType{Type = "Friend"}, new CardType{Type = "Visitor"},new CardType{Type = "Class"} };
+            CardType[] types = {new CardType{Type = "Item"},new CardType{Type = "Teacher"},new CardType{Type = "Friend"}, new CardType{Type = "Visitor"},new CardType{Type = "Class"},new CardType{Type = "Activity"} };
             var count = 0;
             foreach (var i in types)
             {
