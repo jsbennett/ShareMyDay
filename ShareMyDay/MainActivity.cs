@@ -25,7 +25,7 @@ namespace ShareMyDay
             FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
             fab.Click += FabOnClick;
 
-            Database.Database db = new Database.Database(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
+            Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             db.CreateDatabase();
             db.DatabaseDefaultSetup();
         }
