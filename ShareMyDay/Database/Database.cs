@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.Graphics;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+using ShareMyDay.Database.Models;
 using SQLite;
-using Environment = System.Environment;
+using Picture = ShareMyDay.Database.Models.Picture;
 
 namespace ShareMyDay.Database
 {
@@ -23,21 +13,61 @@ namespace ShareMyDay.Database
      */
     public class Database
     {
+        private readonly string _dbLocation; 
 
-        private readonly string _folderLocation = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-        private readonly string _dbName = "ShareMyDay.db3";
+        /*
+         * Constructor Class
+         * Takes in a location for the database and a name in order to create the path for the database
+         */
+        public Database(string location, string name)
+        {
+            string folderLocation = location;
+            string dbName = name;
+            _dbLocation = System.IO.Path.Combine (
+                folderLocation,dbName);
+            Console.WriteLine("Location:" + _dbLocation);
+        }
+
+        /*
+         * Class Name: Create Connection
+         * Purpose: To create the connection to the database
+         */
+        public SQLiteConnection CreateConnection()
+        {
+            var db = new SQLiteConnection(_dbLocation);
+            return db; 
+        }
 
         /*
          * Method Name: CreateDatabase
          * Purpose: To create the database on the phone 
          */
-        public Boolean CreateDatabase()
+        public void CreateDatabase()
         {
-            //define the path to the database 
-            string dbLocation = System.IO.Path.Combine (
-                _folderLocation,_dbName);
-            var db = new SQLiteConnection(dbLocation);
-            return true; 
+            var db = CreateConnection();
+            db.CreateTable<CardType>();
+            db.CreateTable<NFCEvent>();
+            db.CreateTable<Picture>();
+            db.CreateTable<VoiceRecording>();
+            db.Close();
+        }
+
+        /*
+         * Method Name: DatabaseDefaultSetup
+         * Purpose: To insert the default type values in the Card Type table
+         */
+        public void DatabaseDefaultSetup()
+        {
+            var db = CreateConnection();
+            CardType[] types = {new CardType{Type = "Item"},new CardType{Type = "Teacher"},new CardType{Type = "Friend"}, new CardType{Type = "Visitor"},new CardType{Type = "Class"},new CardType{Type = "Activity"} };
+            var count = 0;
+            foreach (var i in types)
+            {
+                db.Insert(i);
+                count++; 
+            }
+            Console.WriteLine(count);
+            db.Close();
         }
     }
 }
