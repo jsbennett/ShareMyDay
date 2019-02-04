@@ -16,7 +16,7 @@ namespace ShareMyDay.Database
         private readonly string _dbLocation; 
 
         /*
-         * Constructor Class
+         * Constructor
          * Takes in a location for the database and a name in order to create the path for the database
          */
         public Database(string location, string name)
@@ -55,19 +55,19 @@ namespace ShareMyDay.Database
         /*
          * Method Name: DatabaseDefaultSetup
          * Purpose: To insert the default type values in the Card Type table
+         * Return int: Used to check that all 6 items have been added to the database 
          */
-        public void DatabaseDefaultSetup()
+        public int DatabaseDefaultSetup()
         {
             var db = CreateConnection();
             CardType[] types = {new CardType{Type = "Item"},new CardType{Type = "Teacher"},new CardType{Type = "Friend"}, new CardType{Type = "Visitor"},new CardType{Type = "Class"},new CardType{Type = "Activity"} };
             var count = 0;
             foreach (var i in types)
             {
-                db.Insert(i);
-                count++; 
+                count += db.Insert(i);
             }
-            Console.WriteLine(count);
             db.Close();
+            return count; 
         }
     }
 }
