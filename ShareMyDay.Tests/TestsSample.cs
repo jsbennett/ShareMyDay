@@ -3,13 +3,18 @@ using NUnit.Framework;
 
 namespace ShareMyDay.Tests
 {
+    /*
+     * This Class is used sample class of how to do testing 
+     */
     [TestFixture]
     public class TestsSample
     {
 
         [SetUp]
-        public void Setup() { }
-
+        public void Setup()
+        {
+           
+        }
 
         [TearDown]
         public void Tear() { }
