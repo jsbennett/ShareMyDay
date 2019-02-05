@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:id="@+id/RecordInteraction"
+        android:title="Record Interaction" />
+  <item android:id="@+id/TakePicture"
+        android:title="Take A Picture" />
+  <item android:id="@+id/TakeVoiceRecording"
+        android:title="Take A Voice Recording" />
+  <item android:id="@+id/MainMenu"
+        android:title="Go To Main Menu" />
+</menu>

@@ -1,12 +1,18 @@
 ﻿using System;
+using System.Linq;
+using System.Text;
 using Android.App;
+using Android.Content;
+using Android.Content.PM;
 using Android.Nfc;
 using Android.OS;
+using Android.Nfc.Tech;
 using Android.Runtime;
 using Android.Support.Design.Widget;
 using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
+using AlertDialog = Android.App.AlertDialog;
 
 namespace ShareMyDay
 {
@@ -14,10 +20,11 @@ namespace ShareMyDay
      * Class Name: Main Activity
      * Purpose: To be the main entry point for the app which controls the flow
      */
+    
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
-        private NfcAdapter nfcAdapter;
+        private NFC.NFC _nfc;
 
         /*
          * Method Name: OnCreate
@@ -31,12 +38,11 @@ namespace ShareMyDay
             Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
-            FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
-            fab.Click += FabOnClick;
-
             Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             db.CreateDatabase();
             db.DatabaseDefaultSetup();
+
+            _nfc = new NFC.NFC(this);
         }
 
         /*
@@ -46,31 +52,29 @@ namespace ShareMyDay
         protected override void OnResume()
         {
             base.OnResume();
+            _nfc.NfcCardDetection(this,this);
         }
 
-        public override bool OnCreateOptionsMenu(IMenu menu)
+        /*
+         * Method Name: OnNewIntent
+         * Purpose: the action to be carried out when a NFC card is detected 
+         */
+        protected override void OnNewIntent(Intent intent)
         {
-            MenuInflater.Inflate(Resource.Menu.menu_main, menu);
-            return true;
-        }
+            Button button = FindViewById<Button>(Resource.Id.quickMenuButton);
+            PopupMenu quickMenu = new PopupMenu (this,button);
+            quickMenu.Inflate (Resource.Menu.TeacherQuickMenu);
 
-        public override bool OnOptionsItemSelected(IMenuItem item)
-        {
-            int id = item.ItemId;
-            if (id == Resource.Id.action_settings)
-            {
-                return true;
-            }
+            quickMenu.MenuItemClick += (s1, arg1) => {
+                Console.WriteLine ("{0} selected", arg1.Item.TitleFormatted);
+            };
 
-            return base.OnOptionsItemSelected(item);
+            quickMenu.DismissEvent += (s2, arg2) => {
+                Console.WriteLine ("menu dismissed");
+            };
+            quickMenu.Show ();
+         
         }
-
-        private void FabOnClick(object sender, EventArgs eventArgs)
-        {
-            View view = (View) sender;
-            Snackbar.Make(view, "Replace with your own action", Snackbar.LengthLong)
-                .SetAction("Action", (Android.Views.View.IOnClickListener)null).Show();
-        }
-	}
+    }
 }
 

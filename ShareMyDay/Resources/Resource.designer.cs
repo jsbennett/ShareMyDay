@@ -2339,11 +2339,23 @@ namespace ShareMyDay
 			// aapt resource value: 0x7f080035
 			public const int META = 2131230773;
 			
+			// aapt resource value: 0x7f0800b5
+			public const int MainMenu = 2131230901;
+			
+			// aapt resource value: 0x7f0800b2
+			public const int RecordInteraction = 2131230898;
+			
 			// aapt resource value: 0x7f080036
 			public const int SHIFT = 2131230774;
 			
 			// aapt resource value: 0x7f080037
 			public const int SYM = 2131230775;
+			
+			// aapt resource value: 0x7f0800b3
+			public const int TakePicture = 2131230899;
+			
+			// aapt resource value: 0x7f0800b4
+			public const int TakeVoiceRecording = 2131230900;
 			
 			// aapt resource value: 0x7f08009e
 			public const int action0 = 2131230878;
@@ -2528,9 +2540,6 @@ namespace ShareMyDay
 			// aapt resource value: 0x7f080072
 			public const int expanded_menu = 2131230834;
 			
-			// aapt resource value: 0x7f08008c
-			public const int fab = 2131230860;
-			
 			// aapt resource value: 0x7f080050
 			public const int fill = 2131230800;
 			
@@ -2650,6 +2659,9 @@ namespace ShareMyDay
 			
 			// aapt resource value: 0x7f080007
 			public const int progress_horizontal = 2131230727;
+			
+			// aapt resource value: 0x7f08008c
+			public const int quickMenuButton = 2131230860;
 			
 			// aapt resource value: 0x7f080075
 			public const int radio = 2131230837;
@@ -3118,6 +3130,9 @@ namespace ShareMyDay
 			
 			// aapt resource value: 0x7f0e0000
 			public const int menu_main = 2131623936;
+			
+			// aapt resource value: 0x7f0e0001
+			public const int TeacherQuickMenu = 2131623937;
 			
 			static Menu()
 			{
