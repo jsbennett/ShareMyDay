@@ -39,11 +39,11 @@ namespace ShareMyDay.Tests
          * Passes if the value returned from DatabaseDefaultSetup is 6 (which is the number of inserted into the database)
          */
         [Test]
-        public void DatabaseDefaultSetup_InsertsDataCorrectly_ReturnsACountOf6()
+        public void Setup_InsertsDataCorrectly_ReturnsACountOf6()
         {
-            _db.CreateDatabase();
+            _db.Create();
             const int expected = 6;
-            var actual = _db.DatabaseDefaultSetup();
+            var actual = _db.Setup();
             Assert.AreEqual(expected, actual,"DatabaseDefaultSetup_InsertsDataCorrectly_ReturnsACountOf6: Not inserted all CardTypes into database");
         }
     }

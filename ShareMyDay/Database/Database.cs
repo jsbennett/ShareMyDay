@@ -42,7 +42,7 @@ namespace ShareMyDay.Database
          * Method Name: CreateDatabase
          * Purpose: To create the database on the phone 
          */
-        public void CreateDatabase()
+        public void Create()
         {
             var db = CreateConnection();
             db.CreateTable<CardType>();
@@ -57,7 +57,7 @@ namespace ShareMyDay.Database
          * Purpose: To insert the default type values in the Card Type table
          * Return int: Used to check that all 6 items have been added to the database 
          */
-        public int DatabaseDefaultSetup()
+        public int Setup()
         {
             var db = CreateConnection();
             CardType[] types = {new CardType{Type = "Item"},new CardType{Type = "Teacher"},new CardType{Type = "Friend"}, new CardType{Type = "Visitor"},new CardType{Type = "Class"},new CardType{Type = "Activity"} };

@@ -39,8 +39,8 @@ namespace ShareMyDay
             SetSupportActionBar(toolbar);
 
             Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
-            db.CreateDatabase();
-            db.DatabaseDefaultSetup();
+            db.Create();
+            db.Setup();
 
             _nfc = new NFC.NFC(this);
         }
@@ -52,7 +52,7 @@ namespace ShareMyDay
         protected override void OnResume()
         {
             base.OnResume();
-            _nfc.NfcCardDetection(this,this);
+            _nfc.Detection(this,this);
         }
 
         /*
@@ -61,6 +61,8 @@ namespace ShareMyDay
          */
         protected override void OnNewIntent(Intent intent)
         {
+            
+            
             Button button = FindViewById<Button>(Resource.Id.quickMenuButton);
             PopupMenu quickMenu = new PopupMenu (this,button);
             quickMenu.Inflate (Resource.Menu.TeacherQuickMenu);

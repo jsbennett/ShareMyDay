@@ -38,7 +38,7 @@ namespace ShareMyDay.NFC
          * NFC Code adapted from https://www.patrickvankleef.com/2017/01/08/xamarin-near-field-communication/, https://github.com/patkleef/XamarinNFC/blob/master/MainActivity.cs
          * and Xamarin Mobile Development for Android Cookbook by Matthew Leibowitz page 154 - 159
          */
-        public void NfcCardDetection(Context context, Activity activity)
+        public void Detection(Context context, Activity activity)
         {
             //because we do not know what tag is discovered, an implicit intent is used 
             var detectedTag = new IntentFilter(NfcAdapter.ActionTagDiscovered);
