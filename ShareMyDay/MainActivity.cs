@@ -63,7 +63,7 @@ namespace ShareMyDay
         protected override void OnNewIntent(Intent intent)
         {
             
-            
+            //TO DO- move into own class + methods 
             Button button = FindViewById<Button>(Resource.Id.quickMenuButton);
             PopupMenu quickMenu = new PopupMenu (this,button);
             quickMenu.Inflate (Resource.Menu.TeacherQuickMenu);
@@ -73,6 +73,7 @@ namespace ShareMyDay
                 if (arg1.Item.TitleFormatted.ToString() == "Take A Picture")
                 {
                     var cameraIntent = new Intent(this, typeof(CameraActivity));
+                    cameraIntent.PutExtra("PreviousActivity", "QuickMenu");
                     StartActivity(cameraIntent);
                 }
             };

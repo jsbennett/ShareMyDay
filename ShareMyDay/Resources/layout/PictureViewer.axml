@@ -13,6 +13,21 @@
 		android:id="@+id/imageView"
 		android:layout_marginBottom="8.0dp"
 		android:layout_marginTop="12.0dp" />
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="31.5dp"
+		android:text="@string/prompt"
+		android:textSize = "19dp"
+		android:layout_marginLeft="10.0dp" 
+	/>
+	<Spinner
+		android:id="@+id/eventSelector"
+		android:layout_width="match_parent"
+		android:layout_height="46.5dp"
+		android:layout_marginBottom="7.0dp"
+		android:layout_marginLeft="10.0dp" 
+		android:prompt="@string/prompt"
+	/>
 	<Button
 		android:text="Submit"
 		android:layout_width="match_parent"
