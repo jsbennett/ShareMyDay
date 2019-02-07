@@ -1,18 +1,36 @@
 ﻿using System;
+using System.Linq;
+using System.Text;
 using Android.App;
+using Android.Content;
+using Android.Content.PM;
+using Android.Nfc;
 using Android.OS;
+using Android.Nfc.Tech;
 using Android.Runtime;
 using Android.Support.Design.Widget;
 using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
+using ShareMyDay.Activities;
+using AlertDialog = Android.App.AlertDialog;
 
 namespace ShareMyDay
 {
+    /*
+     * Class Name: Main Activity
+     * Purpose: To be the main entry point for the app which controls the flow
+     */
+    
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
+        private NFC.NFC _nfc;
 
+        /*
+         * Method Name: OnCreate
+         * Purpose: It is used for when the app is loading 
+         */
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -21,37 +39,51 @@ namespace ShareMyDay
             Android.Support.V7.Widget.Toolbar toolbar = FindViewById<Android.Support.V7.Widget.Toolbar>(Resource.Id.toolbar);
             SetSupportActionBar(toolbar);
 
-            FloatingActionButton fab = FindViewById<FloatingActionButton>(Resource.Id.fab);
-            fab.Click += FabOnClick;
-
             Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
-            db.CreateDatabase();
-            db.DatabaseDefaultSetup();
+            db.Create();
+            db.Setup();
+
+            _nfc = new NFC.NFC(this);
         }
 
-        public override bool OnCreateOptionsMenu(IMenu menu)
+        /*
+         * Method Name: OnResume
+         * Purpose: This is for when the app has loaded
+         */
+        protected override void OnResume()
         {
-            MenuInflater.Inflate(Resource.Menu.menu_main, menu);
-            return true;
+            base.OnResume();
+            _nfc.Detection(this,this);
         }
 
-        public override bool OnOptionsItemSelected(IMenuItem item)
+        /*
+         * Method Name: OnNewIntent
+         * Purpose: the action to be carried out when a NFC card is detected 
+         */
+        protected override void OnNewIntent(Intent intent)
         {
-            int id = item.ItemId;
-            if (id == Resource.Id.action_settings)
-            {
-                return true;
-            }
+            
+            //TO DO- move into own class + methods 
+            Button button = FindViewById<Button>(Resource.Id.quickMenuButton);
+            PopupMenu quickMenu = new PopupMenu (this,button);
+            quickMenu.Inflate (Resource.Menu.TeacherQuickMenu);
 
-            return base.OnOptionsItemSelected(item);
-        }
+            quickMenu.MenuItemClick += (s1, arg1) => {
+                Console.WriteLine ("{0} selected", arg1.Item.TitleFormatted);
+                if (arg1.Item.TitleFormatted.ToString() == "Take A Picture")
+                {
+                    var cameraIntent = new Intent(this, typeof(CameraActivity));
+                    cameraIntent.PutExtra("PreviousActivity", "QuickMenu");
+                    StartActivity(cameraIntent);
+                }
+            };
 
-        private void FabOnClick(object sender, EventArgs eventArgs)
-        {
-            View view = (View) sender;
-            Snackbar.Make(view, "Replace with your own action", Snackbar.LengthLong)
-                .SetAction("Action", (Android.Views.View.IOnClickListener)null).Show();
+            quickMenu.DismissEvent += (s2, arg2) => {
+                Console.WriteLine ("menu dismissed");
+            };
+            quickMenu.Show ();
+         
         }
-	}
+    }
 }
 
