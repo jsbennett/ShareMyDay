@@ -13,19 +13,6 @@
 		android:id="@+id/imageView"
 		android:layout_marginBottom="8.0dp"
 		android:layout_marginTop="12.0dp" />
-	<TextView
-		android:text="  Select an event from the drop down below:"
-		android:textSize="19.0dp"
-		android:layout_width="match_parent"
-		android:layout_height="33.0dp"
-		android:id="@+id/eventSelectorLabel" />
-	<Spinner
-		android:layout_width="match_parent"
-		android:layout_height="38.0dp"
-		android:id="@+id/eventSelector"
-		android:layout_marginBottom="13.5dp"
-		android:layout_marginLeft="5.0dp"
-		android:layout_marginRight="5.0dp" />
 	<Button
 		android:text="Submit"
 		android:layout_width="match_parent"
