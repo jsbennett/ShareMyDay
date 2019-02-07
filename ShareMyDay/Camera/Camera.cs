@@ -25,11 +25,6 @@ namespace ShareMyDay.Camera
             _photoCode = 123; 
         }
 
-        public int GetPhotoCode()
-        {
-            return _photoCode;
-        }
-
         public ImageView GetImageViewer(int id, Activity activity)
         {
            return activity.FindViewById<ImageView>(id);
