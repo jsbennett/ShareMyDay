@@ -56,7 +56,8 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activities\Camera.cs" />
+    <Compile Include="Activities\CameraActivity.cs" />
+    <Compile Include="Camera\Camera.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Database\Models\NFCEvent.cs" />
     <Compile Include="Database\Models\Picture.cs" />
@@ -112,7 +113,11 @@
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.Design" Version="28.0.0.1" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\PictureViewer.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\menu\TeacherQuickMenu.xml" />
   </ItemGroup>

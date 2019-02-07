@@ -12,6 +12,7 @@ using Android.Support.Design.Widget;
 using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
+using ShareMyDay.Activities;
 using AlertDialog = Android.App.AlertDialog;
 
 namespace ShareMyDay
@@ -69,6 +70,11 @@ namespace ShareMyDay
 
             quickMenu.MenuItemClick += (s1, arg1) => {
                 Console.WriteLine ("{0} selected", arg1.Item.TitleFormatted);
+                if (arg1.Item.TitleFormatted.ToString() == "Take A Picture")
+                {
+                    var cameraIntent = new Intent(this, typeof(CameraActivity));
+                    StartActivity(cameraIntent);
+                }
             };
 
             quickMenu.DismissEvent += (s2, arg2) => {
