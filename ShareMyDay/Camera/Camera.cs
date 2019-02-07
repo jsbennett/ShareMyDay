@@ -84,8 +84,8 @@ namespace ShareMyDay.Camera
             if (requestCode == _photoCode) {
                 
                 if (resultCode == Result.Ok) {
-                    Console.WriteLine(Uri.Parse (camera.GetImage().AbsolutePath));
-                    _imageViewer.SetImageURI (Uri.Parse (camera.GetImage().AbsolutePath));
+                    Console.WriteLine(Uri.Parse ("file://" + camera.GetImage().AbsolutePath));
+                    _imageViewer.SetImageURI (Uri.Parse ("file://" + camera.GetImage().AbsolutePath));
                 } else {
                     Toast.MakeText (activity, "Canceled photo.", ToastLength.Short).Show ();
                 }
