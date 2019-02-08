@@ -48,7 +48,7 @@ namespace ShareMyDay.Database
             db.CreateTable<CardType>();
             db.CreateTable<NFCEvent>();
             db.CreateTable<Picture>();
-            db.CreateTable<VoiceRecording>();
+            db.CreateTable<Models.VoiceRecording>();
             db.Close();
         }
 

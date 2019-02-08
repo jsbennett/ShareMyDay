@@ -70,12 +70,26 @@ namespace ShareMyDay
 
             quickMenu.MenuItemClick += (s1, arg1) => {
                 Console.WriteLine ("{0} selected", arg1.Item.TitleFormatted);
-                if (arg1.Item.TitleFormatted.ToString() == "Take A Picture")
+                switch (arg1.Item.TitleFormatted.ToString())
                 {
-                    var cameraIntent = new Intent(this, typeof(CameraActivity));
-                    cameraIntent.PutExtra("PreviousActivity", "QuickMenu");
-                    StartActivity(cameraIntent);
+                    case "Record Interaction":
+                        Console.WriteLine("Case 1");
+                        break;
+                    case "Take A Picture":
+                        var cameraIntent = new Intent(this, typeof(CameraActivity));
+                        cameraIntent.PutExtra("PreviousActivity", "QuickMenu");
+                        StartActivity(cameraIntent);
+                        break;
+                    case "Take A Voice Recording":
+                        var voiceRecordingIntent = new Intent(this, typeof(VoiceRecordingActivity));
+                        voiceRecordingIntent.PutExtra("PreviousActivity", "QuickMenu");
+                        StartActivity(voiceRecordingIntent);
+                        break;
+                    case "Go To Main Menu":
+                        Console.WriteLine("Case 3");
+                        break;
                 }
+                
             };
 
             quickMenu.DismissEvent += (s2, arg2) => {

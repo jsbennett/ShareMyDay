@@ -65,6 +65,7 @@
     <Compile Include="Database\Models\CardType.cs" />
     <Compile Include="Database\Models\VoiceRecording.cs" />
     <Compile Include="MainActivity.cs" />
+    <Compile Include="MenuItems\Spinner.cs" />
     <Compile Include="NFC\NFC.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -122,6 +123,11 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\menu\TeacherQuickMenu.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\VoiceRecView.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
