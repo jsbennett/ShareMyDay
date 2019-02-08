@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\CameraActivity.cs" />
+    <Compile Include="Activities\VoiceRecordingActivity.cs" />
     <Compile Include="Camera\Camera.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Database\Models\NFCEvent.cs" />
@@ -67,6 +68,7 @@
     <Compile Include="NFC\NFC.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VoiceRecording\VoiceRecording.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
