@@ -65,10 +65,11 @@
     <Compile Include="Database\Models\CardType.cs" />
     <Compile Include="Database\Models\VoiceRecording.cs" />
     <Compile Include="MainActivity.cs" />
-    <Compile Include="MenuItems\Spinner.cs" />
     <Compile Include="NFC\NFC.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UIComponents\CancelButton.cs" />
+    <Compile Include="UIComponents\SpinnerComponent.cs" />
     <Compile Include="VoiceRecording\VoiceRecording.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -129,6 +130,7 @@
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
     Other similar extension points exist, see Microsoft.Common.targets.

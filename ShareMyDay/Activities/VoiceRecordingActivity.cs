@@ -11,6 +11,7 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using ShareMyDay.UIComponents;
 using Environment = Android.OS.Environment;
 
 namespace ShareMyDay.Activities
@@ -23,43 +24,24 @@ namespace ShareMyDay.Activities
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.VoiceRecView);
 
-            // Create your application here
-            Spinner spinner = FindViewById<Spinner> (Resource.Id.eventSelector);
+            //TO-DO: Fix this properly
+            string _previousActivity = "QuickMenu";
 
-            List<string> list = new List<string> {"one", "two", "three", "four"};
-            spinner.ItemSelected += new EventHandler<AdapterView.ItemSelectedEventArgs> (spinner_ItemSelected);
-            var adapter =  new ArrayAdapter<string>(this,
-                Android.Resource.Layout.SimpleSpinnerItem, list);
-
-            adapter.SetDropDownViewResource (Android.Resource.Layout.SimpleSpinnerDropDownItem);
-            spinner.Adapter = adapter;
+            SpinnerComponent spinner = new SpinnerComponent (this, Resource.Id.eventSelector, this);
+            spinner.Setup();
             
             Button startRecordingButton = FindViewById<Button> (Resource.Id.startRecordingButton);
             Button playRecordingButton = FindViewById<Button> (Resource.Id.playButton);
-
             VoiceRecording.VoiceRecording voiceRecorder = new VoiceRecording.VoiceRecording();
-
             startRecordingButton.Click += delegate {
                 voiceRecorder.Begin(startRecordingButton);
             };
-
             playRecordingButton.Click += delegate {
                 voiceRecorder.Play(playRecordingButton);
             };
 
-            Button cancelButton = FindViewById<Button> (Resource.Id.cancelButton);
-            cancelButton.Click += delegate {
-                Toast.MakeText (this, "Back to homepage", ToastLength.Short).Show ();
-                var childMenu = new Intent(this, typeof(MainActivity));
-                StartActivity(childMenu);
-            };
-        }
-
-        private void spinner_ItemSelected (object sender, AdapterView.ItemSelectedEventArgs e)
-        {
-            Spinner spinner = (Spinner)sender;
-            string toast = string.Format ("{0} selected", spinner.GetItemAtPosition (e.Position));
-            Toast.MakeText (this, toast, ToastLength.Long).Show ();
+            CancelButton cancelButton = new CancelButton(this);
+            cancelButton.Get().Click += (o, e) => { cancelButton.Functionality(_previousActivity, this); };
         }
     }
 }
