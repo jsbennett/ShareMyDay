@@ -11,6 +11,7 @@ using Android.Provider;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using ShareMyDay.UIComponents;
 
 namespace ShareMyDay.Activities
 {
@@ -25,22 +26,15 @@ namespace ShareMyDay.Activities
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.PictureViewer);
+            
             _previousActivity = Intent.GetStringExtra("PreviousActivity");
             
-            //TO DO: make a spinner class + methods 
-            Spinner spinner = FindViewById<Spinner> (Resource.Id.eventSelector);
-
-            List<string> list = new List<string> {"one", "two", "three", "four"};
-            spinner.ItemSelected += new EventHandler<AdapterView.ItemSelectedEventArgs> (spinner_ItemSelected);
-            var adapter =  new ArrayAdapter<string>(this,
-                Android.Resource.Layout.SimpleSpinnerItem, list);
-
-            adapter.SetDropDownViewResource (Android.Resource.Layout.SimpleSpinnerDropDownItem);
-            spinner.Adapter = adapter;
+            SpinnerComponent spinner = new SpinnerComponent (this, Resource.Id.eventSelector, this);
+            spinner.Setup();
+     
             _imageViewer = _camera.GetImageViewer(Resource.Id.imageView, this);
             _camera.Start(_imageViewer, this);
 
-            //TO DO: make a button class + methods 
             Button button = FindViewById<Button>(Resource.Id.submitButton);
 
             button.Click += (o, e) => {
@@ -52,29 +46,14 @@ namespace ShareMyDay.Activities
                 }
             };
 
-            Button cancelButton = FindViewById<Button>(Resource.Id.cancelButton);
-
-            cancelButton.Click += (o, e) => {
-                if (_previousActivity == "QuickMenu")
-                {
-                    Toast.MakeText (this, "Back to homepage", ToastLength.Short).Show ();
-                    var childMenu = new Intent(this, typeof(MainActivity));
-                    StartActivity(childMenu);
-                }
-            };
+            CancelButton cancelButton = new CancelButton(this);
+            cancelButton.Get().Click += (o, e) => { cancelButton.Functionality(_previousActivity, this); };
         }
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
         {
             _camera.DisplayPicture(requestCode, resultCode, this,_camera);
-
         }
 
-        private void spinner_ItemSelected (object sender, AdapterView.ItemSelectedEventArgs e)
-        {
-            Spinner spinner = (Spinner)sender;
-            string toast = string.Format ("{0} selected", spinner.GetItemAtPosition (e.Position));
-            Toast.MakeText (this, toast, ToastLength.Long).Show ();
-        }
     }
 }
