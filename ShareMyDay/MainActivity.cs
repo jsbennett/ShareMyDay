@@ -86,7 +86,8 @@ namespace ShareMyDay
                         StartActivity(voiceRecordingIntent);
                         break;
                     case "Go To Main Menu":
-                        Console.WriteLine("Case 3");
+                        var mainMenuIntent = new Intent(this, typeof(TeacherMainMenuActivity));
+                        StartActivity(mainMenuIntent);
                         break;
                 }
                 
