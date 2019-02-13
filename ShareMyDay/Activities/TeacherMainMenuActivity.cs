@@ -20,9 +20,15 @@ namespace ShareMyDay.Activities
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.TeacherMainMenu);
 
-            //button names are closeButton, takePicture, makeVoiceRecording, addCard, updateCard
+            //button names are closeButton, takePicture, makeVoiceRecording, addNewCard, updateCard
 
+            Button addNfcButton = FindViewById<Button> (Resource.Id.addNewCard);
 
+            addNfcButton.Click += delegate
+            {
+                Intent addNfcIntent = new Intent(this, typeof(AddNFcCardActivity) );
+                StartActivity(addNfcIntent);
+            };
         }
     }
 }

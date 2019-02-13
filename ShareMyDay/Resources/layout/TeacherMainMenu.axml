@@ -39,6 +39,7 @@ recording"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:layout_weight="1"
+			android:maxWidth="95dp"
 			android:id="@+id/makeVoiceRecording" />
 	</LinearLayout>
 	
@@ -49,13 +50,13 @@ recording"
     android:orientation="horizontal" >
 		<Button
 			android:text="   Add a 
-  card"
+card"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:minWidth="25px"
 			android:minHeight="25px"
 			android:layout_weight="1"
-			android:id="@+id/addCard" />
+			android:id="@+id/addNewCard" />
 		<Button
 			android:text="Update 
 card"
