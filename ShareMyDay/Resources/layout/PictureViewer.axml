@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:minWidth="25px"
+	android:minHeight="25px">
+	<ImageView
+		android:src="@android:drawable/ic_menu_gallery"
+		android:layout_width="match_parent"
+		android:layout_height="316.0dp"
+		android:id="@+id/imageView"
+		android:layout_marginBottom="8.0dp"
+		android:layout_marginTop="12.0dp" />
+	<TextView
+		android:layout_width="match_parent"
+		android:layout_height="31.5dp"
+		android:text="@string/prompt"
+		android:textSize = "19dp"
+		android:layout_marginLeft="10.0dp" 
+	/>
+	<Spinner
+		android:id="@+id/eventSelector"
+		android:layout_width="match_parent"
+		android:layout_height="46.5dp"
+		android:layout_marginBottom="7.0dp"
+		android:layout_marginLeft="10.0dp" 
+		android:prompt="@string/prompt"
+	/>
+	<Button
+		android:text="Submit"
+		android:layout_width="match_parent"
+		android:layout_height="59.0dp"
+		android:id="@+id/submitButton"
+		android:layout_marginBottom="5.0dp"
+		android:layout_marginLeft="5.0dp"
+		android:layout_marginRight="5.0dp"/>
+	<Button
+		android:text="Cancel"
+		android:layout_width="match_parent"
+		android:layout_height="59.0dp"
+		android:layout_marginLeft="5.0dp"
+		android:layout_marginRight="5.0dp"
+		android:id="@+id/cancelButton" />
+
+</LinearLayout>

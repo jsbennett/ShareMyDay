@@ -34,7 +34,7 @@
     <WarningLevel>4</WarningLevel>
     <AndroidUseSharedRuntime>True</AndroidUseSharedRuntime>
     <AndroidLinkMode>None</AndroidLinkMode>
-    <EmbedAssembliesIntoApk>true</EmbedAssembliesIntoApk>
+    <EmbedAssembliesIntoApk>false</EmbedAssembliesIntoApk>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>PdbOnly</DebugType>
@@ -56,16 +56,25 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activities\Camera.cs" />
+    <Compile Include="Activities\AddNFcCardActivity.cs" />
+    <Compile Include="Activities\CameraActivity.cs" />
+    <Compile Include="Activities\TeacherMainMenuActivity.cs" />
+    <Compile Include="Activities\VoiceRecordingActivity.cs" />
+    <Compile Include="Camera\Camera.cs" />
     <Compile Include="Database\Database.cs" />
     <Compile Include="Database\Models\NFCEvent.cs" />
     <Compile Include="Database\Models\Picture.cs" />
     <Compile Include="Database\Models\CardType.cs" />
     <Compile Include="Database\Models\VoiceRecording.cs" />
     <Compile Include="MainActivity.cs" />
+    <Compile Include="NFC\NFC Functions\NFCWrite.cs" />
     <Compile Include="NFC\NFC.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UIComponents\AlertBoxComponent.cs" />
+    <Compile Include="UIComponents\CancelButton.cs" />
+    <Compile Include="UIComponents\SpinnerComponent.cs" />
+    <Compile Include="VoiceRecording\VoiceRecording.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
@@ -112,9 +121,28 @@
     </PackageReference>
     <PackageReference Include="Xamarin.Android.Support.Design" Version="28.0.0.1" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\PictureViewer.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\menu\TeacherQuickMenu.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\VoiceRecView.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\TeacherMainMenu.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\AddNfcCardView.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
