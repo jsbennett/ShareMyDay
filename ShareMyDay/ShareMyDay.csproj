@@ -56,7 +56,7 @@
     <Reference Include="Mono.Android" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Activities\AddNFcCardActivity.cs" />
+    <Compile Include="Activities\AddUpdateNFcCardActivity.cs" />
     <Compile Include="Activities\CameraActivity.cs" />
     <Compile Include="Activities\TeacherMainMenuActivity.cs" />
     <Compile Include="Activities\VoiceRecordingActivity.cs" />
@@ -140,7 +140,7 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\AddNfcCardView.axml">
+    <AndroidResource Include="Resources\layout\AddUpdateNfcCardView.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

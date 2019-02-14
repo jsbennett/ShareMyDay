@@ -4,21 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 	<TextView
-		android:text="Please select a type for information for the card from the drop down below:"
+		android:text="@string/type_prompt"
 		android:layout_width="match_parent"
-		android:layout_height="56.5dp"
+		android:layout_height="72.0dp"
 		android:minWidth="25px"
 		android:minHeight="25px"
 		android:id="@+id/dropDownLabel"
-		android:layout_marginBottom="10.0dp"
 		android:layout_marginLeft="10.0dp"
 		android:layout_marginRight="14.5dp"
-		android:textSize="20dp"/>
+		android:textSize="20dp" />
 	<Spinner
-		android:layout_width="match_parent"
-		android:layout_height="51.5dp"
+		android:layout_width="fill_parent"
+		android:layout_height="52.5dp"
 		android:id="@+id/nfcCardTypeDropDown"
-		android:layout_marginBottom="18.0dp" />
+		android:layout_marginBottom="18.0dp"
+		android:prompt="@string/type_prompt"/>
 	<TextView
 		android:text="Please enter a value for the card in the box below:"
 		android:layout_width="match_parent"
@@ -34,7 +34,9 @@
 		android:imeOptions="actionGo"
 		android:inputType="text"
 		android:id="@+id/messageInputBox"
-		android:layout_marginBottom="14.5dp" />
+		android:layout_marginBottom="14.5dp"
+		android:hint="e.g. Mrs Henry, Kyle, English, Scary Book..."
+		android:maxLength="24" />
 	<Button
 		android:text="Submit"
 		android:layout_width="match_parent"
@@ -46,6 +48,4 @@
 		android:layout_width="match_parent"
 		android:layout_height="84.5dp"
 		android:id="@+id/cancelButton" />
-	
-		
 </LinearLayout>

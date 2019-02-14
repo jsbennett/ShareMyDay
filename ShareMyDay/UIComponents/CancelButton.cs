@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.Widget;
+using ShareMyDay.Activities;
 
 namespace ShareMyDay.UIComponents
 {
@@ -25,6 +26,12 @@ namespace ShareMyDay.UIComponents
                 Toast.MakeText (context, "Back to homepage", ToastLength.Short).Show ();
                 var childMenu = new Intent(context, typeof(MainActivity));
                 context.StartActivity(childMenu);
+            }
+            else
+            {
+                Toast.MakeText (context, "Back to main menu", ToastLength.Short).Show ();
+                var mainMenu = new Intent(context, typeof(TeacherMainMenuActivity));
+                context.StartActivity(mainMenu);
             }
         } 
     }

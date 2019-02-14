@@ -15,7 +15,7 @@
 			android:layout_height="73.0dp"
 			android:minWidth="25px"
 			android:minHeight="25px"
-			android:id="@+id/closeButton" />
+			android:id="@+id/cancelButton" />
 	</LinearLayout>
 
 	<LinearLayout
