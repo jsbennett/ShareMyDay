@@ -15,15 +15,13 @@ using Android.Widget;
 namespace ShareMyDay.Activities
 {
     /*
-     * Code adapted from Xamarin Mobile Development for Android Cookbook by Matthew Leibowitz page 157-159
+     *
      */
     [Activity(Label = "AddNFcCardActivity")]
     public class AddNFcCardActivity : Activity
     {
         private NFC.NFC _nfc;
-        public Dialog dialog1;
 
-        public static string inputMessage; 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -43,7 +41,7 @@ namespace ShareMyDay.Activities
 
         protected override async void OnNewIntent(Intent intent)
         {
-           await _nfc.Write(intent, this, this);
+           await _nfc.Write( this, this, intent);
         }
 
      

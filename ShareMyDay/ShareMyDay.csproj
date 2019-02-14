@@ -67,6 +67,7 @@
     <Compile Include="Database\Models\CardType.cs" />
     <Compile Include="Database\Models\VoiceRecording.cs" />
     <Compile Include="MainActivity.cs" />
+    <Compile Include="NFC\NFC Functions\NFCWrite.cs" />
     <Compile Include="NFC\NFC.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
