@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+	<TextView
+		android:text="Please select a type for information for the card from the drop down below:"
+		android:layout_width="match_parent"
+		android:layout_height="56.5dp"
+		android:minWidth="25px"
+		android:minHeight="25px"
+		android:id="@+id/dropDownLabel"
+		android:layout_marginBottom="10.0dp"
+		android:layout_marginLeft="10.0dp"
+		android:layout_marginRight="14.5dp"
+		android:textSize="20dp"/>
+	<Spinner
+		android:layout_width="match_parent"
+		android:layout_height="51.5dp"
+		android:id="@+id/nfcCardTypeDropDown"
+		android:layout_marginBottom="18.0dp" />
+	<TextView
+		android:text="Please enter a value for the card in the box below:"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginLeft="10.0dp"
+		android:layout_marginRight="14.5dp"
+		android:textSize="20dp"
+		android:id="@+id/inputBoxLabel"
+		android:layout_marginBottom="10.0dp" />
+	<EditText
+		android:layout_width="match_parent"
+		android:layout_height="56.5dp"
+		android:imeOptions="actionGo"
+		android:inputType="text"
+		android:id="@+id/messageInputBox"
+		android:layout_marginBottom="14.5dp" />
+	<Button
+		android:text="Submit"
+		android:layout_width="match_parent"
+		android:layout_height="77.5dp"
+		android:id="@+id/submitButton"
+		android:layout_marginBottom="15.0dp" />
+	<Button
+		android:text="Cancel"
+		android:layout_width="match_parent"
+		android:layout_height="84.5dp"
+		android:id="@+id/cancelButton" />
+	
+		
+</LinearLayout>
