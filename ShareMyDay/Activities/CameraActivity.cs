@@ -44,6 +44,12 @@ namespace ShareMyDay.Activities
                     var childMenu = new Intent(this, typeof(MainActivity));
                     StartActivity(childMenu);
                 }
+                else
+                {
+                    Toast.MakeText (this, "Back to main menu", ToastLength.Short).Show ();
+                    var mainMenu = new Intent(this, typeof(TeacherMainMenuActivity));
+                    StartActivity(mainMenu);
+                }
             };
 
             CancelButton cancelButton = new CancelButton(this);

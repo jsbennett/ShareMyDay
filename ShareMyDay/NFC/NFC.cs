@@ -23,6 +23,7 @@ namespace ShareMyDay.NFC
     {
         private readonly NfcAdapter _nfcAdapter;
         private static string _inputMessage;
+        private static string _typeSelected; 
         private AlertBoxComponent _tapCardAlertBox;
 
         /*
@@ -54,7 +55,7 @@ namespace ShareMyDay.NFC
             _nfcAdapter.EnableForegroundDispatch(activity, pendingContextIntent, intentTagFilters, null);
         }
 
-        public void WriteDetection(string input, Context context, Activity activity)
+        public void WriteDetection(string type, string input, Context context, Activity activity)
         {
             if (input == "")
             {
@@ -68,13 +69,14 @@ namespace ShareMyDay.NFC
                 _tapCardAlertBox.Setup("Begin Writing Card", "Please tap and hold the card on the back of the phone.");
                 _tapCardAlertBox.Show();
                 _inputMessage = input;
+                _typeSelected = type;
                  Detection(context,activity);
             }
         }
 
         public async Task Write(Context context, Activity activity, Intent intent)
         {
-            NfcWrite writer = new NfcWrite(context, activity,_tapCardAlertBox.GetDialog(), _inputMessage );
+            NfcWrite writer = new NfcWrite(context, activity,_tapCardAlertBox.GetDialog(), _inputMessage, _typeSelected );
             await writer.Write(intent);
         }
 

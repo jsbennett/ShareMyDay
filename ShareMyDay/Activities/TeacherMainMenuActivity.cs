@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
+﻿using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
+using ShareMyDay.UIComponents;
 
 namespace ShareMyDay.Activities
 {
@@ -20,15 +14,40 @@ namespace ShareMyDay.Activities
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.TeacherMainMenu);
 
-            //button names are closeButton, takePicture, makeVoiceRecording, addNewCard, updateCard
-
             Button addNfcButton = FindViewById<Button> (Resource.Id.addNewCard);
+            Button updateNfcButton = FindViewById<Button>(Resource.Id.updateCard);
+            Button takePictureButton = FindViewById<Button>(Resource.Id.takePicture);
+            Button makeVoiceRecordingButton = FindViewById<Button>(Resource.Id.makeVoiceRecording); 
+            
 
             addNfcButton.Click += delegate
             {
-                Intent addNfcIntent = new Intent(this, typeof(AddNFcCardActivity) );
+                Intent addNfcIntent = new Intent(this, typeof(AddUpdateNFcCardActivity));
                 StartActivity(addNfcIntent);
             };
+
+            updateNfcButton.Click += delegate
+            {
+                Intent updateNfcIntent = new Intent(this, typeof(AddUpdateNFcCardActivity));
+                StartActivity(updateNfcIntent);
+            };
+
+            takePictureButton.Click += delegate
+            {
+                Intent takePictureIntent = new Intent(this, typeof(CameraActivity));
+                takePictureIntent.PutExtra("PreviousActivity", "MainMenu");
+                StartActivity(takePictureIntent);
+            };
+
+            makeVoiceRecordingButton.Click += delegate
+            {
+                Intent makeVoiceRecordingIntent = new Intent(this, typeof(VoiceRecordingActivity));
+                makeVoiceRecordingIntent.PutExtra("PreviousActivity", "MainMenu");
+                StartActivity(makeVoiceRecordingIntent);
+            };
+
+            CancelButton cancelButton = new CancelButton(this);
+            cancelButton.Get().Click += (o, e) => { cancelButton.Functionality("QuickMenu", this); };
         }
     }
 }

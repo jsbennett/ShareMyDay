@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.Media;
+﻿using Android.App;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 using ShareMyDay.UIComponents;
-using Environment = Android.OS.Environment;
 
 namespace ShareMyDay.Activities
 {
@@ -24,8 +13,7 @@ namespace ShareMyDay.Activities
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.VoiceRecView);
 
-            //TO-DO: Fix this properly
-            string _previousActivity = "QuickMenu";
+            string previousActivity = Intent.GetStringExtra("PreviousActivity");
 
             SpinnerComponent spinner = new SpinnerComponent (this, Resource.Id.eventSelector, this);
             spinner.Setup();
@@ -41,7 +29,7 @@ namespace ShareMyDay.Activities
             };
 
             CancelButton cancelButton = new CancelButton(this);
-            cancelButton.Get().Click += (o, e) => { cancelButton.Functionality(_previousActivity, this); };
+            cancelButton.Get().Click += (o, e) => { cancelButton.Functionality(previousActivity, this); };
         }
     }
 }

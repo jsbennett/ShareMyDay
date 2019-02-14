@@ -19,12 +19,15 @@ namespace ShareMyDay.NFC.NFC_Functions
 
         private static string _inputMessage;
 
-        public NfcWrite(Context context, Activity activity, Dialog tapCardAlertBox, string inputMessage)
+        private static string _typeSelected; 
+
+        public NfcWrite(Context context, Activity activity, Dialog tapCardAlertBox, string inputMessage, string type)
         {
             _context = context;
             _activity = activity;
             _tapCardAlertBox = tapCardAlertBox;
             _inputMessage = inputMessage;
+            _typeSelected = type; 
         }
 
          public async Task Write(Intent intent)
@@ -49,7 +52,7 @@ namespace ShareMyDay.NFC.NFC_Functions
 
         private static NdefMessage CreateCardContent()
         {
-            var messageBytes = Encoding.UTF8.GetBytes(_inputMessage);
+            var messageBytes = Encoding.UTF8.GetBytes(_typeSelected + ":" +_inputMessage);
             var mimeBytes = Encoding.UTF8.GetBytes("ShareMyDayTest");
             
             var ndefRecord = new NdefRecord(NdefRecord.TnfMimeMedia, mimeBytes, new byte[0], messageBytes);
