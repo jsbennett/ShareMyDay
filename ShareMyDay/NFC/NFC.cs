@@ -4,9 +4,13 @@ using Android.Nfc;
 using Android.Nfc.Tech;
 using ShareMyDay.UIComponents;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Remoting;
 using System.Text;
 using System.Threading.Tasks;
+using Android.Widget;
+using ShareMyDay.Activities;
 using ShareMyDay.NFC.NFC_Functions;
 
 
@@ -80,7 +84,39 @@ namespace ShareMyDay.NFC
             await writer.Write(intent);
         }
 
-       
+        public List<string> GetData(Intent intent)
+        {
+            NFcRead reader = new NFcRead();
+            reader.GetData(intent);
+            List<string> cardValues = new List<string>();
+            cardValues.Add(reader.CardType);
+            foreach (var i in reader.SplitValue())
+            {
+                cardValues.Add(i);
+            }
+
+            return cardValues;
+        }
+
+        public void CheckCard(Intent intent, Context context, Activity activity)
+        {
+            List<string> cardInformation = GetData(intent);
+            if (cardInformation[0].Equals("ShareMyDayTest"))
+            {
+                if (cardInformation[1] == "Teacher")
+                {
+ 
+                    QuickMenuComponent quickMenu = new QuickMenuComponent(activity, context);
+                    quickMenu.Show();
+                }
+            }
+            else
+            {
+                AlertBoxComponent invalidNfcAlertBox = new AlertBoxComponent(context);
+                invalidNfcAlertBox.Setup("Invalid Card","The scanned card is not compatible with Share My Day. Please try a different card.");
+                invalidNfcAlertBox.Show();
+            }
+        }
 
     }
 }

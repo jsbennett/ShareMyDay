@@ -20,12 +20,11 @@ namespace ShareMyDay.UIComponents
             _alertBox.SetMessage (message);
             _alertBox.SetPositiveButton ("OK", (senderAlert, args) => {
             });
-
             _alertBox.SetNegativeButton ("Cancel", (senderAlert, args) => {
             });
         }
 
-        public void OnlyOkOptionSetup(string title, string message, Context context, Activity activity)
+        public void MenuOptionSetup(string title, string message, Context context, Activity activity)
         {
             _alertBox.SetTitle (title);
             _alertBox.SetMessage (message);
@@ -33,6 +32,19 @@ namespace ShareMyDay.UIComponents
                 Intent mainMenu = new Intent(context, typeof(TeacherMainMenuActivity));
                 activity.StartActivity(mainMenu);
             });
+        }
+
+        public void RepeateFunctionSetup<T>(string title, string message, Context context, Activity activity, string previousActivity)
+        {
+            _alertBox.SetTitle (title);
+            _alertBox.SetMessage (message);
+            _alertBox.SetPositiveButton ("OK", (senderAlert, args) => {
+                Intent repeatedActivity = new Intent(context, typeof(T));
+                repeatedActivity.PutExtra("PreviousActivity", previousActivity);
+                activity.StartActivity(repeatedActivity);
+            });
+            _alertBox.SetNegativeButton ("Cancel", (senderAlert, args) => {});
+            
         }
 
         public void Show()

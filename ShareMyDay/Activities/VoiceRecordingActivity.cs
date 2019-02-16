@@ -1,4 +1,5 @@
 ﻿using Android.App;
+using Android.Content;
 using Android.OS;
 using Android.Widget;
 using ShareMyDay.UIComponents;
@@ -28,7 +29,40 @@ namespace ShareMyDay.Activities
                 voiceRecorder.Play(playRecordingButton);
             };
 
-            CancelButton cancelButton = new CancelButton(this);
+            Button submitButton = FindViewById<Button>(Resource.Id.submitButton);
+
+            bool anotherRecording = false; 
+            submitButton.Click += (o, e) => {
+                if (anotherRecording == false)
+                {
+                    //submit to database stuff goes here 
+                    bool uploadedSuccessful = true;
+                    if (uploadedSuccessful)
+                    {
+                        submitButton.Text = "Take Another Voice Recording";
+                        AlertBoxComponent voiceRecording = new AlertBoxComponent(this);
+                        voiceRecording.RepeateFunctionSetup<CameraActivity>("Take Picture",
+                            "Do you want to take a picture?", this, this, previousActivity);
+                        voiceRecording.Show();
+                        anotherRecording = true;
+                    }
+                    else
+                    {
+                        AlertBoxComponent errorUplaodingAlertBox = new AlertBoxComponent(this);
+                        errorUplaodingAlertBox.Setup("Error Uploading",
+                            "Please click submit again.");
+                        errorUplaodingAlertBox.Show();
+                    }
+                }
+                else
+                {
+                    Intent repeatedActivity = new Intent(this, typeof(VoiceRecordingActivity));
+                    repeatedActivity.PutExtra("PreviousActivity", previousActivity);
+                    StartActivity(repeatedActivity);
+                }
+            };
+
+            CancelButtonComponent cancelButton = new CancelButtonComponent(this);
             cancelButton.Get().Click += (o, e) => { cancelButton.Functionality(previousActivity, this); };
         }
     }

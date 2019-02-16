@@ -5,11 +5,11 @@ using ShareMyDay.Activities;
 
 namespace ShareMyDay.UIComponents
 {
-    public class CancelButton
+    public class CancelButtonComponent
     {
         private Button cancelButton;
 
-        public CancelButton(Activity activity)
+        public CancelButtonComponent(Activity activity)
         {
             cancelButton = activity.FindViewById<Button>(Resource.Id.cancelButton);
         }

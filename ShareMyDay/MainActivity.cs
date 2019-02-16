@@ -1,19 +1,12 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
-using Android.Content.PM;
-using Android.Nfc;
 using Android.OS;
-using Android.Nfc.Tech;
-using Android.Runtime;
-using Android.Support.Design.Widget;
 using Android.Support.V7.App;
-using Android.Views;
 using Android.Widget;
 using ShareMyDay.Activities;
-using AlertDialog = Android.App.AlertDialog;
+using ShareMyDay.UIComponents;
+using System;
+using System.Collections.Generic;
 
 namespace ShareMyDay
 {
@@ -21,7 +14,7 @@ namespace ShareMyDay
      * Class Name: Main Activity
      * Purpose: To be the main entry point for the app which controls the flow
      */
-    
+
     [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
     public class MainActivity : AppCompatActivity
     {
@@ -62,42 +55,7 @@ namespace ShareMyDay
          */
         protected override void OnNewIntent(Intent intent)
         {
-            
-            //TO DO- move into own class + methods 
-            Button button = FindViewById<Button>(Resource.Id.quickMenuButton);
-            PopupMenu quickMenu = new PopupMenu (this,button);
-            quickMenu.Inflate (Resource.Menu.TeacherQuickMenu);
-
-            quickMenu.MenuItemClick += (s1, arg1) => {
-                Console.WriteLine ("{0} selected", arg1.Item.TitleFormatted);
-                switch (arg1.Item.TitleFormatted.ToString())
-                {
-                    case "Record Interaction":
-                        Console.WriteLine("Case 1");
-                        break;
-                    case "Take A Picture":
-                        var cameraIntent = new Intent(this, typeof(CameraActivity));
-                        cameraIntent.PutExtra("PreviousActivity", "QuickMenu");
-                        StartActivity(cameraIntent);
-                        break;
-                    case "Take A Voice Recording":
-                        var voiceRecordingIntent = new Intent(this, typeof(VoiceRecordingActivity));
-                        voiceRecordingIntent.PutExtra("PreviousActivity", "QuickMenu");
-                        StartActivity(voiceRecordingIntent);
-                        break;
-                    case "Go To Main Menu":
-                        var mainMenuIntent = new Intent(this, typeof(TeacherMainMenuActivity));
-                        StartActivity(mainMenuIntent);
-                        break;
-                }
-                
-            };
-
-            quickMenu.DismissEvent += (s2, arg2) => {
-                Console.WriteLine ("menu dismissed");
-            };
-            quickMenu.Show ();
-         
+            _nfc.CheckCard(intent, this, this);
         }
     }
 }
