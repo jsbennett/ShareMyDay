@@ -1,7 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:minWidth="25px"
+	android:minHeight="25px">
+	<TextView
+		android:text="Text"
+		android:layout_width="match_parent"
+		android:layout_height="54.0dp"
+		android:id="@+id/textView1"
+		android:layout_marginTop="6.5dp" />
+	<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="388.0dp">
+	<ImageView
+		android:src="@android:drawable/ic_menu_gallery"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:id="@+id/pictureBox" />
+		<Button
+			android:text="Play
+Four clicks"
+			android:textColor="@android:color/white"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:id="@+id/storyClickButton"
+			android:background="@android:color/transparent"/>
+		</FrameLayout>
+	<Button
+		android:text="Finish"
+		android:layout_width="match_parent"
+		android:layout_height="101.5dp"
+		android:id="@+id/cancelButton" />
 
 </LinearLayout>

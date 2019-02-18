@@ -60,6 +60,7 @@
     <Compile Include="Activities\CameraActivity.cs" />
     <Compile Include="Activities\StoryActivity.cs" />
     <Compile Include="Activities\TeacherMainMenuActivity.cs" />
+    <Compile Include="Activities\TodayStoryActivity.cs" />
     <Compile Include="Activities\VoiceRecordingActivity.cs" />
     <Compile Include="Camera\Camera.cs" />
     <Compile Include="Database\Database.cs" />
@@ -145,7 +146,12 @@
     </AndroidResource>
   </ItemGroup>
   <ItemGroup>
-    <AndroidResource Include="Resources\layout\storyView.axml">
+    <AndroidResource Include="Resources\layout\StoryView.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\TodayStoryView.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

@@ -3,6 +3,7 @@ using Android.Content;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
+using ShareMyDay.Activities;
 
 namespace ShareMyDay
 {
@@ -34,12 +35,20 @@ namespace ShareMyDay
 
             _nfc = new NFC.NFC(this);
 
-            Button latestStory = FindViewById<Button>(Resource.Id.latestStoryButton);
+            Button todayStory = FindViewById<Button>(Resource.Id.latestStoryButton);
             Button favouriteStory = FindViewById<Button>(Resource.Id.favouriteStoryButton);
 
-            latestStory.Click += delegate { };
+            todayStory.Click += delegate {
+                Intent storyIntent = new Intent(this, typeof(TodayStoryActivity));
+                StartActivity(storyIntent);
+            };
 
-            favouriteStory.Click += delegate { };
+            favouriteStory.Click += delegate
+            {
+                Intent storyIntent = new Intent(this, typeof(StoryActivity));
+                storyIntent.PutExtra("Story", "Favourite");
+                StartActivity(storyIntent);
+            };
         }
 
         /*
