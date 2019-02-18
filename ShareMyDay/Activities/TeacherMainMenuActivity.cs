@@ -46,7 +46,7 @@ namespace ShareMyDay.Activities
                 StartActivity(makeVoiceRecordingIntent);
             };
 
-            CancelButton cancelButton = new CancelButton(this);
+            CancelButtonComponent cancelButton = new CancelButtonComponent(this);
             cancelButton.Get().Click += (o, e) => { cancelButton.Functionality("QuickMenu", this); };
         }
     }

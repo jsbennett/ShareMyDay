@@ -93,7 +93,7 @@ namespace ShareMyDay.NFC.NFC_Functions
                 ndefTagConnection.Close();
                 
                 AlertBoxComponent writeSuccessfulAlertBox = new AlertBoxComponent(_context);
-                writeSuccessfulAlertBox.OnlyOkOptionSetup("Card Write Was Successful", "The card was successfully written to. You will now be taken back to the main menu.", _context, _activity);
+                writeSuccessfulAlertBox.MenuOptionSetup("Card Write Was Successful", "The card was successfully written to. You will now be taken back to the main menu.", _context, _activity);
                 writeSuccessfulAlertBox.Show();
                 
                 return true;
@@ -125,7 +125,7 @@ namespace ShareMyDay.NFC.NFC_Functions
                 formatter.Close();
                 
                 AlertBoxComponent writeSuccessfulAlertBox = new AlertBoxComponent(_context);
-                writeSuccessfulAlertBox.OnlyOkOptionSetup("Card Write Was Successful", "The card was successfully written to. You will now be taken back to the main menu.", _context, _activity);
+                writeSuccessfulAlertBox.MenuOptionSetup("Card Write Was Successful", "The card was successfully written to. You will now be taken back to the main menu.", _context, _activity);
                 writeSuccessfulAlertBox.Show();
             }
             catch (Exception e)

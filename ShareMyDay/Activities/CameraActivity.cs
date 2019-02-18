@@ -35,24 +35,40 @@ namespace ShareMyDay.Activities
             _imageViewer = _camera.GetImageViewer(Resource.Id.imageView, this);
             _camera.Start(_imageViewer, this);
 
-            Button button = FindViewById<Button>(Resource.Id.submitButton);
+            Button submitButton = FindViewById<Button>(Resource.Id.submitButton);
 
-            button.Click += (o, e) => {
-                if (_previousActivity == "QuickMenu")
+            bool anotherPicture = false; 
+            submitButton.Click += (o, e) => {
+                if (anotherPicture == false)
                 {
-                    Toast.MakeText (this, "Back to homepage", ToastLength.Short).Show ();
-                    var childMenu = new Intent(this, typeof(MainActivity));
-                    StartActivity(childMenu);
+                    //submit to database stuff goes here 
+                    bool uploadedSuccessful = true;
+                    if (uploadedSuccessful)
+                    {
+                        submitButton.Text = "Take Another Picture";
+                        AlertBoxComponent voiceRecording = new AlertBoxComponent(this);
+                        voiceRecording.RepeateFunctionSetup<VoiceRecordingActivity>("Take Voice Recording",
+                            "Do you want to take a voice recording?", this, this, _previousActivity);
+                        voiceRecording.Show();
+                        anotherPicture = true;
+                    }
+                    else
+                    {
+                        AlertBoxComponent errorUplaodingAlertBox = new AlertBoxComponent(this);
+                        errorUplaodingAlertBox.Setup("Error Uploading",
+                            "Please click submit again.");
+                        errorUplaodingAlertBox.Show();
+                    }
                 }
                 else
                 {
-                    Toast.MakeText (this, "Back to main menu", ToastLength.Short).Show ();
-                    var mainMenu = new Intent(this, typeof(TeacherMainMenuActivity));
-                    StartActivity(mainMenu);
+                    Intent repeatedActivity = new Intent(this, typeof(CameraActivity));
+                    repeatedActivity.PutExtra("PreviousActivity", _previousActivity);
+                    StartActivity(repeatedActivity);
                 }
             };
 
-            CancelButton cancelButton = new CancelButton(this);
+            CancelButtonComponent cancelButton = new CancelButtonComponent(this);
             cancelButton.Get().Click += (o, e) => { cancelButton.Functionality(_previousActivity, this); };
         }
 
