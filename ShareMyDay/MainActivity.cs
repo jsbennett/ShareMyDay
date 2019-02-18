@@ -2,11 +2,6 @@
 using Android.Content;
 using Android.OS;
 using Android.Support.V7.App;
-using Android.Widget;
-using ShareMyDay.Activities;
-using ShareMyDay.UIComponents;
-using System;
-using System.Collections.Generic;
 
 namespace ShareMyDay
 {

@@ -16,7 +16,43 @@
 			android:background="?attr/colorPrimary"
 			app:popupTheme="@style/AppTheme.PopupOverlay" />
 	</android.support.design.widget.AppBarLayout>
-	<include
-		layout="@layout/content_main" />
+	<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+		<Button
+			android:text="Latest Story"
+			android:layout_width="match_parent"
+			android:layout_height="259dp"
+			android:layout_centerHorizontal="true"
+			android:id="@+id/latestStoryButton"
+			android:visibility="visible"
+			android:layout_marginTop="55.5dp" 
+	/>
+		<Button
+		android:text="Favourite Story"
+		android:layout_width="match_parent"
+		android:layout_height="259dp"
+		android:layout_centerHorizontal="true"
+		android:id="@+id/favouriteStoryButton"
+		android:visibility="visible" 
+		android:layout_gravity="bottom"  
+	/>
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true">
+			<Button
+				android:text="Button"
+				android:layout_width="match_parent"
+				android:layout_height="200dp"
+				android:layout_centerHorizontal="true"
+				android:id="@+id/quickMenuButton"
+				android:visibility="invisible"
+				android:layout_marginLeft="88.0dp"
+				android:layout_marginRight="0.0dp" />
+    </FrameLayout>
+</FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>
