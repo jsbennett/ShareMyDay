@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Activities\AddUpdateNFcCardActivity.cs" />
     <Compile Include="Activities\CameraActivity.cs" />
+    <Compile Include="Activities\StoryActivity.cs" />
     <Compile Include="Activities\TeacherMainMenuActivity.cs" />
     <Compile Include="Activities\VoiceRecordingActivity.cs" />
     <Compile Include="Camera\Camera.cs" />
@@ -140,6 +141,11 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\AddUpdateNfcCardView.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\storyView.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>
