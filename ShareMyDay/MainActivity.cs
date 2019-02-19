@@ -33,6 +33,7 @@ namespace ShareMyDay
             _db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             _db.Create();
             _db.Setup();
+            
 
             _nfc = new NFC.NFC(this);
 
@@ -69,6 +70,7 @@ namespace ShareMyDay
         protected override void OnNewIntent(Intent intent)
         {
             _nfc.CheckCard(intent, this, this, _db);
+            _db.FilterEvents();
         }
     }
 }

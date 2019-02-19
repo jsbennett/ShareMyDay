@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using ShareMyDay.Database.Models;
+using ShareMyDay.Story.Models;
 using SQLite;
 using Picture = ShareMyDay.Database.Models.Picture;
 
@@ -47,7 +49,7 @@ namespace ShareMyDay.Database
         {
             var db = CreateConnection();
             db.CreateTable<CardType>();
-            db.CreateTable<NFCEvent>();
+            db.CreateTable<NfcEvent>();
             db.CreateTable<Picture>();
             db.CreateTable<Models.VoiceRecording>();
             db.Close();
@@ -78,7 +80,7 @@ namespace ShareMyDay.Database
         public int InsertEvent(string type, string value)
         {
             var db = CreateConnection();
-            var nfcEvent = new NFCEvent();
+            var nfcEvent = new NfcEvent();
             var table = db.Table<CardType>();
             int typeId = 0;
             bool typeFound = false;
@@ -101,7 +103,7 @@ namespace ShareMyDay.Database
                 count = db.Insert(nfcEvent);
             }
 
-            var eventTable = db.Table<NFCEvent>();
+            var eventTable = db.Table<NfcEvent>();
             foreach (var i in eventTable)
             {
                 Console.WriteLine(i.Value);
@@ -110,5 +112,38 @@ namespace ShareMyDay.Database
             return count; 
         }
 
+        public List<NfcEvent> GetEvents()
+        {
+            var db = CreateConnection();
+            var events = db.Query<NfcEvent>("SELECT * FROM NFcEvent WHERE DateTime >= ? AND DateTime <= ?" , new DateTime(DateTime.Now.Year,DateTime.Now.Month, DateTime.Now.Day,0,0,0), new DateTime(DateTime.Now.Year,DateTime.Now.Month, DateTime.Now.Day,23,59,59) ); 
+            db.Close();
+            return events;  
+        }
+
+        public List<NfcEvent> FilterEvents()
+        {
+            var events = GetEvents();
+           
+            for (int i = 0; i < events.Count; i++)
+            {
+               
+                for (int j = 0; j < events.Count; j++)
+                {
+                    if (j != i)
+                    {
+                            if (events[i].Value.Equals(events[j].Value) && events[i].DateTime.Hour.Equals(events[j].DateTime.Hour))
+                            {
+
+                                events.Remove(events[j]);
+                                j--;
+
+                            }
+                    
+                    }
+                    
+                }
+            }
+            return events; 
+        }
     }
 }

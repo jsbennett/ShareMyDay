@@ -38,7 +38,6 @@ namespace ShareMyDay.Activities
                 };
 
                 Button next = FindViewById<Button>(Resource.Id.changeViewButton);
-                bool limitReached = false; 
                 
                 next.Click += delegate
                 {

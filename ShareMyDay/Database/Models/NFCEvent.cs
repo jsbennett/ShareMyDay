@@ -1,16 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using SQLite;
+﻿using SQLite;
 using SQLiteNetExtensions.Attributes;
+using System;
+using System.Collections.Generic;
 
 namespace ShareMyDay.Database.Models
 {
@@ -19,7 +10,7 @@ namespace ShareMyDay.Database.Models
      * Purpose: To be the blueprint of a NFC table entry
      * Created 31/01/2019
      */
-    class NFCEvent
+    public class NfcEvent
     {
         [PrimaryKey,AutoIncrement]
         public int Id { get; set; }

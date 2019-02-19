@@ -74,6 +74,11 @@
     <Compile Include="NFC\NFC.cs" />
     <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Story\Models\Event.cs" />
+    <Compile Include="Story\Models\EventPicture.cs" />
+    <Compile Include="Story\Models\EventRecording.cs" />
+    <Compile Include="Story\Story.cs" />
+    <Compile Include="Story\StoryFunctions\StoryGeneration.cs" />
     <Compile Include="UIComponents\AlertBoxComponent.cs" />
     <Compile Include="UIComponents\CancelButtonComponent.cs" />
     <Compile Include="UIComponents\QuickMenuComponent.cs" />
