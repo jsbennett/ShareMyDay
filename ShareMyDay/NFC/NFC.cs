@@ -98,7 +98,7 @@ namespace ShareMyDay.NFC
             return cardValues;
         }
 
-        public void CheckCard(Intent intent, Context context, Activity activity)
+        public void CheckCard(Intent intent, Context context, Activity activity, Database.Database db)
         {
             List<string> cardInformation = GetData(intent);
             if (cardInformation[0].Equals("ShareMyDayTest"))
@@ -108,6 +108,16 @@ namespace ShareMyDay.NFC
  
                     QuickMenuComponent quickMenu = new QuickMenuComponent(activity, context);
                     quickMenu.Show();
+                }
+                else
+                {
+                    bool successful = db.InsertEvent(cardInformation[1], cardInformation[2]) != 0; 
+
+                    if (successful)
+                    {
+                        string message = cardInformation[2] + " has been recorded"; 
+                        Toast.MakeText (context, message, ToastLength.Short).Show ();
+                    }
                 }
             }
             else

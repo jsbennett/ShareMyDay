@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using ShareMyDay.Database.Models;
 using SQLite;
 using Picture = ShareMyDay.Database.Models.Picture;
@@ -62,12 +63,52 @@ namespace ShareMyDay.Database
             var db = CreateConnection();
             CardType[] types = {new CardType{Type = "Item"},new CardType{Type = "Teacher"},new CardType{Type = "Friend"}, new CardType{Type = "Visitor"},new CardType{Type = "Class"},new CardType{Type = "Activity"} };
             var count = 0;
-            foreach (var i in types)
+            if (db.Table<CardType>().Count() == 0)
             {
-                count += db.Insert(i);
+                foreach (var i in types)
+                {
+                    count += db.Insert(i);
+                }
+            }
+            
+            db.Close();
+            return count; 
+        }
+
+        public int InsertEvent(string type, string value)
+        {
+            var db = CreateConnection();
+            var nfcEvent = new NFCEvent();
+            var table = db.Table<CardType>();
+            int typeId = 0;
+            bool typeFound = false;
+            int count = 0; 
+            foreach (var record in table)
+            {
+                if (record.Type == type)
+                {
+                    typeId = record.Id;
+                    typeFound = true;
+                    break; 
+                }
+            }
+
+            if (typeFound)
+            {
+                nfcEvent.DateTime = DateTime.Now;
+                nfcEvent.Value = value;
+                nfcEvent.TypeId = typeId;
+                count = db.Insert(nfcEvent);
+            }
+
+            var eventTable = db.Table<NFCEvent>();
+            foreach (var i in eventTable)
+            {
+                Console.WriteLine(i.Value);
             }
             db.Close();
             return count; 
         }
+
     }
 }
