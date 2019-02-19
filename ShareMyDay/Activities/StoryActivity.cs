@@ -1,18 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
+﻿using Android.App;
 using Android.Content;
-using Android.Graphics.Drawables;
-using Android.Media;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
-using Java.IO;
-using Org.Apache.Http.Impl.IO;
 using ShareMyDay.UIComponents;
 using Uri = Android.Net.Uri;
 
