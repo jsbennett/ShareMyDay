@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Android.Widget;
 using ShareMyDay.Activities;
+using ShareMyDay.Database.Models;
 using ShareMyDay.NFC.NFC_Functions;
 
 
@@ -111,7 +112,19 @@ namespace ShareMyDay.NFC
                 }
                 else
                 {
-                    bool successful = db.InsertEvent(cardInformation[1], cardInformation[2]) != 0; 
+                    StoryEvent storyEvent = new StoryEvent
+                    {
+                        Value = cardInformation[2],
+                        DateTime = DateTime.Now, 
+                        Cards = new List<Card> {
+                            new Card
+                            {
+                                Type = cardInformation[1],
+                                Message = cardInformation[2]
+                            }
+                        }
+                    };
+                    bool successful = db.InsertEvent(storyEvent) != 0; 
 
                     if (successful)
                     {

@@ -17,7 +17,7 @@ namespace ShareMyDay.Database.Models
         public string Type { get; set; }
 
         [OneToMany]	        
-        public List<NfcEvent> NFcEvents { get; set; }
+        public List<StoryEvent> NFcEvents { get; set; }
         
     }
 }

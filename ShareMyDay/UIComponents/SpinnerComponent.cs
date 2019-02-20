@@ -36,7 +36,7 @@ namespace ShareMyDay.UIComponents
  
         public void NFcTypePopulate()
         {
-            List<string> list = new List<string> {"Item", "Activity", "Class", "Teacher","Friend","Visitor"};
+            List<string> list = new List<string> {"Leisure Activity", "Class Activity", "Class", "Item","Teacher","Friend","Visitor"};
             var adapter =  new ArrayAdapter<string>(_context,
                 Android.Resource.Layout.SimpleSpinnerItem, list);
 

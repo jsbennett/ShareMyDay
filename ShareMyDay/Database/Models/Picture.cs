@@ -13,7 +13,7 @@ namespace ShareMyDay.Database.Models
         [PrimaryKey,AutoIncrement]
         public int Id { get; set; }
        
-        [ForeignKey(typeof(NfcEvent))]
+        [ForeignKey(typeof(StoryEvent))]
         public int NfcEventId { get; set; }
 
         public string Path { get; set; }

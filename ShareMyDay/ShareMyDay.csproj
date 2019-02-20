@@ -64,9 +64,11 @@
     <Compile Include="Activities\VoiceRecordingActivity.cs" />
     <Compile Include="Camera\Camera.cs" />
     <Compile Include="Database\Database.cs" />
-    <Compile Include="Database\Models\NFCEvent.cs" />
+    <Compile Include="Database\Models\Card.cs" />
+    <Compile Include="Database\Models\StoryEvent.cs" />
     <Compile Include="Database\Models\Picture.cs" />
     <Compile Include="Database\Models\CardType.cs" />
+    <Compile Include="Database\Models\Story.cs" />
     <Compile Include="Database\Models\VoiceRecording.cs" />
     <Compile Include="MainActivity.cs" />
     <Compile Include="NFC\NFC Functions\NFcRead.cs" />

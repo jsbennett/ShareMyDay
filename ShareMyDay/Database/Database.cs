@@ -48,10 +48,12 @@ namespace ShareMyDay.Database
         public void Create()
         {
             var db = CreateConnection();
-            db.CreateTable<CardType>();
-            db.CreateTable<NfcEvent>();
+            db.CreateTable<Models.Story>();
+            db.CreateTable<StoryEvent>();
+            db.CreateTable<Card>();
             db.CreateTable<Picture>();
             db.CreateTable<Models.VoiceRecording>();
+            db.CreateTable<CardType>();
             db.Close();
         }
 
@@ -63,7 +65,7 @@ namespace ShareMyDay.Database
         public int Setup()
         {
             var db = CreateConnection();
-            CardType[] types = {new CardType{Type = "Item"},new CardType{Type = "Teacher"},new CardType{Type = "Friend"}, new CardType{Type = "Visitor"},new CardType{Type = "Class"},new CardType{Type = "Activity"} };
+            CardType[] types = {new CardType{Type = "Leisure Activity"}, new CardType{Type = "Class Activity"},new CardType{Type = "Class"}, new CardType{Type = "Item"},new CardType{Type = "Teacher"},new CardType{Type = "Friend"}, new CardType{Type = "Visitor"} };
             var count = 0;
             if (db.Table<CardType>().Count() == 0)
             {
@@ -72,78 +74,140 @@ namespace ShareMyDay.Database
                     count += db.Insert(i);
                 }
             }
+            db.Close();
+            return count; 
+        }
+
+        /*
+         * Method Name: InsertEvent
+         * Purpose: To insert an event into the event table 
+         */
+        public int InsertEvent(StoryEvent storyEvent)
+        {
+            var db = CreateConnection();
             
-            db.Close();
+            //var table = db.Table<CardType>();
+            //int typeId = 0;
+            //bool typeFound = false;
+            //int count = 0; 
+            //foreach (var record in table)
+            //{
+            //    if (record.Type == type)
+            //    {
+            //        typeId = record.Id;
+            //        typeFound = true;
+            //        break; 
+            //    }
+            //}
+
+            //if (typeFound)
+            //{
+            //    nfcEvent.DateTime = DateTime.Now;
+            //    nfcEvent.Value = value;
+            //    nfcEvent.TypeId = typeId;
+            //    count = db.Insert(nfcEvent);
+            //}
+
+            //var eventTable = db.Table<NfcEvent>();
+            //foreach (var i in eventTable)
+            //{
+            //    Console.WriteLine(i.Value  + " "+ i.TypeId);
+            //}
+            //db.Close();
+            var count = db.Insert(storyEvent);
             return count; 
         }
 
-        public int InsertEvent(string type, string value)
+        
+
+        public List<StoryEvent> GetEvents()
         {
             var db = CreateConnection();
-            var nfcEvent = new NfcEvent();
-            var table = db.Table<CardType>();
-            int typeId = 0;
-            bool typeFound = false;
-            int count = 0; 
-            foreach (var record in table)
-            {
-                if (record.Type == type)
-                {
-                    typeId = record.Id;
-                    typeFound = true;
-                    break; 
-                }
-            }
-
-            if (typeFound)
-            {
-                nfcEvent.DateTime = DateTime.Now;
-                nfcEvent.Value = value;
-                nfcEvent.TypeId = typeId;
-                count = db.Insert(nfcEvent);
-            }
-
-            var eventTable = db.Table<NfcEvent>();
-            foreach (var i in eventTable)
-            {
-                Console.WriteLine(i.Value);
-            }
-            db.Close();
-            return count; 
-        }
-
-        public List<NfcEvent> GetEvents()
-        {
-            var db = CreateConnection();
-            var events = db.Query<NfcEvent>("SELECT * FROM NFcEvent WHERE DateTime >= ? AND DateTime <= ?" , new DateTime(DateTime.Now.Year,DateTime.Now.Month, DateTime.Now.Day,0,0,0), new DateTime(DateTime.Now.Year,DateTime.Now.Month, DateTime.Now.Day,23,59,59) ); 
+            var events = db.Query<StoryEvent>("SELECT * FROM StoryEvent WHERE DateTime >= ? AND DateTime <= ?" , new DateTime(DateTime.Now.Year,DateTime.Now.Month, DateTime.Now.Day,0,0,0), new DateTime(DateTime.Now.Year,DateTime.Now.Month, DateTime.Now.Day,23,59,59) ); 
             db.Close();
             return events;  
         }
 
-        public List<NfcEvent> FilterEvents()
+        public List<StoryEvent> GetFilteredEvents()
         {
-            var events = GetEvents();
-           
-            for (int i = 0; i < events.Count; i++)
+           var events = GetEvents();
+           if(events.Count !=0){
+               for (int i = 0; i < events.Count; i++)
+               {
+                   for (int j = 0; j < events.Count; j++)
+                   {
+                       if (j != i)
+                       {
+                           var timeLimit = events[i].DateTime.AddMinutes(10);
+                           int limit;
+                           if (events[i].DateTime.AddHours(1).Hour.Equals(timeLimit.Hour))
+                           {
+                               limit = 100 + timeLimit.Minute; 
+                           }
+                           else
+                           {
+                               limit = timeLimit.Minute;
+                           }
+                           if (events[i].Value.Equals(events[j].Value) &&
+                               events[i].DateTime.Hour.Equals(events[j].DateTime.Hour) && events[j].DateTime.Minute >= events[i].DateTime.Minute && events[j].DateTime.Minute <= limit)
+                           {
+                               events.Remove(events[j]);
+                               j--;
+                           }
+                       }
+
+                   }
+               }
+           }
+
+            foreach (var i in events)
             {
-               
-                for (int j = 0; j < events.Count; j++)
-                {
-                    if (j != i)
-                    {
-                            if (events[i].Value.Equals(events[j].Value) && events[i].DateTime.Hour.Equals(events[j].DateTime.Hour))
-                            {
-
-                                events.Remove(events[j]);
-                                j--;
-
-                            }
-                    
-                    }
-                    
-                }
+                Console.WriteLine(i.DateTime+ " " + i.Value);
             }
             return events; 
         }
+
+        //public void EventGrouping()
+        //{
+        //    var events = GetFilteredEvents();
+        //    Dictionary<StoryEvent,List<StoryEvent>> eventGroups = new Dictionary<StoryEvent, List<StoryEvent>>();
+            
+        //    foreach (var i in events)
+        //    {
+        //        List<StoryEvent> partsOfEvent = new List<StoryEvent>();
+        //        if (i.TypeId.Equals(3))
+        //        {
+        //            foreach (var j in events)
+        //            {
+        //                if (j.TypeId.Equals(1) || j.TypeId.Equals(2) || j.TypeId.Equals(4) ||
+        //                    j.TypeId.Equals(5) || j.TypeId.Equals(6) || j.TypeId.Equals(7) && j.DateTime.Hour.Equals(i.DateTime.Hour))
+        //                {
+        //                    partsOfEvent.Add(j);
+        //                }
+        //            }
+        //            eventGroups.Add(i,partsOfEvent);
+        //        }
+        //    }
+
+        //    foreach (var i in eventGroups)
+        //    {
+        //        if (i.Key.TypeId.Equals(3))
+        //        {
+        //            Console.WriteLine("class or activity: " + i.Key.Value);
+
+        //            if (i.Value.Count.Equals(0))
+        //            {
+        //                Console.WriteLine("No Assisting Activities");
+        //            }
+        //            else
+        //            {
+        //                foreach (var j in i.Value)
+        //                {
+        //                    Console.WriteLine("Has additional events: " + j.Value);
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
     }
 }

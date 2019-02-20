@@ -52,6 +52,30 @@ namespace ShareMyDay.NFC.NFC_Functions
 
         private static NdefMessage CreateCardContent()
         {
+            switch (_typeSelected)
+            {
+                case "Leisure Activity":
+                    _typeSelected = "1";
+                    break; 
+                case "Class Activity":
+                    _typeSelected = "2";
+                    break; 
+                case "Class":
+                    _typeSelected = "3";
+                    break; 
+                case "Item":
+                    _typeSelected = "4";
+                    break; 
+                case "Teacher":
+                    _typeSelected = "5";
+                    break; 
+                case "Friend":
+                    _typeSelected = "6";
+                    break; 
+                case "Visitor":
+                    _typeSelected = "7";
+                    break; 
+            }
             var messageBytes = Encoding.UTF8.GetBytes(_typeSelected + ":" +_inputMessage);
             var mimeBytes = Encoding.UTF8.GetBytes("ShareMyDayTest");
             
