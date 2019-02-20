@@ -2,6 +2,8 @@
 using Android.Content;
 using Android.Widget;
 using System.Collections.Generic;
+using ShareMyDay.Database.Models;
+using ShareMyDay.Story.StoryFunctions;
 
 namespace ShareMyDay.UIComponents
 {
@@ -25,7 +27,17 @@ namespace ShareMyDay.UIComponents
         public void EventsPopulate()
         {
             //TO DO - make call to db to fetch all the events 
-            List<string> list = new List<string> {"one", "two", "three", "four"};
+            StoryGeneration generator = new StoryGeneration(new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3"));
+            List<StoryEvent> events = generator.GetEvents();
+            List<string> list = new List<string>
+            {
+                "New Event"
+            };
+            foreach (var i in events)
+            {
+                list.Add(i.DateTime.ToShortTimeString() + " - " + i.Value);
+            }
+            
             var adapter =  new ArrayAdapter<string>(_context,
                 Android.Resource.Layout.SimpleSpinnerItem, list);
 

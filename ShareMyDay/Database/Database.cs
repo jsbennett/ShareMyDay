@@ -120,7 +120,7 @@ namespace ShareMyDay.Database
 
         
 
-        public List<StoryEvent> GetEvents()
+        public List<StoryEvent> GetUnfilteredEvents()
         {
             var db = CreateConnection();
             var events = db.Query<StoryEvent>("SELECT * FROM StoryEvent WHERE DateTime >= ? AND DateTime <= ?" , new DateTime(DateTime.Now.Year,DateTime.Now.Month, DateTime.Now.Day,0,0,0), new DateTime(DateTime.Now.Year,DateTime.Now.Month, DateTime.Now.Day,23,59,59) ); 
@@ -128,44 +128,43 @@ namespace ShareMyDay.Database
             return events;  
         }
 
-        public List<StoryEvent> GetFilteredEvents()
-        {
-           var events = GetEvents();
-           if(events.Count !=0){
-               for (int i = 0; i < events.Count; i++)
-               {
-                   for (int j = 0; j < events.Count; j++)
-                   {
-                       if (j != i)
-                       {
-                           var timeLimit = events[i].DateTime.AddMinutes(10);
-                           int limit;
-                           if (events[i].DateTime.AddHours(1).Hour.Equals(timeLimit.Hour))
-                           {
-                               limit = 100 + timeLimit.Minute; 
-                           }
-                           else
-                           {
-                               limit = timeLimit.Minute;
-                           }
-                           if (events[i].Value.Equals(events[j].Value) &&
-                               events[i].DateTime.Hour.Equals(events[j].DateTime.Hour) && events[j].DateTime.Minute >= events[i].DateTime.Minute && events[j].DateTime.Minute <= limit)
-                           {
-                               events.Remove(events[j]);
-                               j--;
-                           }
-                       }
+        //public List<StoryEvent> GetEvents()
+        //{
+        //   var events = GetUnfilteredEvents();
+        //   if(events.Count !=0){
+        //       for (int i = 0; i < events.Count; i++)
+        //       {
+        //           for (int j = 0; j < events.Count; j++)
+        //           {
+        //               if (j != i)
+        //               {
+        //                   int limit;
+        //                   if (events[i].DateTime.AddHours(1).Hour.Equals(events[i].DateTime.AddMinutes(10).Hour))
+        //                   {
+        //                       limit = 100 + events[i].DateTime.AddMinutes(10).Minute; 
+        //                   }
+        //                   else
+        //                   {
+        //                       limit = events[i].DateTime.AddMinutes(10).Minute;
+        //                   }
+        //                   if (events[i].Value.Equals(events[j].Value) &&
+        //                       events[i].DateTime.Hour.Equals(events[j].DateTime.Hour) && events[j].DateTime.Minute >= events[i].DateTime.Minute && events[j].DateTime.Minute <= limit)
+        //                   {
+        //                       events.Remove(events[j]);
+        //                       j--;
+        //                   }
+        //               }
 
-                   }
-               }
-           }
+        //           }
+        //       }
+        //   }
 
-            foreach (var i in events)
-            {
-                Console.WriteLine(i.DateTime+ " " + i.Value);
-            }
-            return events; 
-        }
+        //    foreach (var i in events)
+        //    {
+        //        Console.WriteLine(i.DateTime+ " " + i.Value);
+        //    }
+        //    return events; 
+        //}
 
         //public void EventGrouping()
         //{

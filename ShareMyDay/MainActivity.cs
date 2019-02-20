@@ -70,7 +70,7 @@ namespace ShareMyDay
         protected override void OnNewIntent(Intent intent)
         {
             _nfc.CheckCard(intent, this, this, _db);
-            _db.GetFilteredEvents();
+            
         }
     }
 }
