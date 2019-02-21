@@ -21,21 +21,35 @@ namespace ShareMyDay.Activities
             
             Button startRecordingButton = FindViewById<Button> (Resource.Id.startRecordingButton);
             Button playRecordingButton = FindViewById<Button> (Resource.Id.playButton);
+            Button submitButton = FindViewById<Button>(Resource.Id.submitButton);
+            playRecordingButton.Enabled = false; 
             VoiceRecording.VoiceRecording voiceRecorder = new VoiceRecording.VoiceRecording();
             startRecordingButton.Click += delegate {
-                voiceRecorder.Begin(startRecordingButton);
+                if (startRecordingButton.Text.Equals("Redo voice recording"))
+                {
+                    voiceRecorder.Begin(startRecordingButton, submitButton, playRecordingButton, true);
+                }
+                else
+                {
+                    voiceRecorder.Begin(startRecordingButton, submitButton, playRecordingButton, false);
+                }
+               
+                
             };
             playRecordingButton.Click += delegate {
                 voiceRecorder.Play(playRecordingButton);
+                startRecordingButton.Text = "Redo voice recording";
             };
 
-            Button submitButton = FindViewById<Button>(Resource.Id.submitButton);
-
+           
+            submitButton.Enabled = false; 
             bool anotherRecording = false; 
             submitButton.Click += (o, e) => {
                 if (anotherRecording == false)
                 {
                     //submit to database stuff goes here 
+                    Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
+                    db.InsertEvent(voiceRecorder.save());
                     bool uploadedSuccessful = true;
                     if (uploadedSuccessful)
                     {

@@ -1,18 +1,13 @@
 ﻿using Android.App;
 using Android.Content;
 using Android.Nfc;
-using Android.Nfc.Tech;
+using Android.Widget;
+using ShareMyDay.Database.Models;
+using ShareMyDay.NFC.NFC_Functions;
 using ShareMyDay.UIComponents;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Remoting;
-using System.Text;
 using System.Threading.Tasks;
-using Android.Widget;
-using ShareMyDay.Activities;
-using ShareMyDay.Database.Models;
-using ShareMyDay.NFC.NFC_Functions;
 
 
 namespace ShareMyDay.NFC
@@ -20,7 +15,7 @@ namespace ShareMyDay.NFC
     /*
      * Class Name: NFC
      * Purpose: To set up and control NFC card interactions with the phone
-     *  NFC Code adapted from https://www.patrickvankleef.com/2017/01/08/xamarin-near-field-communication/, https://github.com/patkleef/XamarinNFC/blob/master/MainActivity.cs
+     * NFC Code adapted from https://www.patrickvankleef.com/2017/01/08/xamarin-near-field-communication/, https://github.com/patkleef/XamarinNFC/blob/master/MainActivity.cs
      * and Xamarin Mobile Development for Android Cookbook by Matthew Leibowitz page 154 - 159
      *
      */
@@ -104,7 +99,7 @@ namespace ShareMyDay.NFC
             List<string> cardInformation = GetData(intent);
             if (cardInformation[0].Equals("ShareMyDayTest"))
             {
-                if (cardInformation[1] == "Teacher")
+                if (cardInformation[1] == "5")
                 {
  
                     QuickMenuComponent quickMenu = new QuickMenuComponent(activity, context);
