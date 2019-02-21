@@ -103,7 +103,7 @@ namespace ShareMyDay.VoiceRecording
             }
         }
 
-        public StoryEvent save()
+        public StoryEvent Save()
         {
             List<Database.Models.VoiceRecording> recordings = new List<Database.Models.VoiceRecording>();
             foreach (var i in _audioPaths)

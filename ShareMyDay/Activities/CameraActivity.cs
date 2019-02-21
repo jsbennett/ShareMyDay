@@ -35,14 +35,14 @@ namespace ShareMyDay.Activities
             _imageViewer = _camera.GetImageViewer(Resource.Id.imageView, this);
             _camera.Start(_imageViewer, this);
 
-            Button submitButton = FindViewById<Button>(Resource.Id.submitButton);
+            Button submitButton = FindViewById<Button>(Resource.Id.submitButton); 
 
             bool anotherPicture = false; 
             submitButton.Click += (o, e) => {
                 if (anotherPicture == false)
                 {
-                    //submit to database stuff goes here 
-                    bool uploadedSuccessful = true;
+                    Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
+                    bool uploadedSuccessful = db.InsertEvent(_camera.Save()) != 0;
                     if (uploadedSuccessful)
                     {
                         submitButton.Text = "Take Another Picture";

@@ -49,8 +49,8 @@ namespace ShareMyDay.Activities
                 {
                     //submit to database stuff goes here 
                     Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
-                    db.InsertEvent(voiceRecorder.save());
-                    bool uploadedSuccessful = true;
+                    bool uploadedSuccessful = db.InsertEvent(voiceRecorder.Save()) != 0;
+                   
                     if (uploadedSuccessful)
                     {
                         submitButton.Text = "Take Another Voice Recording";

@@ -4,6 +4,8 @@ using Android.Provider;
 using Android.Widget;
 using Java.IO;
 using System;
+using System.Collections.Generic;
+using ShareMyDay.Database.Models;
 using Console = System.Console;
 using Uri = Android.Net.Uri;
 
@@ -19,6 +21,7 @@ namespace ShareMyDay.Camera
         private readonly int _photoCode;
         private File _image;
         private ImageView _imageViewer;
+        private string _url; 
 
         /*
          * Constructor 
@@ -125,10 +128,34 @@ namespace ShareMyDay.Camera
                 if (resultCode == Result.Ok) {
                     Console.WriteLine(Uri.Parse ("file://" + camera.GetImage().AbsolutePath));
                     _imageViewer.SetImageURI (Uri.Parse ("file://" + camera.GetImage().AbsolutePath));
+                    _url = "file://" + camera.GetImage().AbsolutePath;
                 } else {
                     Toast.MakeText (activity, "Canceled photo.", ToastLength.Short).Show ();
                 }
             }
+        }
+
+        public string GetImageURL()
+        {
+            return _url;
+
+        }
+        public StoryEvent Save()
+        {
+            StoryEvent storyEvent = new StoryEvent
+            {
+                Value = DateTime.Now.ToLongTimeString() + " Picture Taken",
+                DateTime = DateTime.Now, 
+                Pictures = new List<Picture>
+                {
+                    new Picture
+                    {
+                        Path = GetImageURL()
+                    }
+
+                }
+            };
+            return storyEvent;
         }
     }
 }
