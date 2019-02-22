@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Android.Views.Accessibility;
 using ShareMyDay.Database.Models;
 
 namespace ShareMyDay.Story.StoryFunctions
@@ -15,17 +16,77 @@ namespace ShareMyDay.Story.StoryFunctions
 
         public void Create()
         {
+            var storyEvents = GetEvents();
+            List<Database.Models.Story> stories = new List<Database.Models.Story>();
+            List<StoryEvent> finalEvents = new List<StoryEvent>();
+            for (var i = 0; i < storyEvents.Count; i++)
+            {
+                //if only cards
+                if ((storyEvents[i].Pictures == null || storyEvents[i].Pictures.Count.Equals(0)) && (storyEvents[i].VoiceRecordings == null || storyEvents[i].VoiceRecordings.Count.Equals(0)) && storyEvents[i].Cards!=null)
+                {
+                    if (storyEvents[i].Cards.Count != 0)
+                    {
+                        //need to loop through the rest to find if there are any voice recordings or pictures for the card to join with within 10 minutes from i.datetime
+                        //if there is none then it gets added as its own story 
+                    }
 
-            
-            //get all events from todays date - DONE 
-            //check if they have pictures and/or voice recordings
-            //if they dont have any then it is not to be made into a story 
-            //if they have a voice recording but no picture then assign picture from picture bank 
-            //check the time of the events - DONE
-            //if type of event is class or activity and the value is the same in multiple events within the same hour i.e how long a school period lasts then only take one - DONE
-            //if event is of type friend, item, visitor, teacher then get their time and compare it to the times from the events classed as an activity or class
-            //if its in the same hour time frame then it is in that class or activity. 
-            //then massive if statement to create sentences for activities and classes 
+                }
+
+                //if only pictures
+                if ((storyEvents[i].Cards == null || storyEvents[i].Cards.Count.Equals(0)) && (storyEvents[i].VoiceRecordings == null || storyEvents[i].VoiceRecordings.Count.Equals(0)) && storyEvents[i].Pictures
+                    !=null)
+                {
+                    if (storyEvents[i].Pictures.Count != 0)
+                    {
+                        //need to loop through the rest to find if there are any voice recordings or cards for the card to join with within 10 minutes from i.datetime
+                        //if there is none then it gets added as its own story 
+                    }
+
+                }
+
+                //if only voice recordings
+                if ((storyEvents[i].Cards == null || storyEvents[i].Cards.Count.Equals(0)) && (storyEvents[i].Pictures == null || storyEvents[i].Pictures.Count.Equals(0)) && storyEvents[i].VoiceRecordings
+                    !=null)
+                {
+                    if (storyEvents[i].VoiceRecordings.Count != 0)
+                    {
+                        //need to loop through the rest to find if there are any pictures or cards for the card to join with within 10 minutes from i.datetime
+                        //if there is none then it gets added as its own story 
+                    }
+
+                }
+
+                //if only pictures and voice recording
+                if ((storyEvents[i].Pictures != null && !storyEvents[i].Pictures.Count.Equals(0)) && (storyEvents[i].VoiceRecordings != null && !storyEvents[i].VoiceRecordings.Count.Equals(0)) && (storyEvents[i].Cards ==null || storyEvents[i].Cards.Count.Equals(0)))
+                {
+                    
+                    //make into story as it has enough information 
+                }
+
+                //if only picture and card
+                if ((storyEvents[i].Pictures != null && !storyEvents[i].Pictures.Count.Equals(0)) && (storyEvents[i].VoiceRecordings == null || storyEvents[i].VoiceRecordings.Count.Equals(0)) && (storyEvents[i].Cards !=null && !storyEvents[i].Cards.Count.Equals(0)))
+                {
+                    
+                    //make into story as it has enough information - create sentence from card information to be used as a voice recording 
+                }
+
+                //if only voice recordings and card
+                if ((storyEvents[i].Pictures == null || storyEvents[i].Pictures.Count.Equals(0)) && (storyEvents[i].VoiceRecordings != null && !storyEvents[i].VoiceRecordings.Count.Equals(0)) && (storyEvents[i].Cards !=null && !storyEvents[i].Cards.Count.Equals(0)))
+                {
+                    
+                    //make into story as it has enough information - chose picture from picture pool 
+                }
+
+
+                //if pictures, voice recordings and cards 
+                if ((storyEvents[i].Pictures != null && !storyEvents[i].Pictures.Count.Equals(0)) && (storyEvents[i].VoiceRecordings != null && !storyEvents[i].VoiceRecordings.Count.Equals(0)) && (storyEvents[i].Cards !=null && !storyEvents[i].Cards.Count.Equals(0)))
+                {
+                    
+                    //make into story as it has enough information 
+                }
+
+               
+            }
         }
 
         public List<StoryEvent> GetEvents()

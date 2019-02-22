@@ -26,7 +26,6 @@ namespace ShareMyDay.UIComponents
 
         public void EventsPopulate()
         {
-            //TO DO - make call to db to fetch all the events 
             StoryGeneration generator = new StoryGeneration(new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3"));
             List<StoryEvent> events = generator.GetEvents();
             List<string> list = new List<string>

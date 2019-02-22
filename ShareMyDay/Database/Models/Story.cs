@@ -9,6 +9,8 @@ namespace ShareMyDay.Database.Models
     {
         [PrimaryKey,AutoIncrement]
         public int Id { get; set; }
+
+        public string StoryType { get; set; }
         
         public string Value { get; set; }
         
