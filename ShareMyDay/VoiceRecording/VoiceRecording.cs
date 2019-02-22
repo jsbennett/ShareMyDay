@@ -116,7 +116,7 @@ namespace ShareMyDay.VoiceRecording
 
             StoryEvent storyEvent = new StoryEvent
             {
-                Value = DateTime.Now.ToLongTimeString() + " Voice Recording",
+                Value = DateTime.Now.ToLongTimeString() +  "-"  + "Voice Recording",
                 DateTime = DateTime.Now, 
                 VoiceRecordings = recordings
             };

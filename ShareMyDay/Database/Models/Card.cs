@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using SQLiteNetExtensions.Attributes;
 
 namespace ShareMyDay.Database.Models
 {
@@ -6,6 +7,9 @@ namespace ShareMyDay.Database.Models
     {
         [PrimaryKey,AutoIncrement]
         public int Id { get; set; }
+
+        [ForeignKey(typeof(StoryEvent))]
+        public int StoryEventId { get; set; }
 
         public string Type { get; set; }
 

@@ -49,7 +49,7 @@ namespace ShareMyDay.Activities
                 {
                     //submit to database stuff goes here 
                     Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
-                    bool uploadedSuccessful = db.InsertEvent(voiceRecorder.Save()) != 0;
+                    bool uploadedSuccessful = true; //db.InsertEvent(voiceRecorder.Save()) != 0;
                    
                     if (uploadedSuccessful)
                     {

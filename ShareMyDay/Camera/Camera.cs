@@ -6,6 +6,7 @@ using Java.IO;
 using System;
 using System.Collections.Generic;
 using ShareMyDay.Database.Models;
+using ShareMyDay.UIComponents;
 using Console = System.Console;
 using Uri = Android.Net.Uri;
 
@@ -140,22 +141,37 @@ namespace ShareMyDay.Camera
             return _url;
 
         }
-        public StoryEvent Save()
+        public bool SaveNewEvent()
         {
+            Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             StoryEvent storyEvent = new StoryEvent
             {
-                Value = DateTime.Now.ToLongTimeString() + " Picture Taken",
-                DateTime = DateTime.Now, 
-                Pictures = new List<Picture>
-                {
-                    new Picture
-                    {
-                        Path = GetImageURL()
-                    }
-
-                }
+                Value = DateTime.Now.ToLongTimeString() +  "-" + "Picture Taken",
+                DateTime = DateTime.Now
             };
-            return storyEvent;
+
+            var picture = new Picture {
+                NfcEventId = storyEvent.Id,
+                Path = GetImageURL()
+
+            };
+                 
+            return db.InsertEvent(true, storyEvent, null, picture, null) != 0;
+
+        }
+
+        public bool SaveExistingEvent(SpinnerComponent spinner)
+        {
+            
+            Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
+            var storyEvent = db.FindByValue(spinner.GetSelected());
+            var picture = new Picture {
+                NfcEventId = storyEvent.Id,
+                Path = GetImageURL()
+
+            };
+
+            return db.InsertEvent(false, storyEvent, null, picture, null) != 0;
         }
     }
 }

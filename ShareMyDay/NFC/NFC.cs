@@ -109,18 +109,19 @@ namespace ShareMyDay.NFC
                 {
                     StoryEvent storyEvent = new StoryEvent
                     {
-                        Value = cardInformation[2],
-                        DateTime = DateTime.Now, 
-                        Cards = new List<Card> {
-                            new Card
-                            {
-                                Type = cardInformation[1],
-                                Message = cardInformation[2]
-                            }
-                        }
+                        Value = DateTime.Now.ToLongTimeString() + "-Card-" + cardInformation[2],
+                        DateTime = DateTime.Now
                     };
-                    bool successful = db.InsertEvent(storyEvent) != 0; 
-
+                    
+                    var card = new Card
+                    {
+                        StoryEventId = storyEvent.Id,
+                        Type = cardInformation[1],
+                        Message = cardInformation[2]
+                    };
+                 
+                    bool successful = db.InsertEvent(true, storyEvent, card, null, null) != 0;
+          
                     if (successful)
                     {
                         string message = cardInformation[2] + " has been recorded"; 

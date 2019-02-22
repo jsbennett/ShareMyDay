@@ -41,8 +41,18 @@ namespace ShareMyDay.Activities
             submitButton.Click += (o, e) => {
                 if (anotherPicture == false)
                 {
-                    Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
-                    bool uploadedSuccessful = db.InsertEvent(_camera.Save()) != 0;
+                   
+                    bool uploadedSuccessful;
+                    if (spinner.GetSelected().Equals("New Event"))
+                    {
+                        uploadedSuccessful =_camera.SaveNewEvent();
+                    }
+                    else
+                    {
+                        uploadedSuccessful = _camera.SaveExistingEvent(spinner); 
+                    }
+
+             
                     if (uploadedSuccessful)
                     {
                         submitButton.Text = "Take Another Picture";

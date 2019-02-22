@@ -30,7 +30,8 @@ namespace ShareMyDay.Story.StoryFunctions
         public List<StoryEvent> GetEvents()
         {
             var events = _db.GetUnfilteredEvents();
-            if(events.Count !=0){
+            if (events.Count != 0)
+            {
                 for (int i = 0; i < events.Count; i++)
                 {
                     for (int j = 0; j < events.Count; j++)
@@ -40,14 +41,16 @@ namespace ShareMyDay.Story.StoryFunctions
                             int limit;
                             if (events[i].DateTime.AddHours(1).Hour.Equals(events[i].DateTime.AddMinutes(10).Hour))
                             {
-                                limit = 100 + events[i].DateTime.AddMinutes(10).Minute; 
+                                limit = 100 + events[i].DateTime.AddMinutes(10).Minute;
                             }
                             else
                             {
                                 limit = events[i].DateTime.AddMinutes(10).Minute;
                             }
-                            if (events[i].Value.Equals(events[j].Value) &&
-                                events[i].DateTime.Hour.Equals(events[j].DateTime.Hour) && events[j].DateTime.Minute >= events[i].DateTime.Minute && events[j].DateTime.Minute <= limit)
+                            string[] outerLoopValues = events[i].Value.Split('-');
+                            string[] innerLoopValues = events[j].Value.Split('-');
+                            if(outerLoopValues[1].Equals("Card") && innerLoopValues[1].Equals("Card") &&  outerLoopValues[2].Equals(innerLoopValues[2]) &&
+                               events[i].DateTime.Hour.Equals(events[j].DateTime.Hour) && events[j].DateTime.Minute >= events[i].DateTime.Minute && events[j].DateTime.Minute <= limit)
                             {
                                 events.Remove(events[j]);
                                 j--;
@@ -60,9 +63,9 @@ namespace ShareMyDay.Story.StoryFunctions
 
             foreach (var i in events)
             {
-                Console.WriteLine(i.DateTime+ " " + i.Value);
+                Console.WriteLine(i.DateTime + " " + i.Value);
             }
-            return events; 
+            return events;
         }
     }
 }

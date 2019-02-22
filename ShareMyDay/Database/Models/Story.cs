@@ -16,5 +16,7 @@ namespace ShareMyDay.Database.Models
        
         [OneToMany]	        
         public List<StoryEvent> Events { get; set; }
+
+        public bool Favourite { get; set; }
     }
 }

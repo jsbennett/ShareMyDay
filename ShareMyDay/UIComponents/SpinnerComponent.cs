@@ -35,7 +35,7 @@ namespace ShareMyDay.UIComponents
             };
             foreach (var i in events)
             {
-                list.Add(i.DateTime.ToShortTimeString() + " - " + i.Value);
+                list.Add(i.Value);
             }
             
             var adapter =  new ArrayAdapter<string>(_context,

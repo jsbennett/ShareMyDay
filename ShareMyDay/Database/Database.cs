@@ -4,6 +4,7 @@ using System.Diagnostics;
 using ShareMyDay.Database.Models;
 using ShareMyDay.Story.Models;
 using SQLite;
+using SQLiteNetExtensions.Extensions;
 using Picture = ShareMyDay.Database.Models.Picture;
 
 namespace ShareMyDay.Database
@@ -82,43 +83,79 @@ namespace ShareMyDay.Database
          * Method Name: InsertEvent
          * Purpose: To insert an event into the event table 
          */
-        public int InsertEvent(StoryEvent storyEvent)
+        public int InsertEvent(Boolean newEvent, StoryEvent storyEvent, Card card, Picture picture, Models.VoiceRecording voiceRecording)
         {
+            int count = 0; 
             var db = CreateConnection();
+            if (newEvent)
+            {
+                count += db.Insert(storyEvent);
+            }
             
-            //var table = db.Table<CardType>();
-            //int typeId = 0;
-            //bool typeFound = false;
-            //int count = 0; 
-            //foreach (var record in table)
-            //{
-            //    if (record.Type == type)
-            //    {
-            //        typeId = record.Id;
-            //        typeFound = true;
-            //        break; 
-            //    }
-            //}
+            if (card != null)
+            {
+                count+= db.Insert(card);
 
-            //if (typeFound)
-            //{
-            //    nfcEvent.DateTime = DateTime.Now;
-            //    nfcEvent.Value = value;
-            //    nfcEvent.TypeId = typeId;
-            //    count = db.Insert(nfcEvent);
-            //}
+                if (storyEvent.Cards==null || storyEvent.Cards.Count.Equals(0))
+                {
+                    storyEvent.Cards = new List<Card>{card};
+                }
+                else
+                {
+                    storyEvent.Cards.Add(card);
+                }
+            }
 
-            //var eventTable = db.Table<NfcEvent>();
-            //foreach (var i in eventTable)
-            //{
-            //    Console.WriteLine(i.Value  + " "+ i.TypeId);
-            //}
-            //db.Close();
-            var count = db.Insert(storyEvent);
+            if (picture != null)
+            {
+                count += db.Insert(picture);
+                if (storyEvent.Pictures==null ||storyEvent.Pictures.Count.Equals(0))
+                {
+                    storyEvent.Pictures = new List<Picture>{picture};
+                }
+                else
+                {
+                    storyEvent.Pictures.Add(picture);
+                }
+            }
+
+            if (voiceRecording != null)
+            {
+               count+= db.Insert(voiceRecording);
+                if (storyEvent.VoiceRecordings==null ||storyEvent.VoiceRecordings.Count.Equals(0))
+                {
+                    storyEvent.VoiceRecordings = new List<Models.VoiceRecording>{voiceRecording};
+                }
+                else
+                {
+                    storyEvent.VoiceRecordings.Add(voiceRecording);
+                }
+            }
+            db.UpdateWithChildren(storyEvent);
+            
+            db.Close();
             return count; 
+
         }
 
-        
+        public StoryEvent FindByValue(string value)
+        {
+            var db = CreateConnection();
+            var result = db.Query<StoryEvent>("SELECT * FROM StoryEvent WHERE Value == ?" , value );
+            var storyEvent = db.GetWithChildren<StoryEvent>(result[0].Id);
+            db.Close();
+            return storyEvent; 
+        } 
+
+        public int UpdateEvent(StoryEvent storyEvent)
+        {
+            var db = CreateConnection();
+            db.Update(storyEvent); 
+            var result = db.Table<StoryEvent>().FirstOrDefault(x => x.Id == storyEvent.Id);
+            Console.WriteLine(result.Value + " Pictures: " + result.Pictures.Count + " VCs: " + result.VoiceRecordings.Count);
+            db.Close();
+            return 1; 
+        }
 
         public List<StoryEvent> GetUnfilteredEvents()
         {
@@ -130,47 +167,50 @@ namespace ShareMyDay.Database
 
         //public List<StoryEvent> GetEvents()
         //{
-        //   var events = GetUnfilteredEvents();
-        //   if(events.Count !=0){
-        //       for (int i = 0; i < events.Count; i++)
-        //       {
-        //           for (int j = 0; j < events.Count; j++)
-        //           {
-        //               if (j != i)
-        //               {
-        //                   int limit;
-        //                   if (events[i].DateTime.AddHours(1).Hour.Equals(events[i].DateTime.AddMinutes(10).Hour))
-        //                   {
-        //                       limit = 100 + events[i].DateTime.AddMinutes(10).Minute; 
-        //                   }
-        //                   else
-        //                   {
-        //                       limit = events[i].DateTime.AddMinutes(10).Minute;
-        //                   }
-        //                   if (events[i].Value.Equals(events[j].Value) &&
+        //    var events = GetUnfilteredEvents();
+        //    if (events.Count != 0)
+        //    {
+        //        for (int i = 0; i < events.Count; i++)
+        //        {
+        //            for (int j = 0; j < events.Count; j++)
+        //            {
+        //                if (j != i)
+        //                {
+        //                    int limit;
+        //                    if (events[i].DateTime.AddHours(1).Hour.Equals(events[i].DateTime.AddMinutes(10).Hour))
+        //                    {
+        //                        limit = 100 + events[i].DateTime.AddMinutes(10).Minute;
+        //                    }
+        //                    else
+        //                    {
+        //                        limit = events[i].DateTime.AddMinutes(10).Minute;
+        //                    }
+        //                    string[] outerLoopValues = events[i].Value.Split('-');
+        //                    string[] innerLoopValues = events[j].Value.Split('-');
+        //                    if(outerLoopValues[1].Equals("Card") && innerLoopValues[1].Equals("Card") &&
         //                       events[i].DateTime.Hour.Equals(events[j].DateTime.Hour) && events[j].DateTime.Minute >= events[i].DateTime.Minute && events[j].DateTime.Minute <= limit)
-        //                   {
-        //                       events.Remove(events[j]);
-        //                       j--;
-        //                   }
-        //               }
+        //                    {
+        //                        events.Remove(events[j]);
+        //                        j--;
+        //                    }
+        //                }
 
-        //           }
-        //       }
-        //   }
+        //            }
+        //        }
+        //    }
 
         //    foreach (var i in events)
         //    {
-        //        Console.WriteLine(i.DateTime+ " " + i.Value);
+        //        Console.WriteLine(i.DateTime + " " + i.Value);
         //    }
-        //    return events; 
+        //    return events;
         //}
 
         //public void EventGrouping()
         //{
         //    var events = GetFilteredEvents();
         //    Dictionary<StoryEvent,List<StoryEvent>> eventGroups = new Dictionary<StoryEvent, List<StoryEvent>>();
-            
+
         //    foreach (var i in events)
         //    {
         //        List<StoryEvent> partsOfEvent = new List<StoryEvent>();
