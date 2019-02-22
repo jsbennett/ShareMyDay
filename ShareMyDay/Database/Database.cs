@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using ShareMyDay.Database.Models;
-using ShareMyDay.Story.Models;
+﻿using ShareMyDay.Database.Models;
 using SQLite;
 using SQLiteNetExtensions.Extensions;
+using System;
+using System.Collections.Generic;
 using Picture = ShareMyDay.Database.Models.Picture;
 
 namespace ShareMyDay.Database

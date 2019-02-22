@@ -15,6 +15,7 @@ namespace ShareMyDay.Story.StoryFunctions
 
         public void Create()
         {
+
             
             //get all events from todays date - DONE 
             //check if they have pictures and/or voice recordings
