@@ -48,12 +48,21 @@ namespace ShareMyDay.Activities
                 if (anotherRecording == false)
                 {
                     //submit to database stuff goes here 
-                    Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
-                    bool uploadedSuccessful = true; //db.InsertEvent(voiceRecorder.Save()) != 0;
-                   
+                    
+                    bool uploadedSuccessful;
+                    if (spinner.GetSelected().Equals("New Event"))
+                    {
+                        uploadedSuccessful =voiceRecorder.SaveNewEvent();
+                    }
+                    else
+                    {
+                        uploadedSuccessful = voiceRecorder.SaveExistingEvent(spinner); 
+                    }
                     if (uploadedSuccessful)
                     {
                         submitButton.Text = "Take Another Voice Recording";
+                        startRecordingButton.Enabled = false;
+                        playRecordingButton.Enabled = false; 
                         AlertBoxComponent voiceRecording = new AlertBoxComponent(this);
                         voiceRecording.RepeateFunctionSetup<CameraActivity>("Take Picture",
                             "Do you want to take a picture?", this, this, previousActivity);

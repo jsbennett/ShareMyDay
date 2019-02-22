@@ -83,7 +83,7 @@ namespace ShareMyDay.Database
          * Method Name: InsertEvent
          * Purpose: To insert an event into the event table 
          */
-        public int InsertEvent(Boolean newEvent, StoryEvent storyEvent, Card card, Picture picture, Models.VoiceRecording voiceRecording)
+        public int InsertEvent(Boolean newEvent, StoryEvent storyEvent, Card card, Picture picture, List<Models.VoiceRecording> voiceRecording)
         {
             int count = 0; 
             var db = CreateConnection();
@@ -121,14 +121,25 @@ namespace ShareMyDay.Database
 
             if (voiceRecording != null)
             {
-               count+= db.Insert(voiceRecording);
+               
+                foreach (var i in voiceRecording)
+                {
+                    count =+ db.Insert(i);
+                }
                 if (storyEvent.VoiceRecordings==null ||storyEvent.VoiceRecordings.Count.Equals(0))
                 {
-                    storyEvent.VoiceRecordings = new List<Models.VoiceRecording>{voiceRecording};
+                    storyEvent.VoiceRecordings = new List<Models.VoiceRecording>();
+                    foreach (var i in voiceRecording)
+                    {
+                        storyEvent.VoiceRecordings.Add(i);
+                    }
                 }
                 else
                 {
-                    storyEvent.VoiceRecordings.Add(voiceRecording);
+                    foreach (var i in voiceRecording)
+                    {
+                        storyEvent.VoiceRecordings.Add(i);
+                    }
                 }
             }
             db.UpdateWithChildren(storyEvent);

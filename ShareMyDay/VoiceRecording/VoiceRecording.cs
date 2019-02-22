@@ -4,6 +4,7 @@ using Android.Widget;
 using System;
 using System.Collections.Generic;
 using ShareMyDay.Database.Models;
+using ShareMyDay.UIComponents;
 using Path = System.IO.Path;
 
 namespace ShareMyDay.VoiceRecording
@@ -102,25 +103,45 @@ namespace ShareMyDay.VoiceRecording
                 }
             }
         }
-
-        public StoryEvent Save()
+        
+        public bool SaveNewEvent()
         {
+            Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
+            StoryEvent storyEvent = new StoryEvent
+            {
+                Value = DateTime.Now.ToLongTimeString() +  "-" + "Voice Recording Taken",
+                DateTime = DateTime.Now
+            };
             List<Database.Models.VoiceRecording> recordings = new List<Database.Models.VoiceRecording>();
             foreach (var i in _audioPaths)
             {
                 recordings.Add(new Database.Models.VoiceRecording
                 {
+                    NfcEventId = storyEvent.Id,
+                    Path = i
+                });
+            }
+                 
+            return db.InsertEvent(true, storyEvent, null, null, recordings) != 0;
+
+        }
+
+        public bool SaveExistingEvent(SpinnerComponent spinner)
+        {
+            
+            Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
+            var storyEvent = db.FindByValue(spinner.GetSelected());
+            List<Database.Models.VoiceRecording> recordings = new List<Database.Models.VoiceRecording>();
+            foreach (var i in _audioPaths)
+            {
+                recordings.Add(new Database.Models.VoiceRecording
+                {
+                    NfcEventId = storyEvent.Id,
                     Path = i
                 });
             }
 
-            StoryEvent storyEvent = new StoryEvent
-            {
-                Value = DateTime.Now.ToLongTimeString() +  "-"  + "Voice Recording",
-                DateTime = DateTime.Now, 
-                VoiceRecordings = recordings
-            };
-            return storyEvent;
+            return db.InsertEvent(false, storyEvent, null, null, recordings) != 0;
         }
         
     }
