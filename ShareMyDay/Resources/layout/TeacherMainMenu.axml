@@ -58,11 +58,11 @@ card"
 			android:layout_weight="1"
 			android:id="@+id/addNewCard" />
 		<Button
-			android:text="Update 
-card"
+			android:text="Edit  
+Events"
 			android:layout_width="wrap_content"
 			android:layout_height="match_parent"
 			android:layout_weight="1"
-			android:id="@+id/updateCard" />
+			android:id="@+id/editEvents" />
 		</LinearLayout>
 </LinearLayout>

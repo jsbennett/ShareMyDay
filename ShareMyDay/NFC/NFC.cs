@@ -97,44 +97,66 @@ namespace ShareMyDay.NFC
         public void CheckCard(Intent intent, Context context, Activity activity, Database.Database db)
         {
             List<string> cardInformation = GetData(intent);
-            if (cardInformation[0].Equals("ShareMyDayTest"))
+            QuickMenuComponent quickMenu = new QuickMenuComponent(activity, context);
+            quickMenu.Show();
+            StoryEvent storyEvent = new StoryEvent
             {
-                if (cardInformation[1] == "5")
-                {
- 
-                    QuickMenuComponent quickMenu = new QuickMenuComponent(activity, context);
-                    quickMenu.Show();
-                }
-                else
-                {
-                    StoryEvent storyEvent = new StoryEvent
-                    {
-                        Value = DateTime.Now.ToLongTimeString() + "-Card-" + cardInformation[2],
-                        DateTime = DateTime.Now
-                    };
-                    
-                    var card = new Card
-                    {
-                        StoryEventId = storyEvent.Id,
-                        Type = cardInformation[1],
-                        Message = cardInformation[2]
-                    };
-                 
-                    bool successful = db.InsertEvent(true, storyEvent, card, null, null) != 0;
-          
-                    if (successful)
-                    {
-                        string message = cardInformation[2] + " has been recorded"; 
-                        Toast.MakeText (context, message, ToastLength.Short).Show ();
-                    }
-                }
-            }
-            else
+                Value = DateTime.Now.ToLongTimeString() + "-Card-" + cardInformation[2],
+                DateTime = DateTime.Now
+            };
+
+            var card = new Card
             {
-                AlertBoxComponent invalidNfcAlertBox = new AlertBoxComponent(context);
-                invalidNfcAlertBox.Setup("Invalid Card","The scanned card is not compatible with Share My Day. Please try a different card.");
-                invalidNfcAlertBox.Show();
+                StoryEventId = storyEvent.Id,
+                Type = cardInformation[1],
+                Message = cardInformation[2]
+            };
+
+            bool successful = db.InsertEvent(true, storyEvent, card, null, null) != 0;
+
+            if (successful)
+            {
+                string message = cardInformation[2] + " has been recorded";
+                Toast.MakeText(context, message, ToastLength.Short).Show();
             }
+            //if (cardInformation[0].Equals("ShareMyDayTest"))
+            //{
+            //    if (cardInformation[1] == "5")
+            //    {
+
+            //        QuickMenuComponent quickMenu = new QuickMenuComponent(activity, context);
+            //        quickMenu.Show();
+            //    }
+            //    else
+            //    {
+            //        StoryEvent storyEvent = new StoryEvent
+            //        {
+            //            Value = DateTime.Now.ToLongTimeString() + "-Card-" + cardInformation[2],
+            //            DateTime = DateTime.Now
+            //        };
+
+            //        var card = new Card
+            //        {
+            //            StoryEventId = storyEvent.Id,
+            //            Type = cardInformation[1],
+            //            Message = cardInformation[2]
+            //        };
+
+            //        bool successful = db.InsertEvent(true, storyEvent, card, null, null) != 0;
+
+            //        if (successful)
+            //        {
+            //            string message = cardInformation[2] + " has been recorded"; 
+            //            Toast.MakeText (context, message, ToastLength.Short).Show ();
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    AlertBoxComponent invalidNfcAlertBox = new AlertBoxComponent(context);
+            //    invalidNfcAlertBox.Setup("Invalid Card","The scanned card is not compatible with Share My Day. Please try a different card.");
+            //    invalidNfcAlertBox.Show();
+            //}
         }
 
     }

@@ -67,16 +67,14 @@ namespace ShareMyDay.VoiceRecording
             }
         }
 
-        public void Play(Button button)
+        public void Play()
         {
-            //send it to db class 
             List<string> copy = new List<string>();
             for (int i = 0; i < _audioPaths.Count; i++)
             {
                 copy.Add(_audioPaths[i]);
             }
             
-        
             PlayRecordings(copy);
         }
 

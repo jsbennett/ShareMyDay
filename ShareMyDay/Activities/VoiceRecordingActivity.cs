@@ -37,7 +37,7 @@ namespace ShareMyDay.Activities
                 
             };
             playRecordingButton.Click += delegate {
-                voiceRecorder.Play(playRecordingButton);
+                voiceRecorder.Play();
                 startRecordingButton.Text = "Redo voice recording";
             };
 

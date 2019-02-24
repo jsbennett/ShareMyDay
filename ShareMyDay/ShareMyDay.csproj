@@ -58,6 +58,8 @@
   <ItemGroup>
     <Compile Include="Activities\AddUpdateNFcCardActivity.cs" />
     <Compile Include="Activities\CameraActivity.cs" />
+    <Compile Include="Activities\EditEventsActivity.cs" />
+    <Compile Include="Activities\EventListActivity.cs" />
     <Compile Include="Activities\StoryActivity.cs" />
     <Compile Include="Activities\TeacherMainMenuActivity.cs" />
     <Compile Include="Activities\TodayStoryActivity.cs" />
@@ -159,6 +161,11 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidResource Include="Resources\layout\TodayStoryView.axml">
+      <SubType>Designer</SubType>
+    </AndroidResource>
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\layout\EditEventView.axml">
       <SubType>Designer</SubType>
     </AndroidResource>
   </ItemGroup>

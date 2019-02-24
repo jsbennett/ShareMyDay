@@ -15,7 +15,7 @@ namespace ShareMyDay.Activities
             SetContentView(Resource.Layout.TeacherMainMenu);
 
             Button addNfcButton = FindViewById<Button> (Resource.Id.addNewCard);
-            Button updateNfcButton = FindViewById<Button>(Resource.Id.updateCard);
+            Button editEventcButton = FindViewById<Button>(Resource.Id.editEvents);
             Button takePictureButton = FindViewById<Button>(Resource.Id.takePicture);
             Button makeVoiceRecordingButton = FindViewById<Button>(Resource.Id.makeVoiceRecording); 
             
@@ -26,10 +26,10 @@ namespace ShareMyDay.Activities
                 StartActivity(addNfcIntent);
             };
 
-            updateNfcButton.Click += delegate
+            editEventcButton.Click += delegate
             {
-                Intent updateNfcIntent = new Intent(this, typeof(AddUpdateNFcCardActivity));
-                StartActivity(updateNfcIntent);
+                Intent editEventIntent = new Intent(this, typeof(EventListActivity));
+                StartActivity(editEventIntent);
             };
 
             takePictureButton.Click += delegate
