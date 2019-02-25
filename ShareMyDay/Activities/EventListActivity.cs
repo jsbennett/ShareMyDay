@@ -62,6 +62,20 @@ namespace ShareMyDay.Activities
                 
             }
 
+            Button close = new Button(this)
+            {
+                Text = "Back"
+            };
+
+            close.Click += delegate
+            {
+                Intent back = new Intent(this, typeof(TeacherMainMenuActivity));
+                StartActivity(back);
+            };
+
+            buttonLayout.AddView(close, ViewGroup.LayoutParams.MatchParent,    
+                300);
+
             innerLayout.AddView( buttonLayout,     
                 ViewGroup.LayoutParams.MatchParent,    
                 ViewGroup.LayoutParams.WrapContent);

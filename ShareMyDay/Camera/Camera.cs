@@ -4,7 +4,6 @@ using Android.Provider;
 using Android.Widget;
 using Java.IO;
 using System;
-using System.Collections.Generic;
 using ShareMyDay.Database.Models;
 using ShareMyDay.UIComponents;
 using Console = System.Console;
@@ -127,9 +126,9 @@ namespace ShareMyDay.Camera
             if (requestCode == _photoCode) {
                 
                 if (resultCode == Result.Ok) {
-                    Console.WriteLine(Uri.Parse ("file://" + camera.GetImage().AbsolutePath));
-                    _imageViewer.SetImageURI (Uri.Parse ("file://" + camera.GetImage().AbsolutePath));
-                    _url = "file://" + camera.GetImage().AbsolutePath;
+                    Console.WriteLine(Uri.Parse (camera.GetImage().AbsolutePath));
+                    _imageViewer.SetImageURI (Uri.Parse (camera.GetImage().AbsolutePath));
+                    _url = camera.GetImage().AbsolutePath;
                 } else {
                     Toast.MakeText (activity, "Canceled photo.", ToastLength.Short).Show ();
                 }

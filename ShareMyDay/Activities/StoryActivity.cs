@@ -1,5 +1,7 @@
-﻿using Android.App;
+﻿using System.Threading.Tasks;
+using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Widget;
 using ShareMyDay.UIComponents;
@@ -11,7 +13,7 @@ namespace ShareMyDay.Activities
     public class StoryActivity : Activity
     {
         private string story; 
-        protected override void OnCreate(Bundle savedInstanceState)
+        protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.StoryView);
@@ -42,7 +44,18 @@ namespace ShareMyDay.Activities
                     alert.Setup("this","clicked");
                     alert.Show();
                 };
-                pictureButton.SetImageURI(Uri.Parse("file:///storage/emulated/0/Pictures/ShareMyDayDev/imagecefc15c6-52ec-42b1-90b0-e9f433476330.jpg"));
+                var options = new BitmapFactory.Options {InJustDecodeBounds = true};
+
+                var sample = 4;
+                options.InSampleSize = sample;
+                        
+                options.InJustDecodeBounds = false;
+
+                using (var image = await GetImage(options, "PATH"))
+                {
+                        pictureButton.SetImageBitmap(image);
+                        
+                }
                
 
             }
@@ -53,6 +66,23 @@ namespace ShareMyDay.Activities
                 Intent exitIntent = new Intent(this, typeof(MainActivity));
                 StartActivity(exitIntent);
             };
+        }
+
+        public async Task<Bitmap> GetImage(BitmapFactory.Options options, string path)
+        {
+            using (var fs = new System.IO.FileStream("storage/emulated/0/Pictures/ShareMyDayDev/imageeab30d8d-f02d-4a2a-88f8-7f4eac55f139.jpg", System.IO.FileMode.Open))
+            
+            {
+                
+                var bitmap = await BitmapFactory.DecodeStreamAsync (fs, null, options);
+                if (bitmap != null)
+                {
+                    Toast.MakeText(this, "Images Loading...", ToastLength.Short).Show();
+                }
+
+                return bitmap;
+            }
+            
         }
     }
 }
