@@ -147,7 +147,7 @@ namespace ShareMyDay.Database
 
         }
 
-        public int InsertStories(List<StoryEvent> storyEventList)
+        public int InsertStories(List<StoryEvent> storyEventList, bool isExtraStory, bool isTextToSpeech)
         {
             int count = 0; 
             var db = CreateConnection();
@@ -160,7 +160,15 @@ namespace ShareMyDay.Database
             }
 
             story.Events = storyEventList;
+            if (isExtraStory)
+            {
+                story.Extra = true; 
+            }
 
+            if (isTextToSpeech)
+            {
+                story.TextToSpeech = true; 
+            }
             db.UpdateWithChildren(story);
 
             db.Close();

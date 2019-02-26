@@ -10,7 +10,7 @@ namespace ShareMyDay.Database.Models
         [PrimaryKey,AutoIncrement]
         public int Id { get; set; }
 
-        public string StoryType { get; set; }
+        public bool TextToSpeech { get; set; }
         
         public string Value { get; set; }
         
@@ -20,5 +20,7 @@ namespace ShareMyDay.Database.Models
         public List<StoryEvent> Events { get; set; }
 
         public bool Favourite { get; set; }
+
+        public bool Extra { get; set; }
     }
 }
