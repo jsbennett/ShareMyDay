@@ -147,6 +147,27 @@ namespace ShareMyDay.Database
 
         }
 
+        public int InsertStories(List<StoryEvent> storyEventList)
+        {
+            int count = 0; 
+            var db = CreateConnection();
+            var story = new Models.Story();
+            count += db.Insert(story);
+            foreach (var i in storyEventList)
+            {
+                i.StoryId = story.Id;
+                i.InStory = true;
+            }
+
+            story.Events = storyEventList;
+
+            db.UpdateWithChildren(story);
+
+            db.Close();
+
+            return count;
+        }
+
         public StoryEvent FindByValue(string value)
         {
             var db = CreateConnection();

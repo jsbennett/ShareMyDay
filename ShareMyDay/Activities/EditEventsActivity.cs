@@ -40,9 +40,6 @@ namespace ShareMyDay.Activities
                     Text = previousActivity, 
                     TextSize = 30,
                     TextAlignment = TextAlignment.Center
-                    
-                    
-                    
                 };
 
                 informationLayout.AddView(title);

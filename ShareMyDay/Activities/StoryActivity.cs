@@ -4,6 +4,7 @@ using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using Android.Widget;
+using ShareMyDay.Story.StoryFunctions;
 using ShareMyDay.UIComponents;
 using Uri = Android.Net.Uri;
 
@@ -21,6 +22,10 @@ namespace ShareMyDay.Activities
             story = Intent.GetStringExtra("Story");
 
             ImageView pictureButton = FindViewById<ImageView>(Resource.Id.pictureBox);
+            Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
+
+            StoryGeneration storyGeneration = new StoryGeneration(db);
+            storyGeneration.Create();
 
             Button button = FindViewById<Button>(Resource.Id.storyClickButton);
             if (story == "Favourite")
