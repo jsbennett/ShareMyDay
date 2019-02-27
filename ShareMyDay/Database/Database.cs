@@ -147,6 +147,16 @@ namespace ShareMyDay.Database
 
         }
 
+        public void DeleteTableValues()
+        {
+            var db = CreateConnection();
+            db.DeleteAll<Models.Story>();
+            db.DeleteAll<StoryEvent>();
+            db.DeleteAll<Card>();
+            db.DeleteAll<Picture>();
+            db.DeleteAll<Models.VoiceRecording>();
+            db.Close();
+        }
         public int InsertStories(List<StoryEvent> storyEventList, bool isExtraStory, bool isTextToSpeech)
         {
             int count = 0; 
@@ -157,6 +167,7 @@ namespace ShareMyDay.Database
             {
                 i.StoryId = story.Id;
                 i.InStory = true;
+                db.UpdateWithChildren(i);
             }
 
             story.Events = storyEventList;

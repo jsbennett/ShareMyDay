@@ -19,8 +19,7 @@ namespace ShareMyDay.Activities
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.TodayStoryView);
-            //check for events from today from the database
-            //Get all events from the day which have a story i.e a picture or voice recording 
+           //Get all stories from today 
 
             bool eventsFromToday = true;
             if (eventsFromToday)

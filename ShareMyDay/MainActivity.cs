@@ -33,7 +33,7 @@ namespace ShareMyDay
             _db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             _db.Create();
             _db.Setup();
-            
+         
 
             _nfc = new NFC.NFC(this);
 
