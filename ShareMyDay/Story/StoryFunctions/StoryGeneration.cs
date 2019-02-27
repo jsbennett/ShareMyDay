@@ -58,8 +58,8 @@ namespace ShareMyDay.Story.StoryFunctions
                                     }
 
                                     string[] jEvent = storyEvents[j].Value.Split("-");
-                                    if (jEvent[1].Equals("Picture Taken") ||
-                                        jEvent[1].Equals("Voice Recording Taken") && !jEvent[1].Equals("Card") &&
+                                    if ((jEvent[1].Equals("Picture Taken") ||
+                                        jEvent[1].Equals("Voice Recording Taken")) && !jEvent[1].Equals("Card") &&
                                         storyEvents[i].DateTime.Hour.Equals(storyEvents[j].DateTime.Hour) &&
                                         storyEvents[j].DateTime.Minute >= storyEvents[i].DateTime.Minute &&
                                         storyEvents[j].DateTime.Minute <= limit)
@@ -112,9 +112,9 @@ namespace ShareMyDay.Story.StoryFunctions
                                     }
 
                                     string[] jEvent = storyEvents[j].Value.Split("-");
-                                    if (jEvent[1].Equals("Card") ||
+                                    if ((jEvent[1].Equals("Card") ||
                                         jEvent[1].Equals("Voice Recording Taken") ||
-                                        jEvent[1].Equals("Picture Taken") &&
+                                        jEvent[1].Equals("Picture Taken")) &&
                                         storyEvents[i].DateTime.Hour.Equals(storyEvents[j].DateTime.Hour) &&
                                         storyEvents[j].DateTime.Minute >= storyEvents[i].DateTime.Minute &&
                                         storyEvents[j].DateTime.Minute <= limit)
@@ -168,9 +168,9 @@ namespace ShareMyDay.Story.StoryFunctions
                                     }
 
                                     string[] jEvent = storyEvents[j].Value.Split("-");
-                                    if (jEvent[1].Equals("Card") ||
+                                    if ((jEvent[1].Equals("Card") ||
                                         jEvent[1].Equals("Voice Recording Taken") ||
-                                        jEvent[1].Equals("Picture Taken") &&
+                                        jEvent[1].Equals("Picture Taken")) &&
                                         storyEvents[i].DateTime.Hour.Equals(storyEvents[j].DateTime.Hour) &&
                                         storyEvents[j].DateTime.Minute >= storyEvents[i].DateTime.Minute &&
                                         storyEvents[j].DateTime.Minute <= limit)
@@ -220,9 +220,9 @@ namespace ShareMyDay.Story.StoryFunctions
                                     }
 
                                     string[] jEvent = storyEvents[j].Value.Split("-");
-                                    if (jEvent[1].Equals("Card") ||
+                                    if ((jEvent[1].Equals("Card") ||
                                         jEvent[1].Equals("Voice Recording Taken") ||
-                                        jEvent[1].Equals("Picture Taken") &&
+                                        jEvent[1].Equals("Picture Taken")) &&
                                         storyEvents[i].DateTime.Hour.Equals(storyEvents[j].DateTime.Hour) &&
                                         storyEvents[j].DateTime.Minute >= storyEvents[i].DateTime.Minute &&
                                         storyEvents[j].DateTime.Minute <= limit)
@@ -269,9 +269,9 @@ namespace ShareMyDay.Story.StoryFunctions
                                     }
 
                                     string[] jEvent = storyEvents[j].Value.Split("-");
-                                    if (jEvent[1].Equals("Card") ||
+                                    if ((jEvent[1].Equals("Card") ||
                                         jEvent[1].Equals("Voice Recording Taken") ||
-                                        jEvent[1].Equals("Picture Taken") &&
+                                        jEvent[1].Equals("Picture Taken")) &&
                                         storyEvents[i].DateTime.Hour.Equals(storyEvents[j].DateTime.Hour) &&
                                         storyEvents[j].DateTime.Minute >= storyEvents[i].DateTime.Minute &&
                                         storyEvents[j].DateTime.Minute <= limit)
@@ -312,7 +312,7 @@ namespace ShareMyDay.Story.StoryFunctions
                             };
                             _db.InsertEvent(true, storyEvent, null, picture, null);
                             var newEvent = _db.FindByValue(eventValue);
-                            finalEvents.Add(newEvent);
+                            finalEvents.Add(newEvent); 
                             _db.InsertStories(finalEvents,false, false);
                         }
                         else
@@ -349,9 +349,9 @@ namespace ShareMyDay.Story.StoryFunctions
                                     }
 
                                     string[] jEvent = storyEvents[j].Value.Split("-");
-                                    if (jEvent[1].Equals("Card") ||
+                                    if ((jEvent[1].Equals("Card") ||
                                         jEvent[1].Equals("Voice Recording Taken") ||
-                                        jEvent[1].Equals("Picture Taken") &&
+                                        jEvent[1].Equals("Picture Taken")) &&
                                         storyEvents[i].DateTime.Hour.Equals(storyEvents[j].DateTime.Hour) &&
                                         storyEvents[j].DateTime.Minute >= storyEvents[i].DateTime.Minute &&
                                         storyEvents[j].DateTime.Minute <= limit)
@@ -393,10 +393,38 @@ namespace ShareMyDay.Story.StoryFunctions
                         (storyEvents[i].VoiceRecordings != null && !storyEvents[i].VoiceRecordings.Count.Equals(0)) &&
                         (storyEvents[i].Cards != null && !storyEvents[i].Cards.Count.Equals(0)))
                     {
-                        List<StoryEvent> finalEvents = new List<StoryEvent>
+
+                        List<StoryEvent> finalEvents = new List<StoryEvent>();
+                        for (int j = 0; j < storyEvents.Count; j++)
                         {
-                            storyEvents[i]
-                        };
+                            if (i != j)
+                            {
+                                int limit;
+                                if (storyEvents[i].DateTime.AddHours(1).Hour
+                                    .Equals(storyEvents[i].DateTime.AddMinutes(10).Hour))
+                                {
+                                    limit = 100 + storyEvents[i].DateTime.AddMinutes(10).Minute;
+                                }
+                                else
+                                {
+                                    limit = storyEvents[i].DateTime.AddMinutes(10).Minute;
+                                }
+
+                                string[] jEvent = storyEvents[j].Value.Split("-");
+                                if ((jEvent[1].Equals("Card") ||
+                                     jEvent[1].Equals("Voice Recording Taken") ||
+                                     jEvent[1].Equals("Picture Taken")) &&
+                                    storyEvents[i].DateTime.Hour.Equals(storyEvents[j].DateTime.Hour) &&
+                                    storyEvents[j].DateTime.Minute >= storyEvents[i].DateTime.Minute &&
+                                    storyEvents[j].DateTime.Minute <= limit)
+                                {
+                                    finalEvents.Add(storyEvents[j]);
+                                    storyEvents.Remove(storyEvents[j]);
+                                    j--;
+                                }
+                            }
+                        }
+                         finalEvents.Insert(0,storyEvents[i]);
                         _db.InsertStories(finalEvents,false, false);
                     }
 
