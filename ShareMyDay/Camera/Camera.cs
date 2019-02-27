@@ -163,7 +163,7 @@ namespace ShareMyDay.Camera
         {
             
             Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
-            var storyEvent = db.FindByValue(spinner.GetSelected());
+            var storyEvent = db.FindEventByValue(spinner.GetSelected());
             var picture = new Picture {
                 NfcEventId = storyEvent.Id,
                 Path = GetImageURL()

@@ -11,8 +11,10 @@ namespace ShareMyDay.Database.Models
         public int Id { get; set; }
 
         public bool TextToSpeech { get; set; }
-        
-        public string Value { get; set; }
+
+        public string CoverPhoto { get; set; }
+
+        public string TitleValue { get; set; }
         
         public DateTime DateTime { get; set; }
        

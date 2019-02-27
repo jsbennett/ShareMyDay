@@ -163,11 +163,31 @@ namespace ShareMyDay.Database
             var db = CreateConnection();
             var story = new Models.Story();
             count += db.Insert(story);
+            bool firstPicture = false;
+            bool firstCard = false; 
+
             foreach (var i in storyEventList)
             {
+                if (i.Pictures != null && i.Pictures.Count != 0 && !firstPicture)
+                {
+                    story.CoverPhoto = i.Pictures[0].Path;
+                    firstPicture = true;
+                }
+
+                if (i.Cards != null && i.Cards.Count != 0 && !firstCard)
+                {
+                    story.TitleValue = i.Cards[0].Message;
+                    firstCard = true;
+                }
+
                 i.StoryId = story.Id;
                 i.InStory = true;
                 db.UpdateWithChildren(i);
+            }
+
+            if (firstCard.Equals(false))
+            {
+                story.TitleValue = "This happened at school today...";
             }
 
             story.Events = storyEventList;
@@ -187,14 +207,28 @@ namespace ShareMyDay.Database
             return count;
         }
 
-        public StoryEvent FindByValue(string value)
+        public StoryEvent FindEventByValue(string value)
         {
             var db = CreateConnection();
             var result = db.Query<StoryEvent>("SELECT * FROM StoryEvent WHERE Value == ?" , value );
             var storyEvent = db.GetWithChildren<StoryEvent>(result[0].Id);
             db.Close();
             return storyEvent; 
-        } 
+        }
+
+        public List<Models.Story> GetAllStories()
+        {
+            var db = CreateConnection();
+            var initalStories = db.Query<StoryEvent>("SELECT * FROM Story");
+            List<Models.Story> stories = new List<Models.Story>();
+            foreach (var i in initalStories)
+            {
+                stories.Add( db.GetWithChildren<Models.Story>(i.Id));
+
+            }
+           db.Close();
+           return stories; 
+        }
 
         public int UpdateEvent(StoryEvent storyEvent)
         {

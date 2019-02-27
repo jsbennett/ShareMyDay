@@ -5,10 +5,12 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
+using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
+using ShareMyDay.Story.StoryFunctions;
 
 namespace ShareMyDay.Activities
 {
@@ -20,45 +22,53 @@ namespace ShareMyDay.Activities
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.TodayStoryView);
            //Get all stories from today 
-
-            bool eventsFromToday = true;
+           
+            var db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
+            var stories = db.GetAllStories(); 
+            bool eventsFromToday = stories.Count != 0;
+            
             if (eventsFromToday)
             {
                 Button latestStory = FindViewById<Button>(Resource.Id.currentStoryButton); 
-                //for the first one in array of stories 
-                int i = 1;
-                int limit = 4; //this is the number of stories for a day 
-                latestStory.Text = "Story: " + i;
+                int storyIndex = 0;
+                int limit = stories.Count; //this is the number of stories for a day 
+                latestStory.Background = Drawable.CreateFromPath(stories[storyIndex].CoverPhoto);
+                latestStory.Text = "Story: " + stories[storyIndex].TitleValue;
                 latestStory.Click += delegate
                 {
                     Intent storyIntent = new Intent(this, typeof(StoryActivity));
-                    storyIntent.PutExtra("Story", i);
+                    storyIntent.PutExtra("Story", storyIndex);
                     StartActivity(storyIntent);
                 };
 
                 Button next = FindViewById<Button>(Resource.Id.changeViewButton);
-                
+                if (limit.Equals(1))
+                {
+                    next.Text = "Close";
+                }
+
                 next.Click += delegate
                 {
-                    i++;
-                    latestStory.Text = "Story: " + i;
-                    if (i == limit)
+                    if (next.Text.Equals("Close"))
                     {
-                        next.Text = "Close";
-
-                    }else if (i == limit + 1)
-                    {
-                        i--;
-                        latestStory.Text = "Story: " + i;
-                        latestStory.Enabled = false;
                         Intent exitIntent = new Intent(this, typeof(MainActivity));
                         StartActivity(exitIntent);
                     }
-                  
+                    storyIndex++;
+                    if (storyIndex < limit-1)
+                    {
+                        latestStory.Background = Drawable.CreateFromPath(stories[storyIndex].CoverPhoto);
+                        latestStory.Text = "Story: " + stories[storyIndex].TitleValue;
+                    }
+                    
+                    if (storyIndex == limit-1)
+                    {
+                        next.Text = "Close";
+                        latestStory.Background = Drawable.CreateFromPath(stories[storyIndex].CoverPhoto);
+                        latestStory.Text = "Story: " + stories[storyIndex].TitleValue;
+
+                    } 
                 };
-
-                
-
             }
             else
             {

@@ -19,7 +19,7 @@ namespace ShareMyDay.Activities
             var db = new Database.Database(
                 System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "ShareMyDay.db3");
 
-            var eventInformation = db.FindByValue(previousActivity);
+            var eventInformation = db.FindEventByValue(previousActivity);
 
             LinearLayout outerLayout = new LinearLayout(this)
             {
