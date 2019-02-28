@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-	<Button
-		android:text="Latest Story"
-		android:layout_width="340dp"
-		android:layout_height="390.0dp"
-		android:minWidth="25px"
-		android:minHeight="25px"
-		android:id="@+id/currentStoryButton"
-		android:layout_marginLeft="11.5dp"
-		android:layout_marginTop="10.0dp" />
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+	<TextView
+		android:text="Text"
+		android:layout_width="match_parent"
+		android:layout_height="53.5dp"
+		android:id="@+id/storyTitle"
+	/>
+	<ImageView
+		android:src="@android:drawable/ic_menu_gallery"
+		android:layout_width="match_parent"
+		android:layout_height="352.0dp"
+		android:id="@+id/storyButton" />
 	<Button
 		android:text="Next"
 		android:layout_width="340dp"

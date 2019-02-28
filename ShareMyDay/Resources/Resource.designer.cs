@@ -2333,17 +2333,20 @@ namespace ShareMyDay
 			// aapt resource value: 0x7f080033
 			public const int CTRL = 2131230771;
 			
+			// aapt resource value: 0x7f0800b9
+			public const int CountBox = 2131230905;
+			
 			// aapt resource value: 0x7f080034
 			public const int FUNCTION = 2131230772;
 			
 			// aapt resource value: 0x7f080035
 			public const int META = 2131230773;
 			
-			// aapt resource value: 0x7f0800ca
-			public const int MainMenu = 2131230922;
+			// aapt resource value: 0x7f0800cb
+			public const int MainMenu = 2131230923;
 			
-			// aapt resource value: 0x7f0800c7
-			public const int RecordInteraction = 2131230919;
+			// aapt resource value: 0x7f0800c8
+			public const int RecordInteraction = 2131230920;
 			
 			// aapt resource value: 0x7f080036
 			public const int SHIFT = 2131230774;
@@ -2351,11 +2354,11 @@ namespace ShareMyDay
 			// aapt resource value: 0x7f080037
 			public const int SYM = 2131230775;
 			
-			// aapt resource value: 0x7f0800c8
-			public const int TakePicture = 2131230920;
-			
 			// aapt resource value: 0x7f0800c9
-			public const int TakeVoiceRecording = 2131230921;
+			public const int TakePicture = 2131230921;
+			
+			// aapt resource value: 0x7f0800ca
+			public const int TakeVoiceRecording = 2131230922;
 			
 			// aapt resource value: 0x7f0800a6
 			public const int action0 = 2131230886;
@@ -2408,8 +2411,8 @@ namespace ShareMyDay
 			// aapt resource value: 0x7f08005c
 			public const int action_mode_close_button = 2131230812;
 			
-			// aapt resource value: 0x7f0800c6
-			public const int action_settings = 2131230918;
+			// aapt resource value: 0x7f0800c7
+			public const int action_settings = 2131230919;
 			
 			// aapt resource value: 0x7f0800a5
 			public const int action_text = 2131230885;
@@ -2468,8 +2471,8 @@ namespace ShareMyDay
 			// aapt resource value: 0x7f080047
 			public const int center_vertical = 2131230791;
 			
-			// aapt resource value: 0x7f0800c0
-			public const int changeViewButton = 2131230912;
+			// aapt resource value: 0x7f0800c1
+			public const int changeViewButton = 2131230913;
 			
 			// aapt resource value: 0x7f080073
 			public const int checkbox = 2131230835;
@@ -2494,9 +2497,6 @@ namespace ShareMyDay
 			
 			// aapt resource value: 0x7f080098
 			public const int coordinator = 2131230872;
-			
-			// aapt resource value: 0x7f0800bf
-			public const int currentStoryButton = 2131230911;
 			
 			// aapt resource value: 0x7f08006d
 			public const int custom = 2131230829;
@@ -2639,14 +2639,14 @@ namespace ShareMyDay
 			// aapt resource value: 0x7f0800bc
 			public const int makeVoiceRecording = 2131230908;
 			
-			// aapt resource value: 0x7f0800c5
-			public const int masked = 2131230917;
+			// aapt resource value: 0x7f0800c6
+			public const int masked = 2131230918;
 			
 			// aapt resource value: 0x7f0800a9
 			public const int media_actions = 2131230889;
 			
-			// aapt resource value: 0x7f0800c1
-			public const int message = 2131230913;
+			// aapt resource value: 0x7f0800c2
+			public const int message = 2131230914;
 			
 			// aapt resource value: 0x7f080092
 			public const int messageInputBox = 2131230866;
@@ -2693,14 +2693,14 @@ namespace ShareMyDay
 			// aapt resource value: 0x7f08000b
 			public const int parent_matrix = 2131230731;
 			
-			// aapt resource value: 0x7f0800b9
-			public const int pictureBox = 2131230905;
+			// aapt resource value: 0x7f0800ba
+			public const int pictureBox = 2131230906;
 			
 			// aapt resource value: 0x7f08004d
 			public const int pin = 2131230797;
 			
-			// aapt resource value: 0x7f0800c3
-			public const int playButton = 2131230915;
+			// aapt resource value: 0x7f0800c4
+			public const int playButton = 2131230916;
 			
 			// aapt resource value: 0x7f080006
 			public const int progress_circular = 2131230726;
@@ -2825,14 +2825,17 @@ namespace ShareMyDay
 			// aapt resource value: 0x7f08004b
 			public const int start = 2131230795;
 			
-			// aapt resource value: 0x7f0800c2
-			public const int startRecordingButton = 2131230914;
+			// aapt resource value: 0x7f0800c3
+			public const int startRecordingButton = 2131230915;
 			
 			// aapt resource value: 0x7f0800a8
 			public const int status_bar_latest_event_content = 2131230888;
 			
-			// aapt resource value: 0x7f0800ba
-			public const int storyClickButton = 2131230906;
+			// aapt resource value: 0x7f0800c0
+			public const int storyButton = 2131230912;
+			
+			// aapt resource value: 0x7f0800bf
+			public const int storyTitle = 2131230911;
 			
 			// aapt resource value: 0x7f080076
 			public const int submenuarrow = 2131230838;
@@ -2864,9 +2867,6 @@ namespace ShareMyDay
 			// aapt resource value: 0x7f080069
 			public const int textSpacerNoTitle = 2131230825;
 			
-			// aapt resource value: 0x7f0800b8
-			public const int textView1 = 2131230904;
-			
 			// aapt resource value: 0x7f0800a2
 			public const int text_input_password_toggle = 2131230882;
 			
@@ -2881,6 +2881,9 @@ namespace ShareMyDay
 			
 			// aapt resource value: 0x7f08001c
 			public const int title = 2131230748;
+			
+			// aapt resource value: 0x7f0800b8
+			public const int titleBox = 2131230904;
 			
 			// aapt resource value: 0x7f080071
 			public const int titleDividerNoCustom = 2131230833;
@@ -2927,8 +2930,8 @@ namespace ShareMyDay
 			// aapt resource value: 0x7f080016
 			public const int view_offset_helper = 2131230742;
 			
-			// aapt resource value: 0x7f0800c4
-			public const int visible = 2131230916;
+			// aapt resource value: 0x7f0800c5
+			public const int visible = 2131230917;
 			
 			// aapt resource value: 0x7f08003c
 			public const int withText = 2131230780;

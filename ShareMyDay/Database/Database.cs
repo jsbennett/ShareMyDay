@@ -215,6 +215,27 @@ namespace ShareMyDay.Database
             db.Close();
             return storyEvent; 
         }
+        public List<StoryEvent> FindEventsFromStory(string value)
+        {
+            var db = CreateConnection();
+            var result = db.Query<StoryEvent>("SELECT * FROM StoryEvent WHERE StoryId == ?" , value );
+            List<StoryEvent> events = new List<StoryEvent>();
+            foreach (var i in result)
+            {
+               events.Add(db.GetWithChildren<StoryEvent>(i.Id));
+            }
+            db.Close();
+            return events; 
+        }
+
+        public Models.Story FindStoryById(string id)
+        {
+            var db = CreateConnection();
+            //var result = db.Query<Models.Story>("SELECT * FROM Story WHERE Value == ?" , id );
+            var story = db.GetWithChildren<Models.Story>(id);
+            db.Close();
+            return story; 
+        }
 
         public List<Models.Story> GetAllStories()
         {

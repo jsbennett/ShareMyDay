@@ -26,6 +26,7 @@ namespace ShareMyDay.Story.StoryFunctions
                 storyEvents.Add(_db.FindEventByValue(i.Value));
             }
 
+            
             for (var i = 0; i < storyEvents.Count; i++)
             {
                 //if it has not been added to a story or if the story has not been marked as finished 
@@ -73,11 +74,18 @@ namespace ShareMyDay.Story.StoryFunctions
                                             {
                                                 if (!storyEvents[j].Finished.Equals(true))
                                                 {
-                                                    finalEvents.Add(storyEvents[j]);
-                                                    storyEvents.Remove(storyEvents[j]);
-                                                    j--;
+                                                    
+                                                        finalEvents.Add(storyEvents[j]);
+                                                        storyEvents.Remove(storyEvents[j]);
+                                                        j--;
+                                                  
                                                 }
                                             }
+                                        }
+                                        
+                                        if(jEvent[1].Equals("Card"))
+                                        {
+                                            break;
                                         }
                                     }
                                 }
@@ -135,6 +143,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                             {
                                                 if (!storyEvents[j].Finished.Equals(true))
                                                 {
+                                                    //check if is a card and if the story being created already has a card 
                                                     finalEvents.Add(storyEvents[j]);
                                                     storyEvents.Remove(storyEvents[j]);
                                                     j--;
@@ -197,6 +206,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                             {
                                                 if (!storyEvents[j].Finished.Equals(true))
                                                 {
+                                                    //check if is a card and if the story being created already has a card 
                                                     finalEvents.Add(storyEvents[j]);
                                                     storyEvents.Remove(storyEvents[j]);
                                                     j--;
@@ -256,6 +266,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                         {
                                             if (!storyEvents[j].Finished.Equals(true))
                                             {
+                                                //check if is a card and if the story being created already has a card 
                                                 finalEvents.Add(storyEvents[j]);
                                                 storyEvents.Remove(storyEvents[j]);
                                                 j--;
@@ -277,10 +288,10 @@ namespace ShareMyDay.Story.StoryFunctions
                             _db.InsertStories(finalEvents, false, false);
                         }
 
-                        //if only picture and card
-                        if ((storyEvents[i].Pictures != null && !storyEvents[i].Pictures.Count.Equals(0)) &&
-                            (storyEvents[i].VoiceRecordings == null ||
-                             storyEvents[i].VoiceRecordings.Count.Equals(0)) &&
+                        //if only voice recording and card
+                        if ((storyEvents[i].Pictures == null || storyEvents[i].Pictures.Count.Equals(0)) &&
+                            (storyEvents[i].VoiceRecordings != null &&
+                             !storyEvents[i].VoiceRecordings.Count.Equals(0)) &&
                             (storyEvents[i].Cards != null && !storyEvents[i].Cards.Count.Equals(0)))
                         {
                             var hasPicture = false;
@@ -302,9 +313,8 @@ namespace ShareMyDay.Story.StoryFunctions
                                     }
 
                                     string[] jEvent = storyEvents[j].Value.Split("-");
-                                    if ((jEvent[1].Equals("Card") ||
-                                         jEvent[1].Equals("Voice Recording Taken") ||
-                                         jEvent[1].Equals("Picture Taken")) &&
+                                    if ((jEvent[1].Equals("Voice Recording Taken") ||
+                                         jEvent[1].Equals("Picture Taken")) && !jEvent[1].Equals("Card") &&
                                         storyEvents[i].DateTime.Hour.Equals(storyEvents[j].DateTime.Hour) &&
                                         storyEvents[j].DateTime.Minute >= storyEvents[i].DateTime.Minute &&
                                         storyEvents[j].DateTime.Minute <= limit)
@@ -323,6 +333,10 @@ namespace ShareMyDay.Story.StoryFunctions
                                                 j--;
                                             }
                                         }
+                                    }
+                                    if(jEvent[1].Equals("Card"))
+                                    {
+                                        break;
                                     }
                                 }
                             }
@@ -365,11 +379,11 @@ namespace ShareMyDay.Story.StoryFunctions
 
                         }
 
-                        //if only voice recordings and card
+                        //if only pictures and card
                         //make into story as it has enough information - create sentence from card information to be used as a voice recording 
-                        if ((storyEvents[i].Pictures == null || storyEvents[i].Pictures.Count.Equals(0)) &&
-                            (storyEvents[i].VoiceRecordings != null &&
-                             !storyEvents[i].VoiceRecordings.Count.Equals(0)) &&
+                        if ((storyEvents[i].Pictures != null && !storyEvents[i].Pictures.Count.Equals(0)) &&
+                            (storyEvents[i].VoiceRecordings == null ||
+                             storyEvents[i].VoiceRecordings.Count.Equals(0)) &&
                             (storyEvents[i].Cards != null && !storyEvents[i].Cards.Count.Equals(0)))
                         {
                             var hasVoiceRecording = false;
@@ -391,9 +405,8 @@ namespace ShareMyDay.Story.StoryFunctions
                                     }
 
                                     string[] jEvent = storyEvents[j].Value.Split("-");
-                                    if ((jEvent[1].Equals("Card") ||
-                                         jEvent[1].Equals("Voice Recording Taken") ||
-                                         jEvent[1].Equals("Picture Taken")) &&
+                                    if ((jEvent[1].Equals("Voice Recording Taken") ||
+                                         jEvent[1].Equals("Picture Taken")) && !jEvent[1].Equals("Card") &&
                                         storyEvents[i].DateTime.Hour.Equals(storyEvents[j].DateTime.Hour) &&
                                         storyEvents[j].DateTime.Minute >= storyEvents[i].DateTime.Minute &&
                                         storyEvents[j].DateTime.Minute <= limit)
@@ -412,6 +425,10 @@ namespace ShareMyDay.Story.StoryFunctions
                                                 j--;
                                             }
                                         }
+                                    }
+                                    if(jEvent[1].Equals("Card"))
+                                    {
+                                        break;
                                     }
                                 }
                             }
@@ -461,9 +478,8 @@ namespace ShareMyDay.Story.StoryFunctions
                                     }
 
                                     string[] jEvent = storyEvents[j].Value.Split("-");
-                                    if ((jEvent[1].Equals("Card") ||
-                                         jEvent[1].Equals("Voice Recording Taken") ||
-                                         jEvent[1].Equals("Picture Taken")) &&
+                                    if ((jEvent[1].Equals("Voice Recording Taken") ||
+                                         jEvent[1].Equals("Picture Taken")) && !jEvent[1].Equals("Card") &&
                                         storyEvents[i].DateTime.Hour.Equals(storyEvents[j].DateTime.Hour) &&
                                         storyEvents[j].DateTime.Minute >= storyEvents[i].DateTime.Minute &&
                                         storyEvents[j].DateTime.Minute <= limit)
@@ -477,6 +493,10 @@ namespace ShareMyDay.Story.StoryFunctions
                                                 j--;
                                             }
                                         }
+                                    }
+                                    if(jEvent[1].Equals("Card"))
+                                    {
+                                        break;
                                     }
                                 }
                             }
@@ -506,7 +526,7 @@ namespace ShareMyDay.Story.StoryFunctions
             if (extraStories.Count != 0)
             {
                 _db.InsertStories(extraStories, false, false);
-            }
+            } 
         }
 
         public List<StoryEvent> GetEvents()

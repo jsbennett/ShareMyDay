@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.OS;
 using Android.Runtime;
@@ -28,16 +29,30 @@ namespace ShareMyDay.Activities
             bool eventsFromToday = stories.Count != 0;
             
             if (eventsFromToday)
-            {
-                Button latestStory = FindViewById<Button>(Resource.Id.currentStoryButton); 
+            { 
+                ImageView latestStory = FindViewById<ImageView>(Resource.Id.storyButton);
+                TextView titleBox = FindViewById<TextView>(Resource.Id.storyTitle);
                 int storyIndex = 0;
                 int limit = stories.Count; //this is the number of stories for a day 
-                latestStory.Background = Drawable.CreateFromPath(stories[storyIndex].CoverPhoto);
-                latestStory.Text = "Story: " + stories[storyIndex].TitleValue;
+                
+                var options = new BitmapFactory.Options {InJustDecodeBounds = true};
+
+                var sample = 4;
+                options.InSampleSize = sample;
+                        
+                options.InJustDecodeBounds = false;
+                using (var image = GetImage(options, stories[storyIndex].CoverPhoto))
+                {
+                    latestStory.SetImageBitmap(image);
+
+
+                }
+
+                titleBox.Text = "Story: " + stories[storyIndex].TitleValue;
                 latestStory.Click += delegate
                 {
                     Intent storyIntent = new Intent(this, typeof(StoryActivity));
-                    storyIntent.PutExtra("Story", storyIndex);
+                    storyIntent.PutExtra("Story", stories[storyIndex].Id.ToString());
                     StartActivity(storyIntent);
                 };
 
@@ -57,15 +72,25 @@ namespace ShareMyDay.Activities
                     storyIndex++;
                     if (storyIndex < limit-1)
                     {
-                        latestStory.Background = Drawable.CreateFromPath(stories[storyIndex].CoverPhoto);
-                        latestStory.Text = "Story: " + stories[storyIndex].TitleValue;
+                        using (var image = GetImage(options, stories[storyIndex].CoverPhoto))
+                        {
+                            latestStory.SetImageBitmap(image);
+
+
+                        }
+                        titleBox.Text = "Story: " + stories[storyIndex].TitleValue;
                     }
                     
                     if (storyIndex == limit-1)
                     {
                         next.Text = "Close";
-                        latestStory.Background = Drawable.CreateFromPath(stories[storyIndex].CoverPhoto);
-                        latestStory.Text = "Story: " + stories[storyIndex].TitleValue;
+                        using (var image = GetImage(options, stories[storyIndex].CoverPhoto))
+                        {
+                            latestStory.SetImageBitmap(image);
+
+
+                        }
+                        titleBox.Text = "Story: " + stories[storyIndex].TitleValue;
 
                     } 
                 };
@@ -76,5 +101,23 @@ namespace ShareMyDay.Activities
             }
 
           }
+
+        public Bitmap GetImage(BitmapFactory.Options options, string path)
+        {
+            using (var fs = new System.IO.FileStream(path, System.IO.FileMode.Open))
+            
+            {
+                
+                var bitmap = BitmapFactory.DecodeStream(fs, null, options);
+                
+                if (bitmap != null)
+                {
+                    Toast.MakeText(this, "Images Loading...", ToastLength.Short).Show();
+                }
+
+                return bitmap;
+            }
+            
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace ShareMyDay.Database.Models
         public DateTime DateTime { get; set; }
        
         [OneToMany]	        
-        public List<StoryEvent> Events { get; set; }
+        public List<StoryEvent> Events { get; set; } 
 
         public bool Favourite { get; set; }
 

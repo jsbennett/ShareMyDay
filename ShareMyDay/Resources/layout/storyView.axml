@@ -9,32 +9,22 @@
 	<TextView
 		android:text="Text"
 		android:layout_width="match_parent"
-		android:layout_height="54.0dp"
-		android:id="@+id/textView1"
+		android:layout_height="42.5dp"
+		android:id="@+id/titleBox"
 		android:layout_marginTop="6.5dp" />
-	<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="388.0dp">
+	<TextView
+		android:text="Text"
+		android:layout_width="match_parent"
+		android:layout_height="50.5dp"
+		android:id="@+id/CountBox" />
 	<ImageView
 		android:src="@android:drawable/ic_menu_gallery"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:id="@+id/pictureBox" />
-		<Button
-			android:text="Play
-Four clicks"
-			android:textColor="@android:color/white"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:id="@+id/storyClickButton"
-			android:background="@android:color/transparent"/>
-		</FrameLayout>
+		android:layout_height="349.0dp"
+		android:id="@+id/pictureBox"/>	
 	<Button
 		android:text="Finish"
 		android:layout_width="match_parent"
 		android:layout_height="101.5dp"
 		android:id="@+id/cancelButton" />
-
 </LinearLayout>
