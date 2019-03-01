@@ -130,7 +130,7 @@ namespace ShareMyDay.Camera
                     _imageViewer.SetImageURI (Uri.Parse (camera.GetImage().AbsolutePath));
                     _url = camera.GetImage().AbsolutePath;
                 } else {
-                    Toast.MakeText (activity, "Canceled photo.", ToastLength.Short).Show ();
+                    Toast.MakeText (activity, "Camera Closed", ToastLength.Short).Show ();
                 }
             }
         }
