@@ -80,6 +80,13 @@ namespace ShareMyDay.Story.StoryFunctions
                                                         j--;
                                                   
                                                 }
+                                                else
+                                                {
+                                                    finalEvents.Add(storyEvents[j]);
+                                                    storyEvents.Remove(storyEvents[j]);
+                                               
+                                                    break; 
+                                                }
                                             }
                                         }
                                         
@@ -148,6 +155,13 @@ namespace ShareMyDay.Story.StoryFunctions
                                                     storyEvents.Remove(storyEvents[j]);
                                                     j--;
                                                 }
+                                                else
+                                                {
+                                                    finalEvents.Add(storyEvents[j]);
+                                                    storyEvents.Remove(storyEvents[j]);
+                                                 
+                                                    break; 
+                                                }
                                             }
                                         }
                                     }
@@ -156,7 +170,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                 if (finalEvents.Count != 0)
                                 {
                                     finalEvents.Insert(0, storyEvents[i]);
-                                    _db.InsertStories(finalEvents, false, false);
+                                    _db.InsertStories(finalEvents, false, true);
                                 }
                                 else
                                 {
@@ -210,6 +224,12 @@ namespace ShareMyDay.Story.StoryFunctions
                                                     finalEvents.Add(storyEvents[j]);
                                                     storyEvents.Remove(storyEvents[j]);
                                                     j--;
+                                                }
+                                                else
+                                                {
+                                                    finalEvents.Add(storyEvents[j]);
+                                                    storyEvents.Remove(storyEvents[j]);
+                                                    break; 
                                                 }
                                             }
                                         }
@@ -270,6 +290,12 @@ namespace ShareMyDay.Story.StoryFunctions
                                                 finalEvents.Add(storyEvents[j]);
                                                 storyEvents.Remove(storyEvents[j]);
                                                 j--;
+                                            }
+                                            else
+                                            {
+                                                finalEvents.Add(storyEvents[j]);
+                                                storyEvents.Remove(storyEvents[j]);
+                                                break; 
                                             }
                                         }
                                     }
@@ -332,6 +358,12 @@ namespace ShareMyDay.Story.StoryFunctions
                                                 storyEvents.Remove(storyEvents[j]);
                                                 j--;
                                             }
+                                            else
+                                            {
+                                                finalEvents.Add(storyEvents[j]);
+                                                storyEvents.Remove(storyEvents[j]);
+                                                break; 
+                                            }
                                         }
                                     }
                                     if(jEvent[1].Equals("Card"))
@@ -361,7 +393,7 @@ namespace ShareMyDay.Story.StoryFunctions
 
                                 Picture picture = new Picture
                                 {
-                                    NfcEventId = storyEvent.Id,
+                                    EventId = storyEvent.Id,
                                     Path =
                                         "storage/emulated/0/Pictures/ShareMyDayDev/imageeab30d8d-f02d-4a2a-88f8-7f4eac55f139.jpg"
                                 };
@@ -423,6 +455,12 @@ namespace ShareMyDay.Story.StoryFunctions
                                                 finalEvents.Add(storyEvents[j]);
                                                 storyEvents.Remove(storyEvents[j]);
                                                 j--;
+                                            }
+                                            else
+                                            {
+                                                finalEvents.Add(storyEvents[j]);
+                                                storyEvents.Remove(storyEvents[j]);
+                                                break; 
                                             }
                                         }
                                     }
@@ -492,6 +530,13 @@ namespace ShareMyDay.Story.StoryFunctions
                                                 storyEvents.Remove(storyEvents[j]);
                                                 j--;
                                             }
+                                            else
+                                            {
+                                                finalEvents.Add(storyEvents[j]);
+                                                storyEvents.Remove(storyEvents[j]);
+                                                break; 
+                                            }
+
                                         }
                                     }
                                     if(jEvent[1].Equals("Card"))
@@ -515,7 +560,7 @@ namespace ShareMyDay.Story.StoryFunctions
                             {
                                 storyEvents[i]
                             };
-                            _db.InsertStories(finalEvents, false, false);
+                            _db.InsertStories(finalEvents, false, true);
                         }
 
                     }

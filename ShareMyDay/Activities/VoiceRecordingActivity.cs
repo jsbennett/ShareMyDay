@@ -41,6 +41,20 @@ namespace ShareMyDay.Activities
                 startRecordingButton.Text = "Redo voice recording";
             };
 
+            CheckBox eventComplete = FindViewById<CheckBox>(Resource.Id.eventComplete);
+            bool ticked = false;
+            eventComplete.Click += delegate
+            {
+                if (eventComplete.Checked)
+                {
+                    ticked = true; 
+                }
+                else
+                {
+                    ticked = false; 
+                }
+                
+            };
            
             submitButton.Enabled = false; 
             bool anotherRecording = false; 
@@ -52,11 +66,11 @@ namespace ShareMyDay.Activities
                     bool uploadedSuccessful;
                     if (spinner.GetSelected().Equals("New Event"))
                     {
-                        uploadedSuccessful =voiceRecorder.SaveNewEvent();
+                        uploadedSuccessful = voiceRecorder.SaveNewEvent(ticked);
                     }
                     else
                     {
-                        uploadedSuccessful = voiceRecorder.SaveExistingEvent(spinner); 
+                        uploadedSuccessful = voiceRecorder.SaveExistingEvent(spinner, ticked); 
                     }
                     if (uploadedSuccessful)
                     {

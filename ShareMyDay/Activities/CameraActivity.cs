@@ -31,7 +31,21 @@ namespace ShareMyDay.Activities
             
             SpinnerComponent spinner = new SpinnerComponent (this, Resource.Id.eventSelector, this);
             spinner.Setup();
-     
+
+            CheckBox eventComplete = FindViewById<CheckBox>(Resource.Id.eventComplete);
+            bool ticked = false;
+            eventComplete.Click += delegate
+            {
+                if (eventComplete.Checked)
+                {
+                    ticked = true; 
+                }
+                else
+                {
+                    ticked = false; 
+                }
+                
+            };
             _imageViewer = _camera.GetImageViewer(Resource.Id.imageView, this);
             _camera.Start(_imageViewer, this);
 
@@ -45,11 +59,11 @@ namespace ShareMyDay.Activities
                     bool uploadedSuccessful;
                     if (spinner.GetSelected().Equals("New Event"))
                     {
-                        uploadedSuccessful =_camera.SaveNewEvent();
+                        uploadedSuccessful =_camera.SaveNewEvent(ticked);
                     }
                     else
                     {
-                        uploadedSuccessful = _camera.SaveExistingEvent(spinner); 
+                        uploadedSuccessful = _camera.SaveExistingEvent(spinner, ticked); 
                     }
 
              

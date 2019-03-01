@@ -140,17 +140,18 @@ namespace ShareMyDay.Camera
             return _url;
 
         }
-        public bool SaveNewEvent()
+        public bool SaveNewEvent(bool ticked)
         {
             Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             StoryEvent storyEvent = new StoryEvent
             {
                 Value = DateTime.Now.ToLongTimeString() +  "-" + "Picture Taken",
-                DateTime = DateTime.Now
+                DateTime = DateTime.Now,
+                Finished = ticked
             };
 
             var picture = new Picture {
-                NfcEventId = storyEvent.Id,
+                EventId = storyEvent.Id,
                 Path = GetImageURL()
 
             };
@@ -159,14 +160,17 @@ namespace ShareMyDay.Camera
 
         }
 
-        public bool SaveExistingEvent(SpinnerComponent spinner)
+        public bool SaveExistingEvent(SpinnerComponent spinner, bool ticked)
         {
             
             Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             var storyEvent = db.FindEventByValue(spinner.GetSelected());
+            storyEvent.Finished = ticked;
+
             var picture = new Picture {
-                NfcEventId = storyEvent.Id,
-                Path = GetImageURL()
+                EventId = storyEvent.Id,
+                Path = GetImageURL(),
+
 
             };
 

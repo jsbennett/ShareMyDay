@@ -4,19 +4,25 @@ using Android.App;
 using Android.Content;
 using Android.Graphics;
 using Android.OS;
+using Android.Speech.Tts;
 using Android.Widget;
+using Java.Lang;
+using Java.Util;
 using ShareMyDay.Database.Models;
 using ShareMyDay.Story.StoryFunctions;
 using ShareMyDay.UIComponents;
 using Picture = ShareMyDay.Database.Models.Picture;
+using String = System.String;
 using Uri = Android.Net.Uri;
 
 namespace ShareMyDay.Activities
 {
     [Activity(Label = "StoryActivity")]
-    public class StoryActivity : Activity
+    public class StoryActivity : Activity, Android.Speech.Tts.TextToSpeech.IOnInitListener
     {
-        private string storyId; 
+        private string storyId;
+        private Android.Speech.Tts.TextToSpeech tts;
+        private string text; 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -82,7 +88,7 @@ namespace ShareMyDay.Activities
                 if (story.TextToSpeech)
                 {
                     
-                    foreach (var i in story.Events)
+                    foreach (var i in storyEvents)
                     {
                         if (i.Pictures != null && i.Pictures.Count != 0)
                         {
@@ -101,17 +107,32 @@ namespace ShareMyDay.Activities
                         }
                         else
                         {
-                            //get card and make into sentence 
-                        }
+                            bool cardFound = false; 
+                            foreach (var j in storyEvents)
+                            {
+                                if (j.Cards != null && j.Cards.Count != 0)
+                                {
+                                    text = CreateSentence(j.Cards[0]);
+                                    cardFound = true; 
+                                }
+
+                            }
+
+                            if (!cardFound)
+                            {
+                                text = "Never guess what else happened in school today! Have a look at all of this!";
+                            }
+                            
+                          }
 
                         done = true;
                     }
 
                 }
-
+       
                 if (story.Extra && !done)
                 {
-                    foreach (var i in story.Events)
+                    foreach (var i in storyEvents)
                     {
                         if (i.Pictures != null && i.Pictures.Count != 0)
                         {
@@ -130,34 +151,60 @@ namespace ShareMyDay.Activities
                         }
                         else
                         {
-                            //get card and make into sentence 
+                           
+                            bool cardFound = false; 
+                            foreach (var j in storyEvents)
+                            {
+                                if (j.Cards != null && j.Cards.Count != 0)
+                                {
+                                    text = CreateSentence(j.Cards[0]);
+                                    cardFound = true; 
+                                }
+
+                            }
+
+                            if (!cardFound)
+                            {
+                                text = "Never guess what else happened in school today! Have a look at all of this!";
+                            }
                         }
                     }
                 }
 
                 int pictureCount = pictures.Count;
                 int recordingCount = voiceRecordings.Count;
-                int difference;
-                int totalSteps;
+                
+                int totalSteps = 0;
                 if (pictureCount > recordingCount)
                 {
-                    difference = pictureCount - recordingCount;
-                    totalSteps = pictureCount + difference;
+
+                    totalSteps = pictureCount;
                 }else if (recordingCount > pictureCount)
                 {
-                    difference = recordingCount - pictureCount;
-                    totalSteps = recordingCount + difference;
+                    totalSteps = recordingCount;
                 }
                 else
                 {
-                    totalSteps = pictureCount;
+                    if (pictureCount != 0)
+                    {
+                        totalSteps = pictureCount;
+                    }
+                    else
+                    {
+                        if (recordingCount != 0)
+                        {
+                            totalSteps = recordingCount;
+                        }
+                    }
+                    
                 }
-
+                
                 TextView stepCounter = FindViewById<TextView>(Resource.Id.CountBox);
                 stepCounter.Text = totalSteps + " clicks left";
 
                 bool firstClick = false; 
                 int counter = 0; 
+                
                 pictureButton.Click += delegate
                 {
                     
@@ -165,9 +212,22 @@ namespace ShareMyDay.Activities
                     {
                         totalSteps--;
                         firstClick = true; 
+                        if (story.TextToSpeech)
+                        {
+                            if (tts == null)
+                            {
+                                tts = new Android.Speech.Tts.TextToSpeech(this,this);
+                            }
+                            else
+                            {
+                                tts.Speak(text, QueueMode.Flush, null, null);
+                            }
+                        
+                        }
                     }
                     else
                     {
+                     
                         if (totalSteps.Equals(0))
                         {
                             pictureButton.Enabled = false; 
@@ -179,11 +239,13 @@ namespace ShareMyDay.Activities
                         }
                         
                     }
+
                     if (totalSteps.Equals(0))
                     {
                         stepCounter.Text = "No Clicks Left";
                         pictureButton.Enabled = false; 
                     }
+
                     else if (totalSteps.Equals(1))
                     {
                         stepCounter.Text = totalSteps + " click left";
@@ -192,7 +254,7 @@ namespace ShareMyDay.Activities
                     {
                         stepCounter.Text = totalSteps + " clicks left";
                     }
-                   
+
 
                     if (pictureCount > counter)
                     {
@@ -238,6 +300,54 @@ namespace ShareMyDay.Activities
                 return bitmap;
             }
             
+        }
+
+        public string CreateSentence(Card card)
+        {
+            string sentence = " "; 
+            switch (card.Type)
+            {
+                    case "1":
+                        sentence = "Today, during school I did " + card.Message;
+                        break;
+                    case "2":
+                        sentence = "Today, during school I took part in  " + card.Message + " in class.";
+                        break;
+                    case "3":
+                        sentence = "Today, during school I was in  " + card.Message + " class.";
+                        break;
+                    case "4":
+                        sentence = "Today, during school I used  " + card.Message;
+                        break;
+                    case "5":
+                        sentence = "Today, during school I was with  " + card.Message;
+                        break;
+                    case "6":
+                        sentence = "Today, during school I was with  " + card.Message;
+                        break;
+                    case "7":
+                        sentence = "Today, during school I was visited by " + card.Message;
+                        break;
+            }
+
+            return sentence; 
+        }
+
+        public void OnInit(OperationResult status)
+        {
+            if (status.Equals(OperationResult.Success))
+            {
+               Speak(text);
+            }
+           
+        }
+
+        private void Speak(string text)
+        {
+            if (!String.IsNullOrEmpty(text))
+            {
+                tts.Speak(text, QueueMode.Flush, null, null);
+            }
         }
     }
 }
