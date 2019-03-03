@@ -47,7 +47,7 @@ namespace ShareMyDay.Activities
                 
             };
             _imageViewer = _camera.GetImageViewer(Resource.Id.imageView, this);
-            _camera.Start(_imageViewer, this);
+            _camera.Start(_imageViewer, this, _previousActivity);
 
             Button submitButton = FindViewById<Button>(Resource.Id.submitButton); 
 
@@ -100,7 +100,7 @@ namespace ShareMyDay.Activities
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
         {
-            _camera.DisplayPicture(requestCode, resultCode, this,_camera);
+            _camera.DisplayPicture(requestCode, resultCode, this,_camera, this);
         }
 
     }

@@ -4,6 +4,7 @@ using Android.Provider;
 using Android.Widget;
 using Java.IO;
 using System;
+using ShareMyDay.Activities;
 using ShareMyDay.Database.Models;
 using ShareMyDay.UIComponents;
 using Console = System.Console;
@@ -21,7 +22,8 @@ namespace ShareMyDay.Camera
         private readonly int _photoCode;
         private File _image;
         private ImageView _imageViewer;
-        private string _url; 
+        private string _url;
+        private string _previousActivity; 
 
         /*
          * Constructor 
@@ -107,7 +109,7 @@ namespace ShareMyDay.Camera
          * Method name: Start
          * Purpose: To setup and start the camera activity 
          */
-        public void Start(ImageView imageViewer, Activity activity)
+        public void Start(ImageView imageViewer, Activity activity, string previousActivity)
         {
             _imageViewer = imageViewer;
             var location = GetFileLocation();
@@ -115,13 +117,14 @@ namespace ShareMyDay.Camera
             _image = CreateImageFile(location);
             var imageUri = GetUri(_image); 
             StartActivity(imageUri, activity);
+            _previousActivity = previousActivity;
         }
 
         /*
          * Method name: DisplayPicture
          * Purpose: To get and display the image 
          */
-        public void DisplayPicture(int requestCode, Result resultCode, Activity activity, Camera camera)
+        public void DisplayPicture(int requestCode, Result resultCode, Activity activity, Camera camera, Context context)
         {
             if (requestCode == _photoCode) {
                 
@@ -130,7 +133,18 @@ namespace ShareMyDay.Camera
                     _imageViewer.SetImageURI (Uri.Parse (camera.GetImage().AbsolutePath));
                     _url = camera.GetImage().AbsolutePath;
                 } else {
-                    Toast.MakeText (activity, "Camera Closed", ToastLength.Short).Show ();
+                    if (_previousActivity == "QuickMenu")
+                    {
+                        Toast.MakeText (context, "Back to homepage", ToastLength.Short).Show ();
+                        var childMenu = new Intent(context, typeof(MainActivity));
+                        context.StartActivity(childMenu);
+                    }
+                    else
+                    {
+                        Toast.MakeText (context, "Back to main menu", ToastLength.Short).Show ();
+                        var mainMenu = new Intent(context, typeof(TeacherMainMenuActivity));
+                        context.StartActivity(mainMenu);
+                    }
                 }
             }
         }
