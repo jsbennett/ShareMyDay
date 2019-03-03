@@ -74,6 +74,8 @@ namespace ShareMyDay.Activities
                     }
                     if (uploadedSuccessful)
                     {
+                        spinner.Disable();
+                        eventComplete.Enabled = false; 
                         submitButton.Text = "Take Another Voice Recording";
                         startRecordingButton.Enabled = false;
                         playRecordingButton.Enabled = false; 

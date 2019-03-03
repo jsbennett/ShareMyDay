@@ -2,6 +2,7 @@
 using Android.Content;
 using Android.Widget;
 using System.Collections.Generic;
+using Android.Telephony;
 using ShareMyDay.Database.Models;
 using ShareMyDay.Story.StoryFunctions;
 
@@ -54,6 +55,11 @@ namespace ShareMyDay.UIComponents
             adapter.SetDropDownViewResource (Android.Resource.Layout.SimpleSpinnerDropDownItem);
             _spinner.Adapter = adapter; 
 
+        }
+
+        public void Disable()
+        {
+            _spinner.Enabled = false;
         }
 
         public void spinner_ItemSelected (object sender, AdapterView.ItemSelectedEventArgs e)

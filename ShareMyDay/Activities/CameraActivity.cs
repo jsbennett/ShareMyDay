@@ -69,6 +69,8 @@ namespace ShareMyDay.Activities
              
                     if (uploadedSuccessful)
                     {
+                        spinner.Disable();
+                        eventComplete.Enabled = false; 
                         submitButton.Text = "Take Another Picture";
                         AlertBoxComponent voiceRecording = new AlertBoxComponent(this);
                         voiceRecording.RepeateFunctionSetup<VoiceRecordingActivity>("Take Voice Recording",
