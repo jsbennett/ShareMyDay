@@ -9,10 +9,10 @@
 	<ImageView
 		android:src="@android:drawable/ic_menu_gallery"
 		android:layout_width="match_parent"
-		android:layout_height="316.0dp"
+		android:layout_height="287.5dp"
 		android:id="@+id/imageView"
 		android:layout_marginBottom="8.0dp"
-		android:layout_marginTop="12.0dp" />
+		android:layout_marginTop="6.5dp" />
 	<TextView
 		android:layout_width="match_parent"
 		android:layout_height="31.5dp"
@@ -28,6 +28,13 @@
 		android:layout_marginLeft="10.0dp" 
 		android:prompt="@string/prompt"
 	/>
+	<CheckBox
+		android:text="Is this the end of the event?"
+		android:layout_width="match_parent"
+		android:layout_height="36.5dp"
+		android:textSize = "19dp"
+		android:id="@+id/eventComplete"
+		android:layout_marginLeft="21.0dp" />
 	<Button
 		android:text="Submit"
 		android:layout_width="match_parent"

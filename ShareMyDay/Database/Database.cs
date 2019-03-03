@@ -64,7 +64,7 @@ namespace ShareMyDay.Database
         public int Setup()
         {
             var db = CreateConnection();
-            CardType[] types = {new CardType{Type = "Leisure Activity"}, new CardType{Type = "Class Activity"},new CardType{Type = "Class"}, new CardType{Type = "Item"},new CardType{Type = "Teacher"},new CardType{Type = "Friend"}, new CardType{Type = "Visitor"} };
+            CardType[] types = {new CardType{Type = "Leisure Activity"}, new CardType{Type = "Class Activity"},new CardType{Type = "Class"}, new CardType{Type = "Item"},new CardType{Type = "Teacher"},new CardType{Type = "Friend"}, new CardType{Type = "Visitor"}, new CardType{Type = "Admin"} };
             var count = 0;
             if (db.Table<CardType>().Count() == 0)
             {
@@ -147,14 +147,147 @@ namespace ShareMyDay.Database
 
         }
 
-        public StoryEvent FindByValue(string value)
+        public Models.Story FindFavouriteStory()
+        {
+            var db = CreateConnection();
+            var favouriteStory = db.Query<Models.Story>("SELECT * FROM Story WHERE Favourite == ?", true);
+            if (favouriteStory.Count == 0)
+            {
+                return null;
+            }
+            return favouriteStory[0];
+
+        }
+
+        public bool UpdateFavourite(int storyId)
+        {
+            var db = CreateConnection();
+            var stories = db.Query<Models.Story>("SELECT * FROM Story");
+            if (stories != null && stories.Count != 0)
+            {
+                foreach (var i in stories)
+                {
+                    if (i.Favourite)
+                    {
+                        i.Favourite = false; 
+                    }
+                    db.Update(i);
+                }
+
+                var newFavouriteStory = db.GetWithChildren<Models.Story>(storyId);
+                newFavouriteStory.Favourite = true; 
+                db.Update(newFavouriteStory);
+                return true;
+            }
+            db.Close();
+            return false; 
+        }
+
+        public void DeleteTableValues()
+        {
+            var db = CreateConnection();
+            db.DeleteAll<Models.Story>();
+            db.DeleteAll<StoryEvent>();
+            db.DeleteAll<Card>();
+            db.DeleteAll<Picture>();
+            db.DeleteAll<Models.VoiceRecording>();
+            db.Close();
+        }
+        public int InsertStories(List<StoryEvent> storyEventList, bool isExtraStory, bool isTextToSpeech)
+        {
+            int count = 0; 
+            var db = CreateConnection();
+            var story = new Models.Story();
+            count += db.Insert(story);
+            bool firstPicture = false;
+            bool firstCard = false; 
+
+            foreach (var i in storyEventList)
+            {
+                if (i.Pictures != null && i.Pictures.Count != 0 && !firstPicture)
+                {
+                    story.CoverPhoto = i.Pictures[0].Path;
+                    firstPicture = true;
+                }
+
+                if (i.Cards != null && i.Cards.Count != 0 && !firstCard)
+                {
+                    story.TitleValue = i.Cards[0].Message;
+                    firstCard = true;
+                }
+
+                i.StoryId = story.Id;
+                i.InStory = true;
+                db.UpdateWithChildren(i);
+            }
+
+            if (firstCard.Equals(false))
+            {
+                story.TitleValue = "This happened at school today...";
+            }
+
+            story.Events = storyEventList;
+            if (isExtraStory)
+            {
+                story.Extra = true; 
+            }
+
+            if (isTextToSpeech)
+            {
+                story.TextToSpeech = true; 
+            }
+
+            story.Favourite = false; 
+            db.UpdateWithChildren(story);
+
+            db.Close();
+
+            return count;
+        }
+
+        public StoryEvent FindEventByValue(string value)
         {
             var db = CreateConnection();
             var result = db.Query<StoryEvent>("SELECT * FROM StoryEvent WHERE Value == ?" , value );
             var storyEvent = db.GetWithChildren<StoryEvent>(result[0].Id);
             db.Close();
             return storyEvent; 
-        } 
+        }
+        public List<StoryEvent> FindEventsFromStory(string value)
+        {
+            var db = CreateConnection();
+            var result = db.Query<StoryEvent>("SELECT * FROM StoryEvent WHERE StoryId == ?" , value );
+            List<StoryEvent> events = new List<StoryEvent>();
+            foreach (var i in result)
+            {
+               events.Add(db.GetWithChildren<StoryEvent>(i.Id));
+            }
+            db.Close();
+            return events; 
+        }
+
+        public Models.Story FindStoryById(string id)
+        {
+            var db = CreateConnection();
+            //var result = db.Query<Models.Story>("SELECT * FROM Story WHERE Value == ?" , id );
+            var story = db.GetWithChildren<Models.Story>(id);
+            db.Close();
+            return story; 
+        }
+
+        public List<Models.Story> GetAllStories()
+        {
+            var db = CreateConnection();
+            var initalStories = db.Query<StoryEvent>("SELECT * FROM Story");
+            List<Models.Story> stories = new List<Models.Story>();
+            foreach (var i in initalStories)
+            {
+                stories.Add( db.GetWithChildren<Models.Story>(i.Id));
+
+            }
+           db.Close();
+           return stories; 
+        }
 
         public int UpdateEvent(StoryEvent storyEvent)
         {

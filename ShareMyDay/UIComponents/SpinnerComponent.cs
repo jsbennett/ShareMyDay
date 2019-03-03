@@ -2,6 +2,7 @@
 using Android.Content;
 using Android.Widget;
 using System.Collections.Generic;
+using Android.Telephony;
 using ShareMyDay.Database.Models;
 using ShareMyDay.Story.StoryFunctions;
 
@@ -26,8 +27,7 @@ namespace ShareMyDay.UIComponents
 
         public void EventsPopulate()
         {
-            //TO DO - make call to db to fetch all the events 
-            StoryGeneration generator = new StoryGeneration(new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3"));
+            StoryGeneration generator = new StoryGeneration(new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3"), _context);
             List<StoryEvent> events = generator.GetEvents();
             List<string> list = new List<string>
             {
@@ -48,13 +48,18 @@ namespace ShareMyDay.UIComponents
  
         public void NFcTypePopulate()
         {
-            List<string> list = new List<string> {"Leisure Activity", "Class Activity", "Class", "Item","Teacher","Friend","Visitor"};
+            List<string> list = new List<string> {"Leisure Activity", "Class Activity", "Class", "Item","Teacher","Friend","Visitor", "Teacher - Menu Access"};
             var adapter =  new ArrayAdapter<string>(_context,
                 Android.Resource.Layout.SimpleSpinnerItem, list);
 
             adapter.SetDropDownViewResource (Android.Resource.Layout.SimpleSpinnerDropDownItem);
             _spinner.Adapter = adapter; 
 
+        }
+
+        public void Disable()
+        {
+            _spinner.Enabled = false;
         }
 
         public void spinner_ItemSelected (object sender, AdapterView.ItemSelectedEventArgs e)

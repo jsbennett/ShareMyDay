@@ -4,7 +4,7 @@ using Android.Provider;
 using Android.Widget;
 using Java.IO;
 using System;
-using System.Collections.Generic;
+using ShareMyDay.Activities;
 using ShareMyDay.Database.Models;
 using ShareMyDay.UIComponents;
 using Console = System.Console;
@@ -22,7 +22,8 @@ namespace ShareMyDay.Camera
         private readonly int _photoCode;
         private File _image;
         private ImageView _imageViewer;
-        private string _url; 
+        private string _url;
+        private string _previousActivity; 
 
         /*
          * Constructor 
@@ -108,7 +109,7 @@ namespace ShareMyDay.Camera
          * Method name: Start
          * Purpose: To setup and start the camera activity 
          */
-        public void Start(ImageView imageViewer, Activity activity)
+        public void Start(ImageView imageViewer, Activity activity, string previousActivity)
         {
             _imageViewer = imageViewer;
             var location = GetFileLocation();
@@ -116,22 +117,34 @@ namespace ShareMyDay.Camera
             _image = CreateImageFile(location);
             var imageUri = GetUri(_image); 
             StartActivity(imageUri, activity);
+            _previousActivity = previousActivity;
         }
 
         /*
          * Method name: DisplayPicture
          * Purpose: To get and display the image 
          */
-        public void DisplayPicture(int requestCode, Result resultCode, Activity activity, Camera camera)
+        public void DisplayPicture(int requestCode, Result resultCode, Activity activity, Camera camera, Context context)
         {
             if (requestCode == _photoCode) {
                 
                 if (resultCode == Result.Ok) {
-                    Console.WriteLine(Uri.Parse ("file://" + camera.GetImage().AbsolutePath));
-                    _imageViewer.SetImageURI (Uri.Parse ("file://" + camera.GetImage().AbsolutePath));
-                    _url = "file://" + camera.GetImage().AbsolutePath;
+                    Console.WriteLine(Uri.Parse (camera.GetImage().AbsolutePath));
+                    _imageViewer.SetImageURI (Uri.Parse (camera.GetImage().AbsolutePath));
+                    _url = camera.GetImage().AbsolutePath;
                 } else {
-                    Toast.MakeText (activity, "Canceled photo.", ToastLength.Short).Show ();
+                    if (_previousActivity == "QuickMenu")
+                    {
+                        Toast.MakeText (context, "Back to homepage", ToastLength.Short).Show ();
+                        var childMenu = new Intent(context, typeof(MainActivity));
+                        context.StartActivity(childMenu);
+                    }
+                    else
+                    {
+                        Toast.MakeText (context, "Back to main menu", ToastLength.Short).Show ();
+                        var mainMenu = new Intent(context, typeof(TeacherMainMenuActivity));
+                        context.StartActivity(mainMenu);
+                    }
                 }
             }
         }
@@ -141,17 +154,18 @@ namespace ShareMyDay.Camera
             return _url;
 
         }
-        public bool SaveNewEvent()
+        public bool SaveNewEvent(bool ticked)
         {
             Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             StoryEvent storyEvent = new StoryEvent
             {
                 Value = DateTime.Now.ToLongTimeString() +  "-" + "Picture Taken",
-                DateTime = DateTime.Now
+                DateTime = DateTime.Now,
+                Finished = ticked
             };
 
             var picture = new Picture {
-                NfcEventId = storyEvent.Id,
+                EventId = storyEvent.Id,
                 Path = GetImageURL()
 
             };
@@ -160,14 +174,17 @@ namespace ShareMyDay.Camera
 
         }
 
-        public bool SaveExistingEvent(SpinnerComponent spinner)
+        public bool SaveExistingEvent(SpinnerComponent spinner, bool ticked)
         {
             
             Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
-            var storyEvent = db.FindByValue(spinner.GetSelected());
+            var storyEvent = db.FindEventByValue(spinner.GetSelected());
+            storyEvent.Finished = ticked;
+
             var picture = new Picture {
-                NfcEventId = storyEvent.Id,
-                Path = GetImageURL()
+                EventId = storyEvent.Id,
+                Path = GetImageURL(),
+
 
             };
 

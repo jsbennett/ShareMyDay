@@ -31,9 +31,23 @@ namespace ShareMyDay.Activities
             
             SpinnerComponent spinner = new SpinnerComponent (this, Resource.Id.eventSelector, this);
             spinner.Setup();
-     
+
+            CheckBox eventComplete = FindViewById<CheckBox>(Resource.Id.eventComplete);
+            bool ticked = false;
+            eventComplete.Click += delegate
+            {
+                if (eventComplete.Checked)
+                {
+                    ticked = true; 
+                }
+                else
+                {
+                    ticked = false; 
+                }
+                
+            };
             _imageViewer = _camera.GetImageViewer(Resource.Id.imageView, this);
-            _camera.Start(_imageViewer, this);
+            _camera.Start(_imageViewer, this, _previousActivity);
 
             Button submitButton = FindViewById<Button>(Resource.Id.submitButton); 
 
@@ -45,16 +59,18 @@ namespace ShareMyDay.Activities
                     bool uploadedSuccessful;
                     if (spinner.GetSelected().Equals("New Event"))
                     {
-                        uploadedSuccessful =_camera.SaveNewEvent();
+                        uploadedSuccessful =_camera.SaveNewEvent(ticked);
                     }
                     else
                     {
-                        uploadedSuccessful = _camera.SaveExistingEvent(spinner); 
+                        uploadedSuccessful = _camera.SaveExistingEvent(spinner, ticked); 
                     }
 
              
                     if (uploadedSuccessful)
                     {
+                        spinner.Disable();
+                        eventComplete.Enabled = false; 
                         submitButton.Text = "Take Another Picture";
                         AlertBoxComponent voiceRecording = new AlertBoxComponent(this);
                         voiceRecording.RepeateFunctionSetup<VoiceRecordingActivity>("Take Voice Recording",
@@ -84,7 +100,7 @@ namespace ShareMyDay.Activities
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
         {
-            _camera.DisplayPicture(requestCode, resultCode, this,_camera);
+            _camera.DisplayPicture(requestCode, resultCode, this,_camera, this);
         }
 
     }

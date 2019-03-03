@@ -67,16 +67,14 @@ namespace ShareMyDay.VoiceRecording
             }
         }
 
-        public void Play(Button button)
+        public void Play()
         {
-            //send it to db class 
             List<string> copy = new List<string>();
             for (int i = 0; i < _audioPaths.Count; i++)
             {
                 copy.Add(_audioPaths[i]);
             }
             
-        
             PlayRecordings(copy);
         }
 
@@ -104,20 +102,21 @@ namespace ShareMyDay.VoiceRecording
             }
         }
         
-        public bool SaveNewEvent()
+        public bool SaveNewEvent(bool ticked)
         {
             Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             StoryEvent storyEvent = new StoryEvent
             {
                 Value = DateTime.Now.ToLongTimeString() +  "-" + "Voice Recording Taken",
-                DateTime = DateTime.Now
+                DateTime = DateTime.Now, 
+                Finished = ticked
             };
             List<Database.Models.VoiceRecording> recordings = new List<Database.Models.VoiceRecording>();
             foreach (var i in _audioPaths)
             {
                 recordings.Add(new Database.Models.VoiceRecording
                 {
-                    NfcEventId = storyEvent.Id,
+                    EventId = storyEvent.Id,
                     Path = i
                 });
             }
@@ -126,17 +125,18 @@ namespace ShareMyDay.VoiceRecording
 
         }
 
-        public bool SaveExistingEvent(SpinnerComponent spinner)
+        public bool SaveExistingEvent(SpinnerComponent spinner, bool ticked)
         {
             
             Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
-            var storyEvent = db.FindByValue(spinner.GetSelected());
+            var storyEvent = db.FindEventByValue(spinner.GetSelected());
+            storyEvent.Finished = ticked; 
             List<Database.Models.VoiceRecording> recordings = new List<Database.Models.VoiceRecording>();
             foreach (var i in _audioPaths)
             {
                 recordings.Add(new Database.Models.VoiceRecording
                 {
-                    NfcEventId = storyEvent.Id,
+                    EventId = storyEvent.Id,
                     Path = i
                 });
             }

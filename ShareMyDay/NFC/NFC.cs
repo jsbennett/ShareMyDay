@@ -70,6 +70,10 @@ namespace ShareMyDay.NFC
                 _tapCardAlertBox.Show();
                 _inputMessage = input;
                 _typeSelected = type;
+                if (_typeSelected.Equals("Teacher - Menu Access"))
+                {
+                    _typeSelected = "Admin";
+                }
                  Detection(context,activity);
             }
         }
@@ -99,9 +103,9 @@ namespace ShareMyDay.NFC
             List<string> cardInformation = GetData(intent);
             if (cardInformation[0].Equals("ShareMyDayTest"))
             {
-                if (cardInformation[1] == "5")
+                if (cardInformation[1] == "8")
                 {
- 
+
                     QuickMenuComponent quickMenu = new QuickMenuComponent(activity, context);
                     quickMenu.Show();
                 }
@@ -112,27 +116,27 @@ namespace ShareMyDay.NFC
                         Value = DateTime.Now.ToLongTimeString() + "-Card-" + cardInformation[2],
                         DateTime = DateTime.Now
                     };
-                    
+
                     var card = new Card
                     {
                         StoryEventId = storyEvent.Id,
                         Type = cardInformation[1],
                         Message = cardInformation[2]
                     };
-                 
+
                     bool successful = db.InsertEvent(true, storyEvent, card, null, null) != 0;
-          
+
                     if (successful)
                     {
-                        string message = cardInformation[2] + " has been recorded"; 
-                        Toast.MakeText (context, message, ToastLength.Short).Show ();
+                        string message = cardInformation[2] + " has been recorded";
+                        Toast.MakeText(context, message, ToastLength.Short).Show();
                     }
                 }
             }
             else
             {
                 AlertBoxComponent invalidNfcAlertBox = new AlertBoxComponent(context);
-                invalidNfcAlertBox.Setup("Invalid Card","The scanned card is not compatible with Share My Day. Please try a different card.");
+                invalidNfcAlertBox.Setup("Invalid Card", "The scanned card is not compatible with Share My Day. Please try a different card.");
                 invalidNfcAlertBox.Show();
             }
         }

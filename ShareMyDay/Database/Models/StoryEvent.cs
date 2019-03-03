@@ -27,5 +27,12 @@ namespace ShareMyDay.Database.Models
         
         [OneToMany]	        
         public List<VoiceRecording> VoiceRecordings { get; set; }
+
+        [ForeignKey(typeof(Story))]
+        public int StoryId { get; set; }
+
+        public bool InStory { get; set; }
+
+        public bool Finished { get; set; }
     }
 }

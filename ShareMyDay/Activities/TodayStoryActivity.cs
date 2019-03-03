@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
+﻿using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 
 namespace ShareMyDay.Activities
@@ -19,53 +13,104 @@ namespace ShareMyDay.Activities
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.TodayStoryView);
-            //check for events from today from the database
-            //Get all events from the day which have a story i.e a picture or voice recording 
-
-            bool eventsFromToday = true;
+           
+            var db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
+            var stories = db.GetAllStories(); 
+            
+            bool eventsFromToday = stories.Count != 0;
+            
             if (eventsFromToday)
-            {
-                Button latestStory = FindViewById<Button>(Resource.Id.currentStoryButton); 
-                //for the first one in array of stories 
-                int i = 1;
-                int limit = 4; //this is the number of stories for a day 
-                latestStory.Text = "Story: " + i;
+            { 
+                ImageView latestStory = FindViewById<ImageView>(Resource.Id.storyButton);
+                TextView titleBox = FindViewById<TextView>(Resource.Id.storyTitle);
+                int storyIndex = 0;
+                int limit = stories.Count; //this is the number of stories for a day 
+                
+                var options = new BitmapFactory.Options {InJustDecodeBounds = true};
+
+                var sample = 4;
+                options.InSampleSize = sample;
+                        
+                options.InJustDecodeBounds = false;
+                using (var image = GetImage(options, stories[storyIndex].CoverPhoto))
+                {
+                    latestStory.SetImageBitmap(image);
+
+
+                }
+
+                titleBox.Text = "Story: " + stories[storyIndex].TitleValue;
                 latestStory.Click += delegate
                 {
                     Intent storyIntent = new Intent(this, typeof(StoryActivity));
-                    storyIntent.PutExtra("Story", i);
+                    storyIntent.PutExtra("Story", stories[storyIndex].Id.ToString());
                     StartActivity(storyIntent);
                 };
 
                 Button next = FindViewById<Button>(Resource.Id.changeViewButton);
-                
+                if (limit.Equals(1))
+                {
+                    next.Text = "Close";
+                }
+
                 next.Click += delegate
                 {
-                    i++;
-                    latestStory.Text = "Story: " + i;
-                    if (i == limit)
+                    if (next.Text.Equals("Close"))
                     {
-                        next.Text = "Close";
-
-                    }else if (i == limit + 1)
-                    {
-                        i--;
-                        latestStory.Text = "Story: " + i;
-                        latestStory.Enabled = false;
                         Intent exitIntent = new Intent(this, typeof(MainActivity));
                         StartActivity(exitIntent);
                     }
-                  
+                    storyIndex++;
+                    if (storyIndex < limit-1)
+                    {
+                        using (var image = GetImage(options, stories[storyIndex].CoverPhoto))
+                        {
+                            latestStory.SetImageBitmap(image);
+
+
+                        }
+                        titleBox.Text = "Story: " + stories[storyIndex].TitleValue;
+                    }
+                    
+                    if (storyIndex == limit-1)
+                    {
+                        next.Text = "Close";
+                        using (var image = GetImage(options, stories[storyIndex].CoverPhoto))
+                        {
+                            latestStory.SetImageBitmap(image);
+
+
+                        }
+                        titleBox.Text = "Story: " + stories[storyIndex].TitleValue;
+
+                    } 
                 };
-
-                
-
             }
             else
             {
-
+                Intent noFavouriteStories = new Intent(this, typeof(NoStoriesActivity));
+                noFavouriteStories.PutExtra("StoryType", "Story");
+                StartActivity(noFavouriteStories);
             }
 
           }
+
+        public Bitmap GetImage(BitmapFactory.Options options, string path)
+        {
+            using (var fs = new System.IO.FileStream(path, System.IO.FileMode.Open))
+            
+            {
+                
+                var bitmap = BitmapFactory.DecodeStream(fs, null, options);
+                
+                if (bitmap != null)
+                {
+                    Toast.MakeText(this, "Images Loading...", ToastLength.Short).Show();
+                }
+
+                return bitmap;
+            }
+            
+        }
     }
 }

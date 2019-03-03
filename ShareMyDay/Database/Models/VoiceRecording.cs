@@ -14,7 +14,7 @@ namespace ShareMyDay.Database.Models
         public int Id { get; set; }
        
         [ForeignKey(typeof(StoryEvent))]
-        public int NfcEventId { get; set; }
+        public int EventId { get; set; }
 
         public string Path { get; set; }
     }

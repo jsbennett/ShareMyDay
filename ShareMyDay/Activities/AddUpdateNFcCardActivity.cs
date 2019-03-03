@@ -36,6 +36,13 @@ namespace ShareMyDay.Activities
             Button submitButton = FindViewById<Button>(Resource.Id.submitButton);
             EditText inputBox = FindViewById<EditText>(Resource.Id.messageInputBox);
 
+            Button closeButton = FindViewById<Button>(Resource.Id.cancelButton);
+            closeButton.Click += delegate
+            {
+                Intent mainMenuIntent = new Intent(this, typeof(TeacherMainMenuActivity));
+                StartActivity(mainMenuIntent);
+            };
+
             submitButton.Click += delegate
             {
                 if (inputBox.Text.Length >= 25)
