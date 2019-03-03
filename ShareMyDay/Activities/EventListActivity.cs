@@ -21,7 +21,7 @@ namespace ShareMyDay.Activities
             base.OnCreate(savedInstanceState);
 
             var db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
-            StoryGeneration story = new StoryGeneration(db);
+            StoryGeneration story = new StoryGeneration(db,this);
             var events = story.GetEvents();
 
             LinearLayout outerLayout = new LinearLayout(this)

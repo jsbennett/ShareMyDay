@@ -26,7 +26,7 @@ namespace ShareMyDay.UIComponents
 
         public void EventsPopulate()
         {
-            StoryGeneration generator = new StoryGeneration(new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3"));
+            StoryGeneration generator = new StoryGeneration(new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3"), _context);
             List<StoryEvent> events = generator.GetEvents();
             List<string> list = new List<string>
             {
@@ -47,7 +47,7 @@ namespace ShareMyDay.UIComponents
  
         public void NFcTypePopulate()
         {
-            List<string> list = new List<string> {"Leisure Activity", "Class Activity", "Class", "Item","Teacher","Friend","Visitor"};
+            List<string> list = new List<string> {"Leisure Activity", "Class Activity", "Class", "Item","Teacher","Friend","Visitor", "Teacher - Menu Access"};
             var adapter =  new ArrayAdapter<string>(_context,
                 Android.Resource.Layout.SimpleSpinnerItem, list);
 

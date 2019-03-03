@@ -64,7 +64,7 @@ namespace ShareMyDay.Database
         public int Setup()
         {
             var db = CreateConnection();
-            CardType[] types = {new CardType{Type = "Leisure Activity"}, new CardType{Type = "Class Activity"},new CardType{Type = "Class"}, new CardType{Type = "Item"},new CardType{Type = "Teacher"},new CardType{Type = "Friend"}, new CardType{Type = "Visitor"} };
+            CardType[] types = {new CardType{Type = "Leisure Activity"}, new CardType{Type = "Class Activity"},new CardType{Type = "Class"}, new CardType{Type = "Item"},new CardType{Type = "Teacher"},new CardType{Type = "Friend"}, new CardType{Type = "Visitor"}, new CardType{Type = "Admin"} };
             var count = 0;
             if (db.Table<CardType>().Count() == 0)
             {
@@ -147,6 +147,42 @@ namespace ShareMyDay.Database
 
         }
 
+        public Models.Story FindFavouriteStory()
+        {
+            var db = CreateConnection();
+            var favouriteStory = db.Query<Models.Story>("SELECT * FROM Story WHERE Favourite == ?", true);
+            if (favouriteStory.Count == 0)
+            {
+                return null;
+            }
+            return favouriteStory[0];
+
+        }
+
+        public bool UpdateFavourite(int storyId)
+        {
+            var db = CreateConnection();
+            var stories = db.Query<Models.Story>("SELECT * FROM Story");
+            if (stories != null && stories.Count != 0)
+            {
+                foreach (var i in stories)
+                {
+                    if (i.Favourite)
+                    {
+                        i.Favourite = false; 
+                    }
+                    db.Update(i);
+                }
+
+                var newFavouriteStory = db.GetWithChildren<Models.Story>(storyId);
+                newFavouriteStory.Favourite = true; 
+                db.Update(newFavouriteStory);
+                return true;
+            }
+            db.Close();
+            return false; 
+        }
+
         public void DeleteTableValues()
         {
             var db = CreateConnection();
@@ -200,6 +236,8 @@ namespace ShareMyDay.Database
             {
                 story.TextToSpeech = true; 
             }
+
+            story.Favourite = false; 
             db.UpdateWithChildren(story);
 
             db.Close();

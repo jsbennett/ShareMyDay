@@ -74,7 +74,10 @@ namespace ShareMyDay.NFC.NFC_Functions
                     break; 
                 case "Visitor":
                     _typeSelected = "7";
-                    break; 
+                    break;
+                case "Admin":
+                    _typeSelected = "8";
+                    break;
             }
             var messageBytes = Encoding.UTF8.GetBytes(_typeSelected + ":" +_inputMessage);
             var mimeBytes = Encoding.UTF8.GetBytes("ShareMyDayTest");

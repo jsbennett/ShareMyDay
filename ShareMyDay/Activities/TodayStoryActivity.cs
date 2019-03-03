@@ -13,10 +13,10 @@ namespace ShareMyDay.Activities
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.TodayStoryView);
-           //Get all stories from today 
            
             var db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             var stories = db.GetAllStories(); 
+            
             bool eventsFromToday = stories.Count != 0;
             
             if (eventsFromToday)
@@ -88,7 +88,9 @@ namespace ShareMyDay.Activities
             }
             else
             {
-
+                Intent noFavouriteStories = new Intent(this, typeof(NoStoriesActivity));
+                noFavouriteStories.PutExtra("StoryType", "Story");
+                StartActivity(noFavouriteStories);
             }
 
           }

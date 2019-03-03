@@ -70,6 +70,10 @@ namespace ShareMyDay.NFC
                 _tapCardAlertBox.Show();
                 _inputMessage = input;
                 _typeSelected = type;
+                if (_typeSelected.Equals("Teacher - Menu Access"))
+                {
+                    _typeSelected = "Admin";
+                }
                  Detection(context,activity);
             }
         }
@@ -99,7 +103,7 @@ namespace ShareMyDay.NFC
             List<string> cardInformation = GetData(intent);
             if (cardInformation[0].Equals("ShareMyDayTest"))
             {
-                if (cardInformation[1] == "5")
+                if (cardInformation[1] == "8")
                 {
 
                     QuickMenuComponent quickMenu = new QuickMenuComponent(activity, context);

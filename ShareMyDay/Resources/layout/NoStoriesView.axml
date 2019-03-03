@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+	<TextView
+		android:text="Text"
+		android:layout_width="match_parent"
+		android:layout_height="249.5dp"
+		android:minWidth="25px"
+		android:minHeight="25px"
+		android:id="@+id/storyMessage"
+		android:textSize="30sp"
+		android:layout_marginLeft="10.0dp"
+		android:layout_marginTop="4.0dp"
+		android:gravity="center"/>
+	<Button
+		android:text="Close"
+		android:layout_width="match_parent"
+		android:layout_height="296.5dp"
+		android:id="@+id/closeButton" />
+
+</LinearLayout>
