@@ -1,14 +1,17 @@
-﻿using Android.App;
+﻿using System.Threading.Tasks;
+using Android.App;
 using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using Android.Widget;
+using Java.Lang;
 
 namespace ShareMyDay.Activities
 {
     [Activity(Label = "TodayStoryActivity")]
     public class TodayStoryActivity : Activity
     {
+        public bool closeClicked; 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -39,6 +42,7 @@ namespace ShareMyDay.Activities
 
                 }
 
+               
                 titleBox.Text = "Story: " + stories[storyIndex].TitleValue;
                 latestStory.Click += delegate
                 {
@@ -50,23 +54,37 @@ namespace ShareMyDay.Activities
                 Button next = FindViewById<Button>(Resource.Id.changeViewButton);
                 if (limit.Equals(1))
                 {
-                    next.Text = "Close";
+                    next.SetBackgroundResource(Resource.Drawable.SmallClose);
+                    next.ContentDescription = "Close";
+                }
+                else
+                {
+                    next.SetBackgroundResource(Resource.Drawable.Next);
                 }
 
-                next.Click += delegate
+                next.Click += async delegate
                 {
-                    if (next.Text.Equals("Close"))
+                    if (next.ContentDescription.Equals("Close"))
                     {
+                        next.SetBackgroundResource(Resource.Drawable.SmallCloseClicked);
                         Intent exitIntent = new Intent(this, typeof(MainActivity));
                         StartActivity(exitIntent);
                     }
+                    else
+                    {
+                        next.SetBackgroundResource(Resource.Drawable.NextClicked);
+                    }
+
+                    await Task.Delay(1);
+
+                    next.SetBackgroundResource(Resource.Drawable.Next);
                     storyIndex++;
                     if (storyIndex < limit-1)
                     {
                         using (var image = GetImage(options, stories[storyIndex].CoverPhoto))
                         {
                             latestStory.SetImageBitmap(image);
-
+                            
 
                         }
                         titleBox.Text = "Story: " + stories[storyIndex].TitleValue;
@@ -74,11 +92,13 @@ namespace ShareMyDay.Activities
                     
                     if (storyIndex == limit-1)
                     {
-                        next.Text = "Close";
+                        closeClicked = true; 
+                        next.SetBackgroundResource(Resource.Drawable.SmallClose);
+                        next.ContentDescription = "Close";
                         using (var image = GetImage(options, stories[storyIndex].CoverPhoto))
                         {
                             latestStory.SetImageBitmap(image);
-
+                            
 
                         }
                         titleBox.Text = "Story: " + stories[storyIndex].TitleValue;
@@ -112,5 +132,21 @@ namespace ShareMyDay.Activities
             }
             
         }
+
+        /*
+        * Method Name: OnResume
+        * Purpose: This is for when the app has loaded
+        */
+        protected override void OnResume()
+        {
+            base.OnResume();
+            if (closeClicked == true)
+            {
+                Button next = FindViewById<Button>(Resource.Id.changeViewButton);
+                next.SetBackgroundResource(Resource.Drawable.SmallClose);
+            }
+            
+        }
+
     }
 }

@@ -7,23 +7,27 @@
 	<TextView
 		android:text="Text"
 		android:layout_width="match_parent"
-		android:layout_height="53.5dp"
+		android:layout_height="86.5dp"
 		android:id="@+id/storyTitle"
-		android:textSize="20sp"
-		android:textColor="#000000"
+		android:textSize="25sp"
+		android:textColor="#ffffff"
 		android:gravity="center"
+		android:background="#213f5e"
 	/>
 	<ImageView
 		android:src="@android:drawable/ic_menu_gallery"
 		android:layout_width="match_parent"
-		android:layout_height="369.5dp"
-		android:id="@+id/storyButton" />
+		android:layout_height="359.5dp"
+		android:id="@+id/storyButton"
+		android:layout_marginTop="9.5dp"
+		android:focusable="true"/>
 	<Button
-		android:text="Next"
-		android:layout_width="354.5dp"
-		android:layout_height="133.5dp"
+		android:layout_width="328.0dp"
+		android:layout_height="110.5dp"
 		android:id="@+id/changeViewButton"
-		android:layout_marginTop="2.0dp"
-		android:layout_marginLeft="3.5dp" />
-	
+		android:layout_marginTop="1.0dp"
+		android:background="@drawable/Next"
+		android:contentDescription="Next"
+		android:layout_marginLeft="19.0dp"
+		android:focusable="true"/>
 </LinearLayout>

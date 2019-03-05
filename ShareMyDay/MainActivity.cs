@@ -1,5 +1,7 @@
-﻿using Android.App;
+﻿using System.Net.Mime;
+using Android.App;
 using Android.Content;
+using Android.Media;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
@@ -24,6 +26,7 @@ namespace ShareMyDay
          */
         protected override void OnCreate(Bundle savedInstanceState)
         {
+           
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 
@@ -40,13 +43,17 @@ namespace ShareMyDay
             Button todayStory = FindViewById<Button>(Resource.Id.latestStoryButton);
             Button favouriteStory = FindViewById<Button>(Resource.Id.favouriteStoryButton);
 
-            todayStory.Click += delegate {
+            todayStory.SetBackgroundResource(Resource.Drawable.TodayStoryButton);
+             todayStory.Click += delegate {
+                todayStory.SetBackgroundResource(Resource.Drawable.TodayStoryButtonPressed);
                 Intent storyIntent = new Intent(this, typeof(TodayStoryActivity));
                 StartActivity(storyIntent);
+                
             };
 
             favouriteStory.Click += delegate
             {
+                favouriteStory.SetBackgroundResource(Resource.Drawable.FaveButtonPressed);
                 Intent storyIntent = new Intent(this, typeof(StoryActivity));
                 storyIntent.PutExtra("Story", "Favourite");
                 StartActivity(storyIntent);
@@ -55,12 +62,16 @@ namespace ShareMyDay
 
         /*
          * Method Name: OnResume
-         * Purpose: This is for when the app has loaded
+         * Purpose: This is for when the app has reloaded
          */
         protected override void OnResume()
         {
             base.OnResume();
             _nfc.Detection(this,this);
+            Button todayStory = FindViewById<Button>(Resource.Id.latestStoryButton);
+            todayStory.SetBackgroundResource(Resource.Drawable.TodayStoryButton);
+            Button favouriteStory = FindViewById<Button>(Resource.Id.favouriteStoryButton);
+            favouriteStory.SetBackgroundResource(Resource.Drawable.FaveButton);
         }
 
         /*

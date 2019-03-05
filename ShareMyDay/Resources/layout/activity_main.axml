@@ -38,6 +38,8 @@
 				android:bottomRightRadius="10dp"
 				android:background = "@drawable/TodayStoryButton"
 				android:contentDescription="View today's stories"
+				android:focusable="true"
+				
 			/>
 			<Button
 				android:layout_width="match_parent"
@@ -51,6 +53,7 @@
 				android:layout_marginRight="3dp"
 				android:bottomRightRadius="10dp"
 				android:contentDescription="View your favourite story"
+				android:focusable="true"
 			
 		/>
 			</LinearLayout>

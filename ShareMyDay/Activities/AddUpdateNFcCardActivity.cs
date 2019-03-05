@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.Nfc;
 using Android.Nfc.Tech;
 using Android.OS;
@@ -27,7 +28,7 @@ namespace ShareMyDay.Activities
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.AddUpdateNfcCardView);
-
+           
             SpinnerComponent spinner = new SpinnerComponent (this, Resource.Id.nfcCardTypeDropDown, this);
             spinner.SetupNFcDropDown();
             

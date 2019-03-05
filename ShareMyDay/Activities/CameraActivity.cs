@@ -16,6 +16,8 @@ namespace ShareMyDay.Activities
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            //StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            //StrictMode.SetVmPolicy(builder.Build());
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.PictureViewer);
             

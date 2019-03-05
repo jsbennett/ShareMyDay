@@ -3,13 +3,11 @@ using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using Android.Speech.Tts;
+using Android.Views;
 using Android.Widget;
 using ShareMyDay.Database.Models;
-using ShareMyDay.Story.StoryFunctions;
 using System.Collections.Generic;
-using Android.Views;
-using Java.IO;
-using Console = System.Console;
+using System.Threading.Tasks;
 using Picture = ShareMyDay.Database.Models.Picture;
 using String = System.String;
 
@@ -20,7 +18,9 @@ namespace ShareMyDay.Activities
     {
         private string _storyId;
         private TextToSpeech _phoneVoice;
-        private string _text; 
+        private string _text;
+        public Database.Database _db;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -29,7 +29,7 @@ namespace ShareMyDay.Activities
             _storyId = Intent.GetStringExtra("Story");
 
             ImageView pictureButton = FindViewById<ImageView>(Resource.Id.pictureBox);
-            Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
+            _db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
 
             var options = new BitmapFactory.Options {InJustDecodeBounds = true};
 
@@ -41,11 +41,11 @@ namespace ShareMyDay.Activities
             if (_storyId == "Favourite")
             {
                 
-               story = db.FindFavouriteStory();
+               story = _db.FindFavouriteStory();
 
                 if (story != null)
                 {
-                    SetupStory(story,options, pictureButton,db, true);
+                    SetupStory(story,options, pictureButton,_db, true);
                 }
                 else
                 {
@@ -57,9 +57,9 @@ namespace ShareMyDay.Activities
             }
             else
             {
-                story = db.FindStoryById(_storyId);
+                story = _db.FindStoryById(_storyId);
                 
-                SetupStory(story,options, pictureButton,db, false);
+                SetupStory(story,options, pictureButton,_db, false);
                 
             }
 
@@ -313,24 +313,70 @@ namespace ShareMyDay.Activities
 
                     Button closeButton = FindViewById<Button>(Resource.Id.closeButton);
                     Button favouriteButton = FindViewById<Button>(Resource.Id.favouriteButton);
-                    
-                    closeButton.Click += delegate {
+
+
+                    if (story.Favourite)
+                    {
+                        favouriteButton.SetBackgroundResource(Resource.Drawable.MakeFavouriteButton);
+                    }
+                    closeButton.Click += async delegate {
+                        await Task.Delay(1);
+
+                        closeButton.SetBackgroundResource(Resource.Drawable.BigCloseButtonClicked);
                         Intent exitIntent = new Intent(this, typeof(MainActivity));
                         StartActivity(exitIntent);
                     };
 
-                    favouriteButton.Click += delegate
+                    favouriteButton.Click += async delegate
                     {
-                        if (db.UpdateFavourite(story.Id))
+                        var favouriteStory = _db.FindStoryById(story.Id.ToString());
+                        if (favouriteStory.Favourite)
                         {
-                            //change the favourite button picture 
-                            favouriteButton.Enabled = false; 
+                            AlertDialog.Builder alreadyFavourite = new AlertDialog.Builder(this);
+                            alreadyFavourite.SetTitle("Already Your Favourite Story");
+                            alreadyFavourite.SetMessage(
+                                "This story is already your favourite! If you want a new favourite, select a different story.");
+                            alreadyFavourite.SetNeutralButton("Ok", (senderAlerts, argss) => { });
+                            alreadyFavourite.Create();
+                            alreadyFavourite.Show();
+                        }
+                        else
+                        {
+
+
+                            await Task.Delay(10);
+                            favouriteButton.SetBackgroundResource(Resource.Drawable.unFaveButtonClicked);
+                            AlertDialog.Builder favouriteCheckBox = new AlertDialog.Builder(this);
+                            favouriteCheckBox.SetTitle("New Favourite");
+                            favouriteCheckBox.SetMessage(
+                                "If you make this story your new favourite, the current favourite story will be lost. Do you want to continue?");
+                            favouriteCheckBox.SetPositiveButton("Yes", async (senderAlert, args) =>
+                            {
+                                if (db.UpdateFavourite(story.Id))
+                                {
+                                    AlertDialog.Builder favouriteChanged = new AlertDialog.Builder(this);
+                                    favouriteChanged.SetTitle("Favourite Story Saved");
+                                    favouriteChanged.SetMessage("This story is now your favourite story.");
+                                    favouriteChanged.SetNeutralButton("Ok", (senderAlerts, argss) => { });
+                                    favouriteChanged.Create();
+                                    favouriteChanged.Show();
+
+                                    
+                                    await Task.Delay(1);
+                                    favouriteButton.SetBackgroundResource(Resource.Drawable.MakeFavouriteButton);
+
+                                }
+                            });
+                            favouriteCheckBox.SetNegativeButton("No", (senderAlert, args) => { });
+                            favouriteCheckBox.Create();
+                            favouriteCheckBox.Show();
                         }
                     };
         
                     Button cancelButton = FindViewById<Button>(Resource.Id.cancelButton);
                     cancelButton.Click += delegate
                     {
+                        cancelButton.SetBackgroundResource(Resource.Drawable.FinishClicked);
                         if (totalSteps.Equals(0) && !favourite)
                         {
                             title.Visibility = ViewStates.Invisible;
