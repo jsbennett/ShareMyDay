@@ -39,7 +39,11 @@ namespace ShareMyDay.VoiceRecording
             }
             if (_voiceRecorder == null) {
                 submitButton.Enabled = false;
+                submitButton.SetBackgroundResource(Resource.Drawable.ButtonDimmedGenerator);
+                submitButton.SetTextColor(Color.ParseColor("#969a90"));
                 playButton.Enabled = false; 
+                playButton.SetBackgroundResource(Resource.Drawable.ButtonDimmedGenerator);
+                playButton.SetTextColor(Color.ParseColor("#969a90"));
                 _voiceRecorder = new MediaRecorder ();
                 _voiceRecorder.SetAudioSource (AudioSource.Mic);
                 _voiceRecorder.SetOutputFormat (OutputFormat.ThreeGpp);
@@ -51,12 +55,15 @@ namespace ShareMyDay.VoiceRecording
                 button.Text = "Stop Recording";
                  
                 button.SetBackgroundColor(Color.Red);
-
             }
             else
             {
                 submitButton.Enabled = true; 
+                submitButton.SetBackgroundResource(Resource.Drawable.ButtonGenerator);
+                submitButton.SetTextColor(Color.White);
                 playButton.Enabled = true; 
+                playButton.SetBackgroundResource(Resource.Drawable.ButtonGenerator);
+                playButton.SetTextColor(Color.White);
                 _audioPaths.Add(_audioPath);
                 _voiceRecorder.Stop ();
                 _voiceRecorder.Reset ();

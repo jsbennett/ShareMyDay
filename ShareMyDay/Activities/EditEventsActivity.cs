@@ -12,6 +12,7 @@ namespace ShareMyDay.Activities
     [Activity(Label = "EditEventsActivity")]
     public class EditEventsActivity : Activity
     {
+        private Button _close;
         protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -20,7 +21,15 @@ namespace ShareMyDay.Activities
                 System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "ShareMyDay.db3");
 
             var eventInformation = db.FindEventByValue(previousActivity);
+            _close = new Button(this);
+            _close.SetBackgroundResource(Resource.Drawable.Back);
 
+            _close.Click += delegate
+            {
+                _close.SetBackgroundResource(Resource.Drawable.BackClicked);
+                Intent back = new Intent(this, typeof(EventListActivity));
+                StartActivity(back);
+            };
             LinearLayout outerLayout = new LinearLayout(this)
             {
                 Orientation = Orientation.Vertical
@@ -32,7 +41,7 @@ namespace ShareMyDay.Activities
             {
                 Orientation = Orientation.Vertical
             };
-            informationLayout.SetPadding(0,50,0,50);
+            informationLayout.SetPadding(0,0,0,50);
             if (eventInformation != null)
             {
                 TextView title = new TextView(this)
@@ -42,6 +51,8 @@ namespace ShareMyDay.Activities
                     TextAlignment = TextAlignment.Center
                 };
 
+                title.SetTextColor(Color.White);
+                title.SetBackgroundColor(Color.ParseColor("#213f5e"));
                 informationLayout.AddView(title);
                 if (eventInformation.Cards != null && eventInformation.Cards.Count != 0)
                 {
@@ -51,6 +62,7 @@ namespace ShareMyDay.Activities
                         TextSize = 20 
 
                     };
+                    cardTitle.SetTextColor(Color.Black);
                     cardTitle.SetPadding(40,50,0,10);
                     informationLayout.AddView(cardTitle);
                 }
@@ -61,6 +73,7 @@ namespace ShareMyDay.Activities
                         Text = "No cards tapped for this event",
                         TextSize = 20
                     };
+                    cardTitle.SetTextColor(Color.Black);
                     cardTitle.SetPadding(40,50,0,50);
                     informationLayout.AddView(cardTitle);
                 }
@@ -72,7 +85,8 @@ namespace ShareMyDay.Activities
                         Text = "Event Recordings: ",
                         TextSize = 20
                     };
-                    recordingTitle.SetPadding(40,50,0,50);
+                    recordingTitle.SetTextColor(Color.Black);
+                    recordingTitle.SetPadding(40,0,0,50);
                     informationLayout.AddView(recordingTitle);
 
                     int count = 0;
@@ -81,9 +95,11 @@ namespace ShareMyDay.Activities
                         count++;
                         Button voiceRecording = new Button(this)
                         {
-                            Text = "Play recording " + count
+                            Text = "Play recording " + count,
+                            
                         };
-
+                        voiceRecording.SetTextColor(Color.White);
+                        voiceRecording.SetBackgroundResource(Resource.Drawable.ButtonGenerator);
                         voiceRecording.Click += delegate
                         {
                             List<string> copy = new List<string>();
@@ -107,7 +123,8 @@ namespace ShareMyDay.Activities
                         {
                             Text = "Play All Recordings "
                         };
-
+                        groupedVoiceRecordings.SetTextColor(Color.White);
+                        groupedVoiceRecordings.SetBackgroundResource(Resource.Drawable.ButtonGenerator);
                         groupedVoiceRecordings.Click += delegate
                         {
 
@@ -134,6 +151,7 @@ namespace ShareMyDay.Activities
                         Text = "No voice recordings have been made for this event",
                         TextSize = 20
                     };
+                    recordingTitle.SetTextColor(Color.Black);
                     recordingTitle.SetPadding(40,50,0,50);
                     informationLayout.AddView(recordingTitle);
                 }
@@ -147,6 +165,7 @@ namespace ShareMyDay.Activities
                         Text = "Event Pictures:",
                         TextSize = 20
                     };
+                    imageTitle.SetTextColor(Color.Black);
                     imageTitle.SetPadding(40,50,0,50);
                     informationLayout.AddView(imageTitle);
                     foreach (var i in eventInformation.Pictures)
@@ -169,6 +188,7 @@ namespace ShareMyDay.Activities
                                     TextSize = 20
 
                                 };
+                                noImageTitle.SetTextColor(Color.Black);
                                 noImageTitle.SetPadding(40,50,0,50);
                                 informationLayout.AddView(noImageTitle);
                             }
@@ -190,25 +210,13 @@ namespace ShareMyDay.Activities
                         TextSize = 20
                         
                     };
-                    
+                    imageTitle.SetTextColor(Color.Black);
                     imageTitle.SetPadding(40,50,0,50);
                     informationLayout.AddView(imageTitle);
                 }
 
-
-                Button close = new Button(this)
-                {
-                    Text = "Back"
-                };
-
-                close.Click += delegate
-                {
-                    Intent back = new Intent(this, typeof(EventListActivity));
-                    StartActivity(back);
-                };
-
-                informationLayout.AddView(close, ViewGroup.LayoutParams.MatchParent,    
-                    250);
+                informationLayout.AddView(_close, ViewGroup.LayoutParams.MatchParent,    
+                    450);
                 innerLayout.AddView(informationLayout,
                     ViewGroup.LayoutParams.MatchParent,
                     ViewGroup.LayoutParams.WrapContent);
@@ -217,6 +225,17 @@ namespace ShareMyDay.Activities
                 SetContentView(outerLayout);
             }
 
+        }
+
+        /*
+        * Method Name: OnResume
+        * Purpose: This is for when the app has loaded
+        */
+        protected override void OnResume()
+        {
+            base.OnResume();
+           _close.SetBackgroundResource(Resource.Drawable.Back);
+            
         }
         
         public async Task<Bitmap> GetImage(BitmapFactory.Options options, string path)

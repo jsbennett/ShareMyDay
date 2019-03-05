@@ -1,6 +1,6 @@
-﻿
-using Android.App;
+﻿using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Widget;
 using ShareMyDay.UIComponents;
@@ -20,7 +20,7 @@ namespace ShareMyDay.Activities
             //StrictMode.SetVmPolicy(builder.Build());
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.PictureViewer);
-            
+            Typeface buttonFont = Typeface.CreateFromAsset (Assets, "Kano.otf");
             _previousActivity = Intent.GetStringExtra("PreviousActivity");
             
             SpinnerComponent spinner = new SpinnerComponent (this, Resource.Id.eventSelector, this);
@@ -43,8 +43,12 @@ namespace ShareMyDay.Activities
             _imageViewer = _camera.GetImageViewer(Resource.Id.imageView, this);
             _camera.Start(_imageViewer, this, _previousActivity);
 
-            Button submitButton = FindViewById<Button>(Resource.Id.submitButton); 
+            CancelButtonComponent cancelButton = new CancelButtonComponent(this);
+            cancelButton.Get().SetTypeface(buttonFont,TypefaceStyle.Bold);
+            cancelButton.Get().Click += (o, e) => { cancelButton.Functionality(_previousActivity, this); };
 
+            Button submitButton = FindViewById<Button>(Resource.Id.submitButton); 
+            submitButton.SetTypeface(buttonFont,TypefaceStyle.Bold);
             bool anotherPicture = false; 
             submitButton.Click += (o, e) => {
                 if (anotherPicture == false)
@@ -66,6 +70,7 @@ namespace ShareMyDay.Activities
                         spinner.Disable();
                         eventComplete.Enabled = false; 
                         submitButton.Text = "Take Another Picture";
+                        cancelButton.Get().Text = "Close";
                         AlertBoxComponent voiceRecording = new AlertBoxComponent(this);
                         voiceRecording.RepeateFunctionSetup<VoiceRecordingActivity>("Take Voice Recording",
                             "Do you want to take a voice recording?", this, this, _previousActivity);
@@ -88,8 +93,6 @@ namespace ShareMyDay.Activities
                 }
             };
 
-            CancelButtonComponent cancelButton = new CancelButtonComponent(this);
-            cancelButton.Get().Click += (o, e) => { cancelButton.Functionality(_previousActivity, this); };
         }
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
