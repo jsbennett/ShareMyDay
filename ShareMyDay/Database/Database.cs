@@ -73,6 +73,7 @@ namespace ShareMyDay.Database
                     count += db.Insert(i);
                 }
             }
+           
             db.Close();
             return count; 
         }
@@ -183,7 +184,22 @@ namespace ShareMyDay.Database
             return false; 
         }
 
-        public void DeleteTableValues()
+        public bool RemoveFavourite(string id)
+        {
+            var db = CreateConnection();
+            var story = db.GetWithChildren<Models.Story>(id);
+
+            if (story != null)
+            {
+                story.Favourite = false; 
+                db.Update(story);
+                return true;
+            }
+            db.Close();
+            return false;  
+        }
+
+        public void DeleteAllTableValues()
         {
             var db = CreateConnection();
             db.DeleteAll<Models.Story>();
@@ -193,6 +209,21 @@ namespace ShareMyDay.Database
             db.DeleteAll<Models.VoiceRecording>();
             db.Close();
         }
+
+        public void DeleteOldStories()
+        {
+            var db = CreateConnection();
+            List<Models.Story> stories = GetAllStories();
+            foreach (var i in stories)
+            {
+                if (i.Favourite.Equals(false))
+                {
+                    db.Delete(i);
+                }
+            }
+            db.Close();
+        }
+        
         public int InsertStories(List<StoryEvent> storyEventList, bool isExtraStory, bool isTextToSpeech)
         {
             int count = 0; 
@@ -236,7 +267,7 @@ namespace ShareMyDay.Database
             {
                 story.TextToSpeech = true; 
             }
-
+            story.DateTime = DateTime.Now;
             story.Favourite = false; 
             db.UpdateWithChildren(story);
 
@@ -269,7 +300,6 @@ namespace ShareMyDay.Database
         public Models.Story FindStoryById(string id)
         {
             var db = CreateConnection();
-            //var result = db.Query<Models.Story>("SELECT * FROM Story WHERE Value == ?" , id );
             var story = db.GetWithChildren<Models.Story>(id);
             db.Close();
             return story; 
@@ -282,7 +312,7 @@ namespace ShareMyDay.Database
             List<Models.Story> stories = new List<Models.Story>();
             foreach (var i in initalStories)
             {
-                stories.Add( db.GetWithChildren<Models.Story>(i.Id));
+                stories.Add(db.GetWithChildren<Models.Story>(i.Id));
 
             }
            db.Close();

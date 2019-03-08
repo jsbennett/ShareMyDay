@@ -1,13 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
+﻿using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 
 namespace ShareMyDay.Activities
@@ -31,11 +24,11 @@ namespace ShareMyDay.Activities
             
             if (type == "Favourite")
             {
-                textBox.Text = "No stories are your favourite yet!";
+                textBox.Text = "No stories are your favourite yet! Click on a story, play it to the end and then click the Favourite button for the story to be your favourite story.";
             }
             else
             {
-                textBox.Text = "No stories have been made yet! Come back soon!";
+                textBox.Text = "No stories have been made yet! Your teacher needs to click the generate story button or wait till home time. Come back soon!";
             }
         }
     }

@@ -42,13 +42,13 @@
 		android:maxLength="24" />
 	<Button
 		android:text="Submit"
-		android:layout_width="match_parent"
+		android:layout_width="355.0dp"
 		android:layout_height="132dp"
 		android:id="@+id/submitButton"
 		android:layout_marginBottom="3dp" />
 	<Button
 		android:text="Cancel"
-		android:layout_width="match_parent"
+		android:layout_width="355.0dp"
 		android:layout_height="132dp"
 		android:id="@+id/cancelButton" />
 </LinearLayout>

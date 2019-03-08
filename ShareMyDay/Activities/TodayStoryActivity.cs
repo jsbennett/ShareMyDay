@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Graphics;
@@ -11,19 +13,27 @@ namespace ShareMyDay.Activities
     [Activity(Label = "TodayStoryActivity")]
     public class TodayStoryActivity : Activity
     {
-        public bool closeClicked; 
+        private bool _closeClicked; 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.TodayStoryView);
            
             var db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
-            var stories = db.GetAllStories(); 
-            
+            var initialStories = db.GetAllStories(); 
+            List<Database.Models.Story> stories = new List<Database.Models.Story>();
+            foreach (var i in initialStories)
+            {
+                if (i.DateTime.Day.Equals(DateTime.Now.Day))
+                {
+                    stories.Add(i);
+                }
+            }
             bool eventsFromToday = stories.Count != 0;
             
             if (eventsFromToday)
             { 
+                
                 ImageView latestStory = FindViewById<ImageView>(Resource.Id.storyButton);
                 TextView titleBox = FindViewById<TextView>(Resource.Id.storyTitle);
                 int storyIndex = 0;
@@ -92,7 +102,7 @@ namespace ShareMyDay.Activities
                     
                     if (storyIndex == limit-1)
                     {
-                        closeClicked = true; 
+                        _closeClicked = true; 
                         next.SetBackgroundResource(Resource.Drawable.SmallClose);
                         next.ContentDescription = "Close";
                         using (var image = GetImage(options, stories[storyIndex].CoverPhoto))
@@ -140,7 +150,7 @@ namespace ShareMyDay.Activities
         protected override void OnResume()
         {
             base.OnResume();
-            if (closeClicked == true)
+            if (_closeClicked)
             {
                 Button next = FindViewById<Button>(Resource.Id.changeViewButton);
                 next.SetBackgroundResource(Resource.Drawable.SmallClose);

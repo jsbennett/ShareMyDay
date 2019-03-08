@@ -1,11 +1,10 @@
-﻿using System.Net.Mime;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
-using Android.Media;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
 using ShareMyDay.Activities;
+using System;
 
 namespace ShareMyDay
 {
@@ -19,7 +18,7 @@ namespace ShareMyDay
     {
         private NFC.NFC _nfc;
         private Database.Database _db;
-
+        
         /*
          * Method Name: OnCreate
          * Purpose: It is used for when the app is loading 
@@ -35,6 +34,11 @@ namespace ShareMyDay
 
             _db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             _db.Create();
+            if(DateTime.Now.Hour.Equals(8) && DateTime.Now.Minute.Equals(1))
+            {
+                _db.DeleteOldStories();
+            }
+                
             _db.Setup();
          
 
@@ -72,6 +76,12 @@ namespace ShareMyDay
             todayStory.SetBackgroundResource(Resource.Drawable.TodayStoryButton);
             Button favouriteStory = FindViewById<Button>(Resource.Id.favouriteStoryButton);
             favouriteStory.SetBackgroundResource(Resource.Drawable.FaveButton);
+
+            _db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
+            if(DateTime.Now.Hour.Equals(8) && DateTime.Now.Minute.Equals(1))
+            {
+                _db.DeleteOldStories();
+            }
         }
 
         /*

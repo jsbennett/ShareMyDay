@@ -10,6 +10,7 @@ using Android.Nfc;
 using Android.Nfc.Tech;
 using Android.OS;
 using Android.Runtime;
+using Android.Util;
 using Android.Views;
 using Android.Widget;
 using ShareMyDay.UIComponents;
@@ -33,11 +34,20 @@ namespace ShareMyDay.Activities
             spinner.SetupNFcDropDown();
             
             _nfc = new NFC.NFC(this);
-
+            Typeface buttonFont = Typeface.CreateFromAsset (Assets, "Kano.otf");
             Button submitButton = FindViewById<Button>(Resource.Id.submitButton);
+            submitButton.SetTypeface(buttonFont,TypefaceStyle.Bold);
+            submitButton.SetBackgroundResource(Resource.Drawable.ButtonGenerator);
+            submitButton.SetTextColor(Color.White);
+            submitButton.SetTextSize(ComplexUnitType.Dip,15);
             EditText inputBox = FindViewById<EditText>(Resource.Id.messageInputBox);
+            
 
             Button closeButton = FindViewById<Button>(Resource.Id.cancelButton);
+            closeButton.SetTypeface(buttonFont,TypefaceStyle.Bold);
+            closeButton.SetBackgroundResource(Resource.Drawable.ButtonGenerator);
+            closeButton.SetTextColor(Color.White);
+            closeButton.SetTextSize(ComplexUnitType.Dip,15);
             closeButton.Click += delegate
             {
                 Intent mainMenuIntent = new Intent(this, typeof(TeacherMainMenuActivity));
@@ -55,6 +65,7 @@ namespace ShareMyDay.Activities
                 else
                 {
                     _nfc.WriteDetection(spinner.GetSelected(),inputBox.Text,this,this);
+                    closeButton.Text = "Close";
                 }
             };
         }

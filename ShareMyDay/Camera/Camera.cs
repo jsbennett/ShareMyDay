@@ -4,10 +4,12 @@ using Android.Provider;
 using Android.Widget;
 using Java.IO;
 using System;
+using Android.Graphics;
 using ShareMyDay.Activities;
 using ShareMyDay.Database.Models;
 using ShareMyDay.UIComponents;
 using Console = System.Console;
+using Picture = ShareMyDay.Database.Models.Picture;
 using Uri = Android.Net.Uri;
 
 namespace ShareMyDay.Camera
@@ -130,7 +132,17 @@ namespace ShareMyDay.Camera
                 
                 if (resultCode == Result.Ok) {
                     Console.WriteLine(Uri.Parse (camera.GetImage().AbsolutePath));
-                    _imageViewer.SetImageURI (Uri.Parse (camera.GetImage().AbsolutePath));
+                    var options = new BitmapFactory.Options {InJustDecodeBounds = true};
+
+                    var sample = 4;
+                    options.InSampleSize = sample;            
+                    options.InJustDecodeBounds = false;
+            
+                    using (var image = GetImage(options, camera.GetImage().AbsolutePath))
+                    {
+                        _imageViewer.SetImageBitmap(image);
+                    }
+                    //_imageViewer.SetImageURI (Uri.Parse (camera.GetImage().AbsolutePath));
                     _url = camera.GetImage().AbsolutePath;
                 } else {
                     if (_previousActivity == "QuickMenu")
@@ -149,7 +161,17 @@ namespace ShareMyDay.Camera
             }
         }
 
-        public string GetImageURL()
+        public Bitmap GetImage(BitmapFactory.Options options, string path)
+        {
+            using (var fs = new System.IO.FileStream(path, System.IO.FileMode.Open))
+            {
+                var bitmap = BitmapFactory.DecodeStream (fs, null, options);
+                return bitmap;
+            }
+            
+        }
+
+        public string GetImageUrl()
         {
             return _url;
 
@@ -166,7 +188,7 @@ namespace ShareMyDay.Camera
 
             var picture = new Picture {
                 EventId = storyEvent.Id,
-                Path = GetImageURL()
+                Path = GetImageUrl()
 
             };
                  
@@ -183,7 +205,7 @@ namespace ShareMyDay.Camera
 
             var picture = new Picture {
                 EventId = storyEvent.Id,
-                Path = GetImageURL(),
+                Path = GetImageUrl(),
 
 
             };

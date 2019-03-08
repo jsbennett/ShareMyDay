@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
-using Android.Views.Accessibility;
 using ShareMyDay.Database.Models;
+using System;
+using System.Collections.Generic;
 
 namespace ShareMyDay.Story.StoryFunctions
 {
@@ -177,8 +176,26 @@ namespace ShareMyDay.Story.StoryFunctions
 
                                     if (finalEvents.Count != 0)
                                     {
+                                        bool hasRecordings = false; 
                                         finalEvents.Insert(0, storyEvents[i]);
-                                        _db.InsertStories(finalEvents, false, true);
+                                        foreach (var k in finalEvents)
+                                        {
+                                            if (k.VoiceRecordings != null && k.VoiceRecordings.Count != 0)
+                                            {
+                                                hasRecordings = true;
+                                                break; 
+                                            }
+                                        }
+
+                                        if (hasRecordings)
+                                        {
+                                            _db.InsertStories(finalEvents, false, false);
+                                        }
+                                        else
+                                        {
+                                            _db.InsertStories(finalEvents, false, true);
+                                        }
+                                        
                                     }
                                     else
                                     {

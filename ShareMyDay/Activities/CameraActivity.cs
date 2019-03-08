@@ -16,14 +16,14 @@ namespace ShareMyDay.Activities
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
-            //StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-            //StrictMode.SetVmPolicy(builder.Build());
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.SetVmPolicy(builder.Build());
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.PictureViewer);
-            Typeface buttonFont = Typeface.CreateFromAsset (Assets, "Kano.otf");
+            Typeface buttonFont = Typeface.CreateFromAsset(Assets, "Kano.otf");
             _previousActivity = Intent.GetStringExtra("PreviousActivity");
-            
-            SpinnerComponent spinner = new SpinnerComponent (this, Resource.Id.eventSelector, this);
+
+            SpinnerComponent spinner = new SpinnerComponent(this, Resource.Id.eventSelector, this);
             spinner.Setup();
 
             CheckBox eventComplete = FindViewById<CheckBox>(Resource.Id.eventComplete);
@@ -32,43 +32,42 @@ namespace ShareMyDay.Activities
             {
                 if (eventComplete.Checked)
                 {
-                    ticked = true; 
+                    ticked = true;
                 }
                 else
                 {
-                    ticked = false; 
+                    ticked = false;
                 }
-                
             };
             _imageViewer = _camera.GetImageViewer(Resource.Id.imageView, this);
             _camera.Start(_imageViewer, this, _previousActivity);
 
             CancelButtonComponent cancelButton = new CancelButtonComponent(this);
-            cancelButton.Get().SetTypeface(buttonFont,TypefaceStyle.Bold);
+            cancelButton.Get().SetTypeface(buttonFont, TypefaceStyle.Bold);
             cancelButton.Get().Click += (o, e) => { cancelButton.Functionality(_previousActivity, this); };
 
-            Button submitButton = FindViewById<Button>(Resource.Id.submitButton); 
-            submitButton.SetTypeface(buttonFont,TypefaceStyle.Bold);
-            bool anotherPicture = false; 
-            submitButton.Click += (o, e) => {
+            Button submitButton = FindViewById<Button>(Resource.Id.submitButton);
+            submitButton.SetTypeface(buttonFont, TypefaceStyle.Bold);
+            bool anotherPicture = false;
+            submitButton.Click += (o, e) =>
+            {
                 if (anotherPicture == false)
                 {
-                   
                     bool uploadedSuccessful;
                     if (spinner.GetSelected().Equals("New Event"))
                     {
-                        uploadedSuccessful =_camera.SaveNewEvent(ticked);
+                        uploadedSuccessful = _camera.SaveNewEvent(ticked);
                     }
                     else
                     {
-                        uploadedSuccessful = _camera.SaveExistingEvent(spinner, ticked); 
+                        uploadedSuccessful = _camera.SaveExistingEvent(spinner, ticked);
                     }
 
-             
+
                     if (uploadedSuccessful)
                     {
                         spinner.Disable();
-                        eventComplete.Enabled = false; 
+                        eventComplete.Enabled = false;
                         submitButton.Text = "Take Another Picture";
                         cancelButton.Get().Text = "Close";
                         AlertBoxComponent voiceRecording = new AlertBoxComponent(this);
@@ -92,13 +91,11 @@ namespace ShareMyDay.Activities
                     StartActivity(repeatedActivity);
                 }
             };
-
         }
 
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
         {
-            _camera.DisplayPicture(requestCode, resultCode, this,_camera, this);
+            _camera.DisplayPicture(requestCode, resultCode, this, _camera, this);
         }
-
     }
 }
