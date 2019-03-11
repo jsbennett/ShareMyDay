@@ -88,8 +88,10 @@ namespace ShareMyDay.NFC
         {
             NFcRead reader = new NFcRead();
             reader.GetData(intent);
-            List<string> cardValues = new List<string>();
-            cardValues.Add(reader.CardType);
+            List<string> cardValues = new List<string>
+            {
+                reader.CardType
+            };
             foreach (var i in reader.SplitValue())
             {
                 cardValues.Add(i);

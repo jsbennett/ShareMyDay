@@ -13,14 +13,16 @@ namespace ShareMyDay.Activities
     [Activity(Label = "TodayStoryActivity")]
     public class TodayStoryActivity : Activity
     {
-        private bool _closeClicked; 
+        private bool _closeClicked;
+
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.TodayStoryView);
-           
-            var db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
-            var initialStories = db.GetAllStories(); 
+
+            var db = new Database.Database(
+                System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "ShareMyDay.db3");
+            var initialStories = db.GetAllStories();
             List<Database.Models.Story> stories = new List<Database.Models.Story>();
             foreach (var i in initialStories)
             {
@@ -29,30 +31,37 @@ namespace ShareMyDay.Activities
                     stories.Add(i);
                 }
             }
+
             bool eventsFromToday = stories.Count != 0;
-            
+            Button next = FindViewById<Button>(Resource.Id.changeViewButton);
             if (eventsFromToday)
-            { 
-                
-                ImageView latestStory = FindViewById<ImageView>(Resource.Id.storyButton);
-                TextView titleBox = FindViewById<TextView>(Resource.Id.storyTitle);
-                int storyIndex = 0;
-                int limit = stories.Count; //this is the number of stories for a day 
-                
+            {
                 var options = new BitmapFactory.Options {InJustDecodeBounds = true};
 
                 var sample = 4;
                 options.InSampleSize = sample;
-                        
+
                 options.InJustDecodeBounds = false;
-                using (var image = GetImage(options, stories[storyIndex].CoverPhoto))
+
+                ImageView latestStory = FindViewById<ImageView>(Resource.Id.storyButton);
+                TextView titleBox = FindViewById<TextView>(Resource.Id.storyTitle);
+                int storyIndex = 0;
+                int limit = stories.Count; //this is the number of stories for a day 
+
+                if (stories[storyIndex].DefaultPicture != null)
                 {
-                    latestStory.SetImageBitmap(image);
-
-
+                    int image = (int) typeof(Resource.Drawable).GetField(stories[storyIndex].DefaultPicture)
+                        .GetValue(null);
+                    latestStory.SetImageResource(image);
+                }
+                else
+                {
+                    using (var image = GetImage(options, stories[storyIndex].CoverPhoto))
+                    {
+                        latestStory.SetImageBitmap(image);
+                    }
                 }
 
-               
                 titleBox.Text = "Story: " + stories[storyIndex].TitleValue;
                 latestStory.Click += delegate
                 {
@@ -61,7 +70,7 @@ namespace ShareMyDay.Activities
                     StartActivity(storyIntent);
                 };
 
-                Button next = FindViewById<Button>(Resource.Id.changeViewButton);
+
                 if (limit.Equals(1))
                 {
                     next.SetBackgroundResource(Resource.Drawable.SmallClose);
@@ -89,31 +98,46 @@ namespace ShareMyDay.Activities
 
                     next.SetBackgroundResource(Resource.Drawable.Next);
                     storyIndex++;
-                    if (storyIndex < limit-1)
+                    if (storyIndex < limit - 1)
                     {
-                        using (var image = GetImage(options, stories[storyIndex].CoverPhoto))
+                        if (stories[storyIndex].DefaultPicture != null)
                         {
-                            latestStory.SetImageBitmap(image);
-                            
-
+                            int image = (int) typeof(Resource.Drawable).GetField(stories[storyIndex].DefaultPicture)
+                                .GetValue(null);
+                            latestStory.SetImageResource(image);
                         }
+                        else
+                        {
+                            using (var image = GetImage(options, stories[storyIndex].CoverPhoto))
+                            {
+                                latestStory.SetImageBitmap(image);
+                            }
+                        }
+
                         titleBox.Text = "Story: " + stories[storyIndex].TitleValue;
                     }
-                    
-                    if (storyIndex == limit-1)
+
+                    if (storyIndex == limit - 1)
                     {
-                        _closeClicked = true; 
+                        _closeClicked = true;
                         next.SetBackgroundResource(Resource.Drawable.SmallClose);
                         next.ContentDescription = "Close";
-                        using (var image = GetImage(options, stories[storyIndex].CoverPhoto))
+                        if (stories[storyIndex].DefaultPicture != null)
                         {
-                            latestStory.SetImageBitmap(image);
-                            
-
+                            int image = (int) typeof(Resource.Drawable).GetField(stories[storyIndex].DefaultPicture)
+                                .GetValue(null);
+                            latestStory.SetImageResource(image);
                         }
-                        titleBox.Text = "Story: " + stories[storyIndex].TitleValue;
+                        else
+                        {
+                            using (var image = GetImage(options, stories[storyIndex].CoverPhoto))
+                            {
+                                latestStory.SetImageBitmap(image);
+                            }
+                        }
 
-                    } 
+                        titleBox.Text = "Story: " + stories[storyIndex].TitleValue;
+                    }
                 };
             }
             else
@@ -122,17 +146,15 @@ namespace ShareMyDay.Activities
                 noFavouriteStories.PutExtra("StoryType", "Story");
                 StartActivity(noFavouriteStories);
             }
-
-          }
+        }
 
         public Bitmap GetImage(BitmapFactory.Options options, string path)
         {
             using (var fs = new System.IO.FileStream(path, System.IO.FileMode.Open))
-            
+
             {
-                
                 var bitmap = BitmapFactory.DecodeStream(fs, null, options);
-                
+
                 if (bitmap != null)
                 {
                     Toast.MakeText(this, "Images Loading...", ToastLength.Short).Show();
@@ -140,7 +162,6 @@ namespace ShareMyDay.Activities
 
                 return bitmap;
             }
-            
         }
 
         /*
@@ -155,8 +176,6 @@ namespace ShareMyDay.Activities
                 Button next = FindViewById<Button>(Resource.Id.changeViewButton);
                 next.SetBackgroundResource(Resource.Drawable.SmallClose);
             }
-            
         }
-
     }
 }

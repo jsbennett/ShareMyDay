@@ -6,8 +6,8 @@ using System.Collections.Generic;
 namespace ShareMyDay.Database.Models
 {
     /*
-     * Class Name: NFCEvent
-     * Purpose: To be the blueprint of a NFC table entry
+     * Class Name: StoryEvent
+     * Purpose: To be the blueprint of an event of a story
      * Created 31/01/2019
      */
     public class StoryEvent

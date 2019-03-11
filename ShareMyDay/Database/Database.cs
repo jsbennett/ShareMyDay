@@ -224,7 +224,7 @@ namespace ShareMyDay.Database
             db.Close();
         }
         
-        public int InsertStories(List<StoryEvent> storyEventList, bool isExtraStory, bool isTextToSpeech)
+        public int InsertStories(List<StoryEvent> storyEventList, bool isExtraStory, bool isTextToSpeech, string defaultPicture)
         {
             int count = 0; 
             var db = CreateConnection();
@@ -267,6 +267,16 @@ namespace ShareMyDay.Database
             {
                 story.TextToSpeech = true; 
             }
+
+            if (defaultPicture != null)
+            {
+                story.DefaultPicture = defaultPicture;
+            }
+            else
+            {
+                story.DefaultPicture = null; 
+            }
+
             story.DateTime = DateTime.Now;
             story.Favourite = false; 
             db.UpdateWithChildren(story);

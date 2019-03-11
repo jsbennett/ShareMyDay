@@ -24,5 +24,7 @@ namespace ShareMyDay.Database.Models
         public bool Favourite { get; set; }
 
         public bool Extra { get; set; }
+
+        public string DefaultPicture { get; set; }
     }
 }

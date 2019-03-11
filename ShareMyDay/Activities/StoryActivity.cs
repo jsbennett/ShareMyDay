@@ -80,317 +80,593 @@ namespace ShareMyDay.Activities
         public void SetupStory(Database.Models.Story story, BitmapFactory.Options options, ImageView pictureButton,
             Database.Database db, bool favourite)
         {
-            using (var image = GetImage(options, story.CoverPhoto))
-            {
-                pictureButton.SetImageBitmap(image);
-            }
-
-            TextView title = FindViewById<TextView>(Resource.Id.titleBox);
+           TextView title = FindViewById<TextView>(Resource.Id.titleBox);
             title.Text = story.TitleValue;
 
             List<StoryEvent> storyEvents = db.FindEventsFromStory(story.Id.ToString());
             List<Picture> pictures = new List<Picture>();
             List<Database.Models.VoiceRecording> voiceRecordings = new List<Database.Models.VoiceRecording>();
-
-            if (story.Extra.Equals(false) && story.TextToSpeech.Equals(false))
+            if (story.DefaultPicture== null)
             {
-                foreach (var i in storyEvents)
+                using (var image = GetImage(options, story.CoverPhoto))
                 {
-                    if (i.Pictures != null && i.Pictures.Count != 0)
-                    {
-                        foreach (var picture in i.Pictures)
-                        {
-                            pictures.Add(picture);
-                        }
-                    }
-
-                    if (i.VoiceRecordings != null && i.VoiceRecordings.Count != 0)
-                    {
-                        foreach (var recording in i.VoiceRecordings)
-                        {
-                            voiceRecordings.Add(recording);
-                        }
-                    }
+                    pictureButton.SetImageBitmap(image);
                 }
-            }
 
-            bool done = false;
-            if (story.TextToSpeech)
-            {
-                foreach (var i in storyEvents)
+                if (story.Extra.Equals(false) && story.TextToSpeech.Equals(false))
                 {
-                    if (i.Pictures != null && i.Pictures.Count != 0)
+                    foreach (var i in storyEvents)
                     {
-                        foreach (var picture in i.Pictures)
+                        if (i.Pictures != null && i.Pictures.Count != 0)
                         {
-                            pictures.Add(picture);
-                        }
-                    }
-
-                    if (i.VoiceRecordings != null && i.VoiceRecordings.Count != 0)
-                    {
-                        foreach (var recording in i.VoiceRecordings)
-                        {
-                            voiceRecordings.Add(recording);
-                        }
-                    }
-                    else
-                    {
-                        bool cardFound = false;
-                        foreach (var j in storyEvents)
-                        {
-                            if (j.Cards != null && j.Cards.Count != 0)
+                            foreach (var picture in i.Pictures)
                             {
-                                _text = CreateSentence(j.Cards[0]);
-                                cardFound = true;
+                                pictures.Add(picture);
                             }
                         }
 
-                        if (!cardFound)
+                        if (i.VoiceRecordings != null && i.VoiceRecordings.Count != 0)
                         {
-                            _text = "Never guess what else happened in school today! Have a look at all of this!";
-                        }
-                    }
-
-                    done = true;
-                }
-            }
-
-            if (story.Extra && !done)
-            {
-                foreach (var i in storyEvents)
-                {
-                    if (i.Pictures != null && i.Pictures.Count != 0)
-                    {
-                        foreach (var picture in i.Pictures)
-                        {
-                            pictures.Add(picture);
-                        }
-                    }
-
-                    if (i.VoiceRecordings != null && i.VoiceRecordings.Count != 0)
-                    {
-                        foreach (var recording in i.VoiceRecordings)
-                        {
-                            voiceRecordings.Add(recording);
-                        }
-                    }
-                    else
-                    {
-                        bool cardFound = false;
-                        foreach (var j in storyEvents)
-                        {
-                            if (j.Cards != null && j.Cards.Count != 0)
+                            foreach (var recording in i.VoiceRecordings)
                             {
-                                _text = CreateSentence(j.Cards[0]);
-                                cardFound = true;
+                                voiceRecordings.Add(recording);
+                            }
+                        }
+                    }
+                }
+
+                bool done = false;
+                if (story.TextToSpeech)
+                {
+                    foreach (var i in storyEvents)
+                    {
+                        if (i.Pictures != null && i.Pictures.Count != 0)
+                        {
+                            foreach (var picture in i.Pictures)
+                            {
+                                pictures.Add(picture);
                             }
                         }
 
-                        if (!cardFound)
+                        if (i.VoiceRecordings != null && i.VoiceRecordings.Count != 0)
                         {
-                            _text = "Never guess what else happened in school today! Have a look at all of this!";
-                        }
-                    }
-                }
-            }
-
-            int pictureCount = pictures.Count;
-            int recordingCount = voiceRecordings.Count;
-
-            int totalSteps = 0;
-            if (pictureCount > recordingCount)
-            {
-                totalSteps = pictureCount;
-            }
-            else if (recordingCount > pictureCount)
-            {
-                totalSteps = recordingCount;
-            }
-            else
-            {
-                if (pictureCount != 0)
-                {
-                    totalSteps = pictureCount;
-                }
-                else
-                {
-                    if (recordingCount != 0)
-                    {
-                        totalSteps = recordingCount;
-                    }
-                }
-            }
-
-            TextView stepCounter = FindViewById<TextView>(Resource.Id.CountBox);
-            stepCounter.Text = "Click the picture to begin!";
-
-            bool firstClick = false;
-            int counter = 0;
-
-            pictureButton.Click += delegate
-            {
-                if (firstClick.Equals(false))
-                {
-                    totalSteps--;
-                    firstClick = true;
-                    if (story.TextToSpeech)
-                    {
-                        if (_phoneVoice == null)
-                        {
-                            _phoneVoice = new TextToSpeech(this, this);
+                            foreach (var recording in i.VoiceRecordings)
+                            {
+                                voiceRecordings.Add(recording);
+                            }
                         }
                         else
                         {
-                            _phoneVoice.Speak(_text, QueueMode.Flush, null, null);
+                            bool cardFound = false;
+                            foreach (var j in storyEvents)
+                            {
+                                if (j.Cards != null && j.Cards.Count != 0)
+                                {
+                                    _text = CreateSentence(j.Cards[0]);
+                                    cardFound = true;
+                                }
+                            }
+
+                            if (!cardFound)
+                            {
+                                _text = "Never guess what else happened in school today! Have a look at all of this!";
+                            }
+                        }
+
+                        done = true;
+                    }
+                }
+
+                if (story.Extra && !done)
+                {
+                    foreach (var i in storyEvents)
+                    {
+                        if (i.Pictures != null && i.Pictures.Count != 0)
+                        {
+                            foreach (var picture in i.Pictures)
+                            {
+                                pictures.Add(picture);
+                            }
+                        }
+
+                        if (i.VoiceRecordings != null && i.VoiceRecordings.Count != 0)
+                        {
+                            foreach (var recording in i.VoiceRecordings)
+                            {
+                                voiceRecordings.Add(recording);
+                            }
+                        }
+                        else
+                        {
+                            bool cardFound = false;
+                            foreach (var j in storyEvents)
+                            {
+                                if (j.Cards != null && j.Cards.Count != 0)
+                                {
+                                    _text = CreateSentence(j.Cards[0]);
+                                    cardFound = true;
+                                }
+                            }
+
+                            if (!cardFound)
+                            {
+                                _text = "Never guess what else happened in school today! Have a look at all of this!";
+                            }
                         }
                     }
                 }
+
+                int pictureCount = pictures.Count;
+                int recordingCount = voiceRecordings.Count;
+
+                int totalSteps = 0;
+                if (pictureCount > recordingCount)
+                {
+                    totalSteps = pictureCount;
+                }
+                else if (recordingCount > pictureCount)
+                {
+                    totalSteps = recordingCount;
+                }
                 else
                 {
-                    if (totalSteps.Equals(0))
+                    if (pictureCount != 0)
                     {
-                        //pictureButton.Enabled = false;
-                        //totalSteps++;
-                        totalSteps--;
+                        totalSteps = pictureCount;
                     }
                     else
                     {
-                        counter++;
-                        totalSteps--;
-                    }
-                }
-
-                if (totalSteps.Equals(0))
-                {
-                    stepCounter.Text = "No Clicks Left. Click the picture to play again.";
-                    stepCounter.TextSize = 20;
-                    
-                }
-                else if (totalSteps.Equals(1))
-                {
-                    stepCounter.Text = totalSteps + " click left";
-                }
-                else if (totalSteps <= -1)
-                {
-                    Intent replayStory = new Intent(this, typeof(StoryActivity));
-                    replayStory.PutExtra("Story", _storyId);
-                    StartActivity(replayStory);
-                    stepCounter.Text = "No Clicks Left. Click the picture to play again.";
-                }
-                else
-                {
-                    stepCounter.Text = totalSteps + " clicks left";
-                }
-                
-                if (pictureCount > counter)
-                {
-                    using (var image = GetImage(options, pictures[counter].Path))
-                    {
-                        pictureButton.SetImageBitmap(image);
-                    }
-                }
-
-                if (recordingCount > counter)
-                {
-                    List<string> recording = new List<string>();
-                    recording.Add(voiceRecordings[counter].Path);
-                    VoiceRecording.VoiceRecording audioPlayer = new VoiceRecording.VoiceRecording();
-                    audioPlayer.PlayRecordings(recording);
-                }
-            };
-
-            Button closeButton = FindViewById<Button>(Resource.Id.closeButton);
-            Button favouriteButton = FindViewById<Button>(Resource.Id.favouriteButton);
-
-
-            if (story.Favourite)
-            {
-                favouriteButton.SetBackgroundResource(Resource.Drawable.MakeFavouriteButton);
-            }
-
-            closeButton.Click += async delegate
-            {
-                await Task.Delay(1);
-
-                closeButton.SetBackgroundResource(Resource.Drawable.BigCloseButtonClicked);
-                Intent exitIntent = new Intent(this, typeof(MainActivity));
-                StartActivity(exitIntent);
-            };
-
-            favouriteButton.Click += async delegate
-            {
-                var favouriteStory = _db.FindStoryById(story.Id.ToString());
-                if (favouriteStory.Favourite)
-                {
-                    
-                    favouriteButton.SetBackgroundResource(Resource.Drawable.MakeFavouriteButtonClicked);
-                    await Task.Delay(10);
-                    AlertDialog.Builder alreadyFavourite = new AlertDialog.Builder(this);
-                    alreadyFavourite.SetTitle("Are you sure you want to unfavourite?");
-                    alreadyFavourite.SetMessage(
-                        "This story is your favourite! Are you sure you want to remove it?");
-                    alreadyFavourite.SetPositiveButton("Yes",
-                        (senderAlerts, argss) =>
+                        if (recordingCount != 0)
                         {
-                            _db.RemoveFavourite(story.Id.ToString());
-
-                            favouriteButton.SetBackgroundResource(Resource.Drawable.unFaveButton);
-                        });
-                    alreadyFavourite.SetNegativeButton("No",
-                        (senderAlerts, argss) => {favouriteButton.SetBackgroundResource(Resource.Drawable.MakeFavouriteButton);});
-                    alreadyFavourite.Create();
-                    alreadyFavourite.Show();
-                }
-                else
-                {
-                    await Task.Delay(10);
-                    favouriteButton.SetBackgroundResource(Resource.Drawable.unFaveButtonClicked);
-                    AlertDialog.Builder favouriteCheckBox = new AlertDialog.Builder(this);
-                    favouriteCheckBox.SetTitle("New Favourite");
-                    favouriteCheckBox.SetMessage(
-                        "If you make this story your new favourite, the current favourite story will be lost. Do you want to continue?");
-                    favouriteCheckBox.SetPositiveButton("Yes", async (senderAlert, args) =>
-                    {
-                        if (db.UpdateFavourite(story.Id))
-                        {
-                            AlertDialog.Builder favouriteChanged = new AlertDialog.Builder(this);
-                            favouriteChanged.SetTitle("Favourite Story Saved");
-                            favouriteChanged.SetMessage("This story is now your favourite story.");
-                            favouriteChanged.SetNeutralButton("Ok", (senderAlerts, argss) => { });
-                            favouriteChanged.Create();
-                            favouriteChanged.Show();
-
-
-                            await Task.Delay(1);
-                            favouriteButton.SetBackgroundResource(Resource.Drawable.MakeFavouriteButton);
+                            totalSteps = recordingCount;
                         }
-                    });
-                    favouriteCheckBox.SetNegativeButton("No", (senderAlert, args) => { favouriteButton.SetBackgroundResource(Resource.Drawable.unFaveButton);});
-                    favouriteCheckBox.Create();
-                    favouriteCheckBox.Show();
+                    }
                 }
-            };
 
-            Button cancelButton = FindViewById<Button>(Resource.Id.cancelButton);
-            cancelButton.Click += delegate
-            {
-                cancelButton.SetBackgroundResource(Resource.Drawable.FinishClicked);
-                if (totalSteps.Equals(0) && !favourite)
+                TextView stepCounter = FindViewById<TextView>(Resource.Id.CountBox);
+                stepCounter.Text = "Click the picture to begin!";
+
+                bool firstClick = false;
+                int counter = 0;
+
+                pictureButton.Click += delegate
                 {
-                    title.Visibility = ViewStates.Invisible;
-                    stepCounter.Visibility = ViewStates.Invisible;
-                    cancelButton.Visibility = ViewStates.Invisible;
-                    pictureButton.Visibility = ViewStates.Invisible;
-                    closeButton.Visibility = ViewStates.Visible;
-                    favouriteButton.Visibility = ViewStates.Visible;
+                    if (firstClick.Equals(false))
+                    {
+                        totalSteps--;
+                        firstClick = true;
+                        if (story.TextToSpeech)
+                        {
+                            if (_phoneVoice == null)
+                            {
+                                _phoneVoice = new TextToSpeech(this, this);
+                            }
+                            else
+                            {
+                                _phoneVoice.Speak(_text, QueueMode.Flush, null, null);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (totalSteps.Equals(0))
+                        {
+                            //pictureButton.Enabled = false;
+                            //totalSteps++;
+                            totalSteps--;
+                        }
+                        else
+                        {
+                            counter++;
+                            totalSteps--;
+                        }
+                    }
+
+                    if (totalSteps.Equals(0))
+                    {
+                        stepCounter.Text = "No Clicks Left. Click the picture to play again.";
+                        stepCounter.TextSize = 20;
+
+                    }
+                    else if (totalSteps.Equals(1))
+                    {
+                        stepCounter.Text = totalSteps + " click left";
+                    }
+                    else if (totalSteps <= -1)
+                    {
+                        Intent replayStory = new Intent(this, typeof(StoryActivity));
+                        replayStory.PutExtra("Story", _storyId);
+                        StartActivity(replayStory);
+                        stepCounter.Text = "No Clicks Left. Click the picture to play again.";
+                    }
+                    else
+                    {
+                        stepCounter.Text = totalSteps + " clicks left";
+                    }
+
+                    if (pictureCount > counter)
+                    {
+                        using (var image = GetImage(options, pictures[counter].Path))
+                        {
+                            pictureButton.SetImageBitmap(image);
+                        }
+                    }
+
+                    if (recordingCount > counter  && totalSteps > -1)
+                    {
+                        List<string> recording = new List<string>();
+                        recording.Add(voiceRecordings[counter].Path);
+                        VoiceRecording.VoiceRecording audioPlayer = new VoiceRecording.VoiceRecording();
+                        audioPlayer.PlayRecordings(recording);
+                    }
+                };
+
+
+
+                Button closeButton = FindViewById<Button>(Resource.Id.closeButton);
+                Button favouriteButton = FindViewById<Button>(Resource.Id.favouriteButton);
+
+
+                if (story.Favourite)
+                {
+                    favouriteButton.SetBackgroundResource(Resource.Drawable.MakeFavouriteButton);
                 }
-                else
+
+                closeButton.Click += async delegate
                 {
+                    await Task.Delay(1);
+
+                    closeButton.SetBackgroundResource(Resource.Drawable.BigCloseButtonClicked);
                     Intent exitIntent = new Intent(this, typeof(MainActivity));
                     StartActivity(exitIntent);
+                };
+
+                favouriteButton.Click += async delegate
+                {
+                    var favouriteStory = _db.FindStoryById(story.Id.ToString());
+                    if (favouriteStory.Favourite)
+                    {
+
+                        favouriteButton.SetBackgroundResource(Resource.Drawable.MakeFavouriteButtonClicked);
+                        await Task.Delay(10);
+                        AlertDialog.Builder alreadyFavourite = new AlertDialog.Builder(this);
+                        alreadyFavourite.SetTitle("Are you sure you want to unfavourite?");
+                        alreadyFavourite.SetMessage(
+                            "This story is your favourite! Are you sure you want to remove it?");
+                        alreadyFavourite.SetPositiveButton("Yes",
+                            (senderAlerts, argss) =>
+                            {
+                                _db.RemoveFavourite(story.Id.ToString());
+
+                                favouriteButton.SetBackgroundResource(Resource.Drawable.unFaveButton);
+                            });
+                        alreadyFavourite.SetNegativeButton("No",
+                            (senderAlerts, argss) =>
+                            {
+                                favouriteButton.SetBackgroundResource(Resource.Drawable.MakeFavouriteButton);
+                            });
+                        alreadyFavourite.Create();
+                        alreadyFavourite.Show();
+                    }
+                    else
+                    {
+                        await Task.Delay(10);
+                        favouriteButton.SetBackgroundResource(Resource.Drawable.unFaveButtonClicked);
+                        AlertDialog.Builder favouriteCheckBox = new AlertDialog.Builder(this);
+                        favouriteCheckBox.SetTitle("New Favourite");
+                        favouriteCheckBox.SetMessage(
+                            "If you make this story your new favourite, the current favourite story will be lost. Do you want to continue?");
+                        favouriteCheckBox.SetPositiveButton("Yes", async (senderAlert, args) =>
+                        {
+                            if (db.UpdateFavourite(story.Id))
+                            {
+                                AlertDialog.Builder favouriteChanged = new AlertDialog.Builder(this);
+                                favouriteChanged.SetTitle("Favourite Story Saved");
+                                favouriteChanged.SetMessage("This story is now your favourite story.");
+                                favouriteChanged.SetNeutralButton("Ok", (senderAlerts, argss) => { });
+                                favouriteChanged.Create();
+                                favouriteChanged.Show();
+
+
+                                await Task.Delay(1);
+                                favouriteButton.SetBackgroundResource(Resource.Drawable.MakeFavouriteButton);
+                            }
+                        });
+                        favouriteCheckBox.SetNegativeButton("No",
+                            (senderAlert, args) =>
+                            {
+                                favouriteButton.SetBackgroundResource(Resource.Drawable.unFaveButton);
+                            });
+                        favouriteCheckBox.Create();
+                        favouriteCheckBox.Show();
+                    }
+                };
+
+                Button cancelButton = FindViewById<Button>(Resource.Id.cancelButton);
+                cancelButton.Click += delegate
+                {
+                    cancelButton.SetBackgroundResource(Resource.Drawable.FinishClicked);
+                    if (totalSteps.Equals(0) && !favourite)
+                    {
+                        title.Visibility = ViewStates.Invisible;
+                        stepCounter.Visibility = ViewStates.Invisible;
+                        cancelButton.Visibility = ViewStates.Invisible;
+                        pictureButton.Visibility = ViewStates.Invisible;
+                        closeButton.Visibility = ViewStates.Visible;
+                        favouriteButton.Visibility = ViewStates.Visible;
+                    }
+                    else
+                    {
+                        Intent exitIntent = new Intent(this, typeof(MainActivity));
+                        StartActivity(exitIntent);
+                    }
+                };
+            } 
+            else
+            {
+                int image = (int)typeof(Resource.Drawable).GetField(story.DefaultPicture).GetValue(null);
+                pictureButton.SetImageResource(image);
+
+                if (story.Extra.Equals(false) && story.TextToSpeech.Equals(false))
+                {
+                    foreach (var i in storyEvents)
+                    {
+                        if (i.VoiceRecordings != null && i.VoiceRecordings.Count != 0)
+                        {
+                            foreach (var recording in i.VoiceRecordings)
+                            {
+                                voiceRecordings.Add(recording);
+                            }
+                        }
+                    }
                 }
-            };
+
+                bool done = false;
+                if (story.TextToSpeech)
+                {
+                    foreach (var i in storyEvents)
+                    {
+                       if (i.VoiceRecordings != null && i.VoiceRecordings.Count != 0)
+                        {
+                            foreach (var recording in i.VoiceRecordings)
+                            {
+                                voiceRecordings.Add(recording);
+                            }
+                        }
+                        else
+                        {
+                            bool cardFound = false;
+                            foreach (var j in storyEvents)
+                            {
+                                if (j.Cards != null && j.Cards.Count != 0)
+                                {
+                                    _text = CreateSentence(j.Cards[0]);
+                                    cardFound = true;
+                                }
+                            }
+
+                            if (!cardFound)
+                            {
+                                _text = "Never guess what else happened in school today! Have a look at all of this!";
+                            }
+                        }
+
+                        done = true;
+                    }
+                }
+
+                if (story.Extra && !done)
+                {
+                    foreach (var i in storyEvents)
+                    {
+                        if (i.VoiceRecordings != null && i.VoiceRecordings.Count != 0)
+                        {
+                            foreach (var recording in i.VoiceRecordings)
+                            {
+                                voiceRecordings.Add(recording);
+                            }
+                        }
+                        else
+                        {
+                            bool cardFound = false;
+                            foreach (var j in storyEvents)
+                            {
+                                if (j.Cards != null && j.Cards.Count != 0)
+                                {
+                                    _text = CreateSentence(j.Cards[0]);
+                                    cardFound = true;
+                                }
+                            }
+
+                            if (!cardFound)
+                            {
+                                _text = "Never guess what else happened in school today! Have a look at all of this!";
+                            }
+                        }
+                    }
+                }
+                
+                int recordingCount = voiceRecordings.Count;
+
+                int totalSteps = 0;
+                if (recordingCount != 0)
+                {
+                    totalSteps = recordingCount;
+                }
+                else
+                {
+                    totalSteps = 1;
+                }
+                  
+                TextView stepCounter = FindViewById<TextView>(Resource.Id.CountBox);
+                stepCounter.Text = "Click the picture to begin!";
+
+                bool firstClick = false;
+                int counter = 0;
+
+                pictureButton.Click += delegate
+                {
+                    if (firstClick.Equals(false))
+                    {
+                        totalSteps--;
+                        firstClick = true;
+                        if (story.TextToSpeech)
+                        {
+                            if (_phoneVoice == null)
+                            {
+                                _phoneVoice = new TextToSpeech(this, this);
+                            }
+                            else
+                            {
+                                _phoneVoice.Speak(_text, QueueMode.Flush, null, null);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (totalSteps.Equals(0))
+                        {
+                            //pictureButton.Enabled = false;
+                            //totalSteps++;
+                            totalSteps--;
+                        }
+                        else
+                        {
+                            counter++;
+                            totalSteps--;
+                        }
+                    }
+
+                    if (totalSteps.Equals(0))
+                    {
+                        stepCounter.Text = "No Clicks Left. Click the picture to play again.";
+                        stepCounter.TextSize = 20;
+
+                    }
+                    else if (totalSteps.Equals(1))
+                    {
+                        stepCounter.Text = totalSteps + " click left";
+                    }
+                    else if (totalSteps <= -1)
+                    {
+                        Intent replayStory = new Intent(this, typeof(StoryActivity));
+                        replayStory.PutExtra("Story", _storyId);
+                        StartActivity(replayStory);
+                        stepCounter.Text = "No Clicks Left. Click the picture to play again.";
+                    }
+                    else
+                    {
+                        stepCounter.Text = totalSteps + " clicks left";
+                    }
+                    
+                   if (recordingCount > counter && totalSteps > -1)
+                    {
+                        List<string> recording = new List<string>();
+                        recording.Add(voiceRecordings[counter].Path);
+                        VoiceRecording.VoiceRecording audioPlayer = new VoiceRecording.VoiceRecording();
+                        audioPlayer.PlayRecordings(recording);
+                    }
+                };
+
+                  Button closeButton = FindViewById<Button>(Resource.Id.closeButton);
+                Button favouriteButton = FindViewById<Button>(Resource.Id.favouriteButton);
+
+
+                if (story.Favourite)
+                {
+                    favouriteButton.SetBackgroundResource(Resource.Drawable.MakeFavouriteButton);
+                }
+
+                closeButton.Click += async delegate
+                {
+                    await Task.Delay(1);
+
+                    closeButton.SetBackgroundResource(Resource.Drawable.BigCloseButtonClicked);
+                    Intent exitIntent = new Intent(this, typeof(MainActivity));
+                    StartActivity(exitIntent);
+                };
+
+                favouriteButton.Click += async delegate
+                {
+                    var favouriteStory = _db.FindStoryById(story.Id.ToString());
+                    if (favouriteStory.Favourite)
+                    {
+
+                        favouriteButton.SetBackgroundResource(Resource.Drawable.MakeFavouriteButtonClicked);
+                        await Task.Delay(10);
+                        AlertDialog.Builder alreadyFavourite = new AlertDialog.Builder(this);
+                        alreadyFavourite.SetTitle("Are you sure you want to unfavourite?");
+                        alreadyFavourite.SetMessage(
+                            "This story is your favourite! Are you sure you want to remove it?");
+                        alreadyFavourite.SetPositiveButton("Yes",
+                            (senderAlerts, argss) =>
+                            {
+                                _db.RemoveFavourite(story.Id.ToString());
+
+                                favouriteButton.SetBackgroundResource(Resource.Drawable.unFaveButton);
+                            });
+                        alreadyFavourite.SetNegativeButton("No",
+                            (senderAlerts, argss) =>
+                            {
+                                favouriteButton.SetBackgroundResource(Resource.Drawable.MakeFavouriteButton);
+                            });
+                        alreadyFavourite.Create();
+                        alreadyFavourite.Show();
+                    }
+                    else
+                    {
+                        await Task.Delay(10);
+                        favouriteButton.SetBackgroundResource(Resource.Drawable.unFaveButtonClicked);
+                        AlertDialog.Builder favouriteCheckBox = new AlertDialog.Builder(this);
+                        favouriteCheckBox.SetTitle("New Favourite");
+                        favouriteCheckBox.SetMessage(
+                            "If you make this story your new favourite, the current favourite story will be lost. Do you want to continue?");
+                        favouriteCheckBox.SetPositiveButton("Yes", async (senderAlert, args) =>
+                        {
+                            if (db.UpdateFavourite(story.Id))
+                            {
+                                AlertDialog.Builder favouriteChanged = new AlertDialog.Builder(this);
+                                favouriteChanged.SetTitle("Favourite Story Saved");
+                                favouriteChanged.SetMessage("This story is now your favourite story.");
+                                favouriteChanged.SetNeutralButton("Ok", (senderAlerts, argss) => { });
+                                favouriteChanged.Create();
+                                favouriteChanged.Show();
+
+
+                                await Task.Delay(1);
+                                favouriteButton.SetBackgroundResource(Resource.Drawable.MakeFavouriteButton);
+                            }
+                        });
+                        favouriteCheckBox.SetNegativeButton("No",
+                            (senderAlert, args) =>
+                            {
+                                favouriteButton.SetBackgroundResource(Resource.Drawable.unFaveButton);
+                            });
+                        favouriteCheckBox.Create();
+                        favouriteCheckBox.Show();
+                    }
+                };
+
+                Button cancelButton = FindViewById<Button>(Resource.Id.cancelButton);
+                cancelButton.Click += delegate
+                {
+                    cancelButton.SetBackgroundResource(Resource.Drawable.FinishClicked);
+                    if (totalSteps.Equals(0) && !favourite)
+                    {
+                        title.Visibility = ViewStates.Invisible;
+                        stepCounter.Visibility = ViewStates.Invisible;
+                        cancelButton.Visibility = ViewStates.Invisible;
+                        pictureButton.Visibility = ViewStates.Invisible;
+                        closeButton.Visibility = ViewStates.Visible;
+                        favouriteButton.Visibility = ViewStates.Visible;
+                    }
+                    else
+                    {
+                        Intent exitIntent = new Intent(this, typeof(MainActivity));
+                        StartActivity(exitIntent);
+                    }
+                };
+            }
         }
 
         public string CreateSentence(Card card)
