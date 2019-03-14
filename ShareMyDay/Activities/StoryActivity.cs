@@ -19,7 +19,7 @@ namespace ShareMyDay.Activities
         private string _storyId;
         private TextToSpeech _phoneVoice;
         private string _text;
-        public Database.Database _db;
+        private Database.Database _db;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -266,6 +266,11 @@ namespace ShareMyDay.Activities
                     {
                         stepCounter.Text = "No Clicks Left. Click the picture to play again.";
                         stepCounter.TextSize = 20;
+                        //increment most played
+                        var numberPlayed = story.TimesPlayed;
+                        numberPlayed += 1;
+                        story.TimesPlayed = numberPlayed; 
+                        _db.UpdateStory(story);
 
                     }
                     else if (totalSteps.Equals(1))
@@ -315,7 +320,7 @@ namespace ShareMyDay.Activities
                 closeButton.Click += async delegate
                 {
                     await Task.Delay(1);
-
+                    SetLastPlayed(story);
                     closeButton.SetBackgroundResource(Resource.Drawable.BigCloseButtonClicked);
                     Intent exitIntent = new Intent(this, typeof(MainActivity));
                     StartActivity(exitIntent);
@@ -386,6 +391,7 @@ namespace ShareMyDay.Activities
                 cancelButton.Click += delegate
                 {
                     cancelButton.SetBackgroundResource(Resource.Drawable.FinishClicked);
+                    SetLastPlayed(story);
                     if (totalSteps.Equals(0) && !favourite)
                     {
                         title.Visibility = ViewStates.Invisible;
@@ -541,6 +547,10 @@ namespace ShareMyDay.Activities
                     {
                         stepCounter.Text = "No Clicks Left. Click the picture to play again.";
                         stepCounter.TextSize = 20;
+                        var numberPlayed = story.TimesPlayed;
+                        numberPlayed += 1;
+                        story.TimesPlayed = numberPlayed; 
+                        _db.UpdateStory(story);
 
                     }
                     else if (totalSteps.Equals(1))
@@ -582,6 +592,7 @@ namespace ShareMyDay.Activities
                     await Task.Delay(1);
 
                     closeButton.SetBackgroundResource(Resource.Drawable.BigCloseButtonClicked);
+                    SetLastPlayed(story);
                     Intent exitIntent = new Intent(this, typeof(MainActivity));
                     StartActivity(exitIntent);
                 };
@@ -667,6 +678,26 @@ namespace ShareMyDay.Activities
                     }
                 };
             }
+        }
+
+        public void SetLastPlayed(Database.Models.Story currentStory)
+        {
+            var stories = _db.GetAllStories();
+            foreach (var i in stories)
+            {
+                if (i.LastPlayed)
+                {
+                    i.LastPlayed = false; 
+                }
+
+                if (i.Id.Equals(currentStory.Id))
+                {
+                    i.LastPlayed = true; 
+                }
+            }
+
+            _db.UpdateStories(stories);
+
         }
 
         public string CreateSentence(Card card)

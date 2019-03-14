@@ -47,7 +47,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                  storyEvents[i].VoiceRecordings.Count.Equals(0)) &&
                                 storyEvents[i].Cards != null)
                             {
-                                bool hasPicture = false; 
+                                bool hasPicture = false;
                                 List<StoryEvent> finalEvents = new List<StoryEvent>();
 
                                 if (storyEvents[i].Cards.Count != 0)
@@ -84,6 +84,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                                         {
                                                             hasPicture = true;
                                                         }
+
                                                         finalEvents.Add(storyEvents[j]);
                                                         storyEvents.Remove(storyEvents[j]);
                                                         j--;
@@ -94,6 +95,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                                         {
                                                             hasPicture = true;
                                                         }
+
                                                         finalEvents.Add(storyEvents[j]);
                                                         storyEvents.Remove(storyEvents[j]);
 
@@ -114,44 +116,44 @@ namespace ShareMyDay.Story.StoryFunctions
                                         finalEvents.Insert(0, storyEvents[i]);
                                         if (!hasPicture)
                                         {
-                                            int cardEvent = 0; 
+                                            int cardEvent = 0;
                                             for (var index = 0; index < finalEvents.Count; index++)
                                             {
                                                 var k = finalEvents[index];
                                                 if (k.Cards != null && k.Cards.Count != 0)
                                                 {
-                                                    cardEvent = index; 
+                                                    cardEvent = index;
                                                     break;
                                                 }
                                             }
 
                                             string defaultPicture;
-                                   
+
                                             defaultPicture = FindDefaultPicture(finalEvents[cardEvent]);
-                              
+
                                             _db.InsertStories(finalEvents, false, false, defaultPicture);
                                         }
                                         else
                                         {
-                                            bool hasRecording = false; 
+                                            bool hasRecording = false;
                                             foreach (var k in finalEvents)
                                             {
                                                 if (k.VoiceRecordings != null && k.VoiceRecordings.Count != 0)
                                                 {
-                                                    hasRecording = true; 
+                                                    hasRecording = true;
                                                 }
                                             }
 
                                             if (hasRecording)
                                             {
-                                                _db.InsertStories(finalEvents, false, false,null);
+                                                _db.InsertStories(finalEvents, false, false, null);
                                             }
                                             else
                                             {
-                                                _db.InsertStories(finalEvents, false, true,null);
+                                                _db.InsertStories(finalEvents, false, true, null);
                                             }
                                         }
-                                       
+
                                     }
                                     else
                                     {
@@ -232,11 +234,11 @@ namespace ShareMyDay.Story.StoryFunctions
 
                                         if (hasRecordings)
                                         {
-                                            _db.InsertStories(finalEvents, false, false,null);
+                                            _db.InsertStories(finalEvents, false, false, null);
                                         }
                                         else
                                         {
-                                            _db.InsertStories(finalEvents, false, true,null);
+                                            _db.InsertStories(finalEvents, false, true, null);
                                         }
                                     }
                                     else
@@ -318,13 +320,13 @@ namespace ShareMyDay.Story.StoryFunctions
                                             if (k.Cards != null && k.Cards.Count != 0)
                                             {
                                                 hasCard = true;
-                                                cardEvent = j; 
+                                                cardEvent = j;
                                             }
                                         }
 
                                         if (hasPictures)
                                         {
-                                            _db.InsertStories(finalEvents, false, false,null);
+                                            _db.InsertStories(finalEvents, false, false, null);
                                         }
                                         else
                                         {
@@ -337,6 +339,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                             {
                                                 defaultPicture = FindDefaultPicture(null);
                                             }
+
                                             _db.InsertStories(finalEvents, false, false, defaultPicture);
                                         }
                                     }
@@ -408,7 +411,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                     finalEvents.Add(storyEvents[i]);
                                 }
 
-                                _db.InsertStories(finalEvents, false, false,null);
+                                _db.InsertStories(finalEvents, false, false, null);
                             }
 
                             //if only voice recording and card
@@ -418,7 +421,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                 (storyEvents[i].Cards != null && !storyEvents[i].Cards.Count.Equals(0)))
                             {
                                 var hasPicture = false;
-                                
+
                                 //make into story as it has enough information - create sentence from card information to be used as a voice recording 
                                 List<StoryEvent> finalEvents = new List<StoryEvent>();
                                 for (int j = 0; j < storyEvents.Count; j++)
@@ -483,27 +486,27 @@ namespace ShareMyDay.Story.StoryFunctions
 
                                 if (!hasPicture)
                                 {
-                                    int cardEvent = 0; 
+                                    int cardEvent = 0;
 
                                     for (var index = 0; index < finalEvents.Count; index++)
                                     {
                                         var k = finalEvents[index];
                                         if (k.Cards != null && k.Cards.Count != 0)
                                         {
-                                            cardEvent = index; 
+                                            cardEvent = index;
                                             break;
                                         }
                                     }
 
                                     string defaultPicture;
-                                   
-                                   defaultPicture = FindDefaultPicture(finalEvents[cardEvent]);
-                              
+
+                                    defaultPicture = FindDefaultPicture(finalEvents[cardEvent]);
+
                                     _db.InsertStories(finalEvents, false, false, defaultPicture);
                                 }
                                 else
                                 {
-                                    _db.InsertStories(finalEvents, false, false,null);
+                                    _db.InsertStories(finalEvents, false, false, null);
                                 }
                             }
 
@@ -579,7 +582,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                 else
                                 {
 
-                                    _db.InsertStories(finalEvents, false, false,null);
+                                    _db.InsertStories(finalEvents, false, false, null);
                                 }
                             }
 
@@ -639,7 +642,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                 }
 
                                 finalEvents.Insert(0, storyEvents[i]);
-                                _db.InsertStories(finalEvents, false, false,null);
+                                _db.InsertStories(finalEvents, false, false, null);
                             }
                         }
                         else
@@ -670,7 +673,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                     {
                                         storyEvents[i]
                                     };
-                                    string cardImage = FindDefaultPicture(storyEvents[extraStoryIndex]); 
+                                    string cardImage = FindDefaultPicture(storyEvents[extraStoryIndex]);
                                     _db.InsertStories(finalEvents, false, false, cardImage);
                                 }
                                 else if (!hasPicture && !hasCard)
@@ -679,7 +682,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                     {
                                         storyEvents[i]
                                     };
-                                    string cardImage = FindDefaultPicture(null); 
+                                    string cardImage = FindDefaultPicture(null);
                                     _db.InsertStories(finalEvents, false, false, cardImage);
                                 }
                                 else
@@ -690,7 +693,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                     };
                                     _db.InsertStories(finalEvents, false, false, null);
                                 }
-                                
+
                             }
                         }
                     }
@@ -701,7 +704,7 @@ namespace ShareMyDay.Story.StoryFunctions
                 {
                     bool hasPicture = false;
                     bool hasCard = false;
-                    bool hasRecording = false; 
+                    bool hasRecording = false;
                     int extraStoryIndex = 0;
                     for (var index = 0; index < extraStories.Count; index++)
                     {
@@ -719,28 +722,28 @@ namespace ShareMyDay.Story.StoryFunctions
 
                         if (i.VoiceRecordings != null && i.VoiceRecordings.Count != 0)
                         {
-                            hasRecording = true; 
+                            hasRecording = true;
                         }
                     }
 
                     if (!hasPicture && hasCard && hasRecording)
                     {
-                        string cardImage = FindDefaultPicture(extraStories[extraStoryIndex]); 
+                        string cardImage = FindDefaultPicture(extraStories[extraStoryIndex]);
                         _db.InsertStories(extraStories, false, false, cardImage);
                     }
                     else if (!hasPicture && hasCard && !hasRecording)
                     {
-                        string cardImage = FindDefaultPicture(null); 
+                        string cardImage = FindDefaultPicture(extraStories[extraStoryIndex]);
                         _db.InsertStories(extraStories, true, true, cardImage);
                     }
                     else if (hasPicture && !hasCard && !hasRecording)
                     {
-                       
+
                         _db.InsertStories(extraStories, true, true, null);
                     }
-                    else if (hasPicture && hasCard &&!hasRecording)
+                    else if (hasPicture && hasCard && !hasRecording)
                     {
-                        string cardImage = FindDefaultPicture(extraStories[extraStoryIndex]); 
+                        string cardImage = FindDefaultPicture(extraStories[extraStoryIndex]);
                         _db.InsertStories(extraStories, false, true, cardImage);
                     }
                     else
@@ -814,7 +817,7 @@ namespace ShareMyDay.Story.StoryFunctions
 
         public string FindDefaultPicture(StoryEvent cardStory)
         {
-            string cardTitle = " "; 
+            string cardTitle = " ";
             if (cardStory != null)
             {
                 var type = cardStory.Cards[0].Type;
@@ -839,7 +842,7 @@ namespace ShareMyDay.Story.StoryFunctions
                         cardTitle = "friendCard";
                         break;
                     case "7":
-                        cardTitle= "visitorCard";
+                        cardTitle = "visitorCard";
                         break;
                 }
                 //find out the type 
@@ -849,61 +852,10 @@ namespace ShareMyDay.Story.StoryFunctions
             }
             else
             {
-                cardTitle= "defaultPicture";
+                cardTitle = "defaultPicture";
             }
 
             return cardTitle;
         }
-
-        //public StoryEvent SetDefaultPicture(StoryEvent cardStory)
-        //{
-        //    StoryEvent defaultPictureEvent = new StoryEvent();
-        //    Picture defaultPicture = new Picture();
-        //    if (cardStory != null)
-        //    {
-        //        var type = cardStory.Cards[0].Type;
-        //        switch (type)
-        //        {
-        //            case "1":
-        //                defaultPicture.Path = "drawable/" + Resource.Drawable.leisureCard;
-        //                break; 
-        //            case "2":
-        //                defaultPicture.Path = "drawable/" + Resource.Drawable.leisureCard;
-        //                break; 
-        //            case "3":
-        //                defaultPicture.Path = "drawable/" + Resource.Drawable.leisureCard;
-        //                break; 
-        //            case "4":
-        //                defaultPicture.Path = "drawable/" + Resource.Drawable.leisureCard;
-        //                break; 
-        //            case "5":
-        //                defaultPicture.Path = "drawable/" + Resource.Drawable.leisureCard;
-        //                break; 
-        //            case "6":
-        //                defaultPicture.Path = "drawable/" + Resource.Drawable.leisureCard;
-        //                break; 
-        //            case "7":
-        //                defaultPicture.Path = "drawable/" + Resource.Drawable.leisureCard;
-        //                break;
-        //        }
-        //        //find out the type 
-        //        //make new picture event 
-        //        //insert it into db
-
-        //    }
-        //    else
-        //    {
-        //        defaultPicture.Path = "drawable/" + Resource.Drawable.defaultPicture;
-        //    }
-
-        //    Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
-        //    defaultPictureEvent.Finished = true;
-        //    defaultPictureEvent.DateTime = DateTime.Now;
-        //    defaultPictureEvent.Value = DateTime.Now.ToLongTimeString() + "-" + "Picture Taken";
-        //    defaultPictureEvent.InStory = true;
-        //    defaultPicture.EventId = defaultPictureEvent.Id;
-        //    db.InsertEvent(true, defaultPictureEvent, null, defaultPicture, null);
-        //    return defaultPictureEvent;
-        //}
     }
 }

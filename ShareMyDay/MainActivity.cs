@@ -5,6 +5,7 @@ using Android.Support.V7.App;
 using Android.Widget;
 using ShareMyDay.Activities;
 using System;
+using ShareMyDay.Story.StoryFunctions;
 
 namespace ShareMyDay
 {
@@ -34,12 +35,18 @@ namespace ShareMyDay
 
             _db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             _db.Create();
+            _db.Setup();
             if(DateTime.Now.Hour.Equals(8) && DateTime.Now.Minute.Equals(1))
             {
                 _db.DeleteOldStories();
             }
-                
-            _db.Setup();
+            
+            if((DateTime.Now.Hour >= 15 && DateTime.Now.Minute >=1))
+            {
+                StoryGeneration storyGeneration = new StoryGeneration(_db, this);
+                storyGeneration.Create();
+            }
+            
          
 
             _nfc = new NFC.NFC(this);
@@ -82,6 +89,14 @@ namespace ShareMyDay
             {
                 _db.DeleteOldStories();
             }
+
+            if((DateTime.Now.Hour >= 15 && DateTime.Now.Minute>=1))
+            {
+                StoryGeneration storyGeneration = new StoryGeneration(_db, this);
+                storyGeneration.Create();
+            }
+
+
         }
 
         /*

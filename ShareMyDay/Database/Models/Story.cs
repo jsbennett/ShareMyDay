@@ -26,5 +26,9 @@ namespace ShareMyDay.Database.Models
         public bool Extra { get; set; }
 
         public string DefaultPicture { get; set; }
+
+        public bool LastPlayed { get; set; }
+
+        public int TimesPlayed { get; set; }
     }
 }

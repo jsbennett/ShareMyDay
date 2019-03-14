@@ -3,6 +3,7 @@ using SQLite;
 using SQLiteNetExtensions.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Picture = ShareMyDay.Database.Models.Picture;
 
 namespace ShareMyDay.Database
@@ -345,6 +346,35 @@ namespace ShareMyDay.Database
             var events = db.Query<StoryEvent>("SELECT * FROM StoryEvent WHERE DateTime >= ? AND DateTime <= ?" , new DateTime(DateTime.Now.Year,DateTime.Now.Month, DateTime.Now.Day,0,0,0), new DateTime(DateTime.Now.Year,DateTime.Now.Month, DateTime.Now.Day,23,59,59) ); 
             db.Close();
             return events;  
+        }
+
+        public void UpdateStories(List<Models.Story> stories)
+        {
+            var db = CreateConnection();
+            foreach (var i in stories)
+            {
+                db.Update(i);
+            }
+            db.Close();
+        }
+
+        public void UpdateStory(Models.Story story)
+        {
+            var db = CreateConnection();
+            db.Update(story);
+            db.Close();
+        }
+
+        public Models.Story GetMostPlayed()
+        {
+            var stories = GetAllStories();
+            Models.Story story = new Models.Story(); 
+            if (stories != null && !stories.Count.Equals(0))
+            {
+                int mostPlayed = stories.Max(j => j.TimesPlayed);
+                story = stories.FirstOrDefault(i => i.TimesPlayed.Equals(mostPlayed));
+            }
+            return story; 
         }
 
         //public List<StoryEvent> GetEvents()
