@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
 using Android.Graphics;
 using Android.OS;
 using Android.Widget;
-using Java.Lang;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ShareMyDay.Activities
 {
@@ -46,6 +45,12 @@ namespace ShareMyDay.Activities
                 ImageView latestStory = FindViewById<ImageView>(Resource.Id.storyButton);
                 TextView titleBox = FindViewById<TextView>(Resource.Id.storyTitle);
                 int storyIndex = 0;
+                
+                if (Intent.GetStringExtra("StoryIndex") != null)
+                {
+                    storyIndex = (int) Convert.ToInt64(Intent.GetStringExtra("StoryIndex"));
+                }
+
                 int limit = stories.Count; //this is the number of stories for a day 
 
                 if (stories[storyIndex].DefaultPicture != null)
@@ -67,11 +72,12 @@ namespace ShareMyDay.Activities
                 {
                     Intent storyIntent = new Intent(this, typeof(StoryActivity));
                     storyIntent.PutExtra("Story", stories[storyIndex].Id.ToString());
+                    storyIntent.PutExtra("StoryIndex", storyIndex.ToString()); 
                     StartActivity(storyIntent);
                 };
 
 
-                if (limit.Equals(1))
+                if (limit.Equals(1)||storyIndex.Equals(limit- 1))
                 {
                     next.SetBackgroundResource(Resource.Drawable.SmallClose);
                     next.ContentDescription = "Close";
@@ -83,6 +89,7 @@ namespace ShareMyDay.Activities
 
                 next.Click += async delegate
                 {
+                    
                     if (next.ContentDescription.Equals("Close"))
                     {
                         next.SetBackgroundResource(Resource.Drawable.SmallCloseClicked);
@@ -92,11 +99,12 @@ namespace ShareMyDay.Activities
                     else
                     {
                         next.SetBackgroundResource(Resource.Drawable.NextClicked);
+                        await Task.Delay(1);
+
+                        next.SetBackgroundResource(Resource.Drawable.Next);
                     }
 
-                    await Task.Delay(1);
-
-                    next.SetBackgroundResource(Resource.Drawable.Next);
+                    
                     storyIndex++;
                     if (storyIndex < limit - 1)
                     {
@@ -154,11 +162,6 @@ namespace ShareMyDay.Activities
 
             {
                 var bitmap = BitmapFactory.DecodeStream(fs, null, options);
-
-                if (bitmap != null)
-                {
-                    Toast.MakeText(this, "Images Loading...", ToastLength.Short).Show();
-                }
 
                 return bitmap;
             }

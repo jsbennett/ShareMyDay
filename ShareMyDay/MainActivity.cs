@@ -36,18 +36,21 @@ namespace ShareMyDay
             _db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             _db.Create();
             _db.Setup();
-            if(DateTime.Now.Hour.Equals(8) && DateTime.Now.Minute.Equals(1))
+            if(DateTime.Now.Hour.Equals(10) && DateTime.Now.Minute.Equals(12))
             {
                 _db.DeleteOldStories();
             }
-            
-            if((DateTime.Now.Hour >= 15 && DateTime.Now.Minute >=1))
+
+            if (_db.NumberOfEvents() != 0)
             {
-                StoryGeneration storyGeneration = new StoryGeneration(_db, this);
-                storyGeneration.Create();
+                if ((DateTime.Now.Hour >= 15 && DateTime.Now.Minute >= 1))
+                {
+                    StoryGeneration storyGeneration = new StoryGeneration(_db, this);
+                    storyGeneration.Create();
+                }
             }
-            
-         
+
+
 
             _nfc = new NFC.NFC(this);
 
@@ -90,11 +93,15 @@ namespace ShareMyDay
                 _db.DeleteOldStories();
             }
 
-            if((DateTime.Now.Hour >= 15 && DateTime.Now.Minute>=1))
+            if (_db.NumberOfEvents() != 0)
             {
-                StoryGeneration storyGeneration = new StoryGeneration(_db, this);
-                storyGeneration.Create();
+                if ((DateTime.Now.Hour >= 15 && DateTime.Now.Minute >= 1))
+                {
+                    StoryGeneration storyGeneration = new StoryGeneration(_db, this);
+                    storyGeneration.Create();
+                }
             }
+
 
 
         }

@@ -745,6 +745,10 @@ namespace ShareMyDay.Story.StoryFunctions
                     {
                         string cardImage = FindDefaultPicture(extraStories[extraStoryIndex]);
                         _db.InsertStories(extraStories, false, true, cardImage);
+                    }else if (!hasPicture && !hasCard && hasRecording)
+                    {
+                        string cardImage = FindDefaultPicture(null);
+                        _db.InsertStories(extraStories, false, true, cardImage);
                     }
                     else
                     {

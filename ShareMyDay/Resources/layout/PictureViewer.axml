@@ -30,7 +30,7 @@
 		android:prompt="@string/prompt"
 	/>
 	<CheckBox
-		android:text="Is this the end of the event?"
+		android:text="Is this the end of the story?"
 		android:layout_width="match_parent"
 		android:layout_height="36.5dp"
 		android:textSize = "19dp"

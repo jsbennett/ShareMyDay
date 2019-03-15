@@ -168,6 +168,7 @@ namespace ShareMyDay.Activities
                     imageTitle.SetTextColor(Color.Black);
                     imageTitle.SetPadding(40,50,0,50);
                     informationLayout.AddView(imageTitle);
+                    Toast.MakeText(this, "Images Loading...", ToastLength.Short).Show(); 
                     foreach (var i in eventInformation.Pictures)
                     {
                         ImageView imageViewer = new ImageView(this);
@@ -241,17 +242,12 @@ namespace ShareMyDay.Activities
         public async Task<Bitmap> GetImage(BitmapFactory.Options options, string path)
         {
             using (var fs = new System.IO.FileStream(path, System.IO.FileMode.Open))
-            
             {
                 
                 var bitmap = await BitmapFactory.DecodeStreamAsync (fs, null, options);
-                    if (bitmap != null)
-                    {
-                        Toast.MakeText(this, "Images Loading...", ToastLength.Short).Show();
-                    }
 
-                    return bitmap;
-                }
+                return bitmap;
+            }
             
         }
 

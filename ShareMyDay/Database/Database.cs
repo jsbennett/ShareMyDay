@@ -377,6 +377,11 @@ namespace ShareMyDay.Database
             return story; 
         }
 
+        public int NumberOfEvents()
+        {
+            var events = GetUnfilteredEvents();
+            return events.Count; 
+        }
         //public List<StoryEvent> GetEvents()
         //{
         //    var events = GetUnfilteredEvents();

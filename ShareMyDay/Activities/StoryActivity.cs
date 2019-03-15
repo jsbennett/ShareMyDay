@@ -20,6 +20,7 @@ namespace ShareMyDay.Activities
         private TextToSpeech _phoneVoice;
         private string _text;
         private Database.Database _db;
+        private string _storyIndex; 
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -27,6 +28,7 @@ namespace ShareMyDay.Activities
             SetContentView(Resource.Layout.StoryView);
 
             _storyId = Intent.GetStringExtra("Story");
+            _storyIndex = Intent.GetStringExtra("StoryIndex"); 
 
             ImageView pictureButton = FindViewById<ImageView>(Resource.Id.pictureBox);
             _db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),
@@ -68,11 +70,6 @@ namespace ShareMyDay.Activities
 
             {
                 var bitmap = BitmapFactory.DecodeStream(fs, null, options);
-                if (bitmap != null)
-                {
-                    Toast.MakeText(this, "Images Loading...", ToastLength.Short).Show();
-                }
-
                 return bitmap;
             }
         }
@@ -82,7 +79,9 @@ namespace ShareMyDay.Activities
         {
            TextView title = FindViewById<TextView>(Resource.Id.titleBox);
             title.Text = story.TitleValue;
-
+           
+            _storyIndex = Intent.GetStringExtra("StoryIndex");
+            
             List<StoryEvent> storyEvents = db.FindEventsFromStory(story.Id.ToString());
             List<Picture> pictures = new List<Picture>();
             List<Database.Models.VoiceRecording> voiceRecordings = new List<Database.Models.VoiceRecording>();
@@ -322,8 +321,18 @@ namespace ShareMyDay.Activities
                     await Task.Delay(1);
                     SetLastPlayed(story);
                     closeButton.SetBackgroundResource(Resource.Drawable.BigCloseButtonClicked);
-                    Intent exitIntent = new Intent(this, typeof(MainActivity));
-                    StartActivity(exitIntent);
+                   
+                    if (!favourite)
+                    {
+                        Intent back = new Intent(this, typeof(TodayStoryActivity));
+                        back.PutExtra("StoryIndex", _storyIndex); 
+                        StartActivity(back);
+                    }
+                    else
+                    {
+                        Intent exitIntent = new Intent(this, typeof(MainActivity));
+                        StartActivity(exitIntent);
+                    }
                 };
 
                 favouriteButton.Click += async delegate
@@ -392,7 +401,7 @@ namespace ShareMyDay.Activities
                 {
                     cancelButton.SetBackgroundResource(Resource.Drawable.FinishClicked);
                     SetLastPlayed(story);
-                    if (totalSteps.Equals(0) && !favourite)
+                    if (totalSteps.Equals(0))
                     {
                         title.Visibility = ViewStates.Invisible;
                         stepCounter.Visibility = ViewStates.Invisible;
@@ -403,8 +412,18 @@ namespace ShareMyDay.Activities
                     }
                     else
                     {
-                        Intent exitIntent = new Intent(this, typeof(MainActivity));
-                        StartActivity(exitIntent);
+                        if (!favourite)
+                        {
+                            Intent back = new Intent(this, typeof(TodayStoryActivity));
+                            back.PutExtra("StoryIndex", _storyIndex); 
+                            StartActivity(back);
+                        }
+                        else
+                        {
+                            Intent exitIntent = new Intent(this, typeof(MainActivity));
+                            StartActivity(exitIntent);
+                        }
+                 
                     }
                 };
             } 
@@ -532,8 +551,6 @@ namespace ShareMyDay.Activities
                     {
                         if (totalSteps.Equals(0))
                         {
-                            //pictureButton.Enabled = false;
-                            //totalSteps++;
                             totalSteps--;
                         }
                         else
@@ -593,8 +610,17 @@ namespace ShareMyDay.Activities
 
                     closeButton.SetBackgroundResource(Resource.Drawable.BigCloseButtonClicked);
                     SetLastPlayed(story);
-                    Intent exitIntent = new Intent(this, typeof(MainActivity));
-                    StartActivity(exitIntent);
+                    if (!favourite)
+                    {
+                        Intent back = new Intent(this, typeof(TodayStoryActivity));
+                        back.PutExtra("StoryIndex", _storyIndex); 
+                        StartActivity(back);
+                    }
+                    else
+                    {
+                        Intent exitIntent = new Intent(this, typeof(MainActivity));
+                        StartActivity(exitIntent);
+                    }
                 };
 
                 favouriteButton.Click += async delegate
@@ -662,7 +688,7 @@ namespace ShareMyDay.Activities
                 cancelButton.Click += delegate
                 {
                     cancelButton.SetBackgroundResource(Resource.Drawable.FinishClicked);
-                    if (totalSteps.Equals(0) && !favourite)
+                    if (totalSteps.Equals(0))
                     {
                         title.Visibility = ViewStates.Invisible;
                         stepCounter.Visibility = ViewStates.Invisible;
@@ -673,8 +699,17 @@ namespace ShareMyDay.Activities
                     }
                     else
                     {
-                        Intent exitIntent = new Intent(this, typeof(MainActivity));
-                        StartActivity(exitIntent);
+                        if (!favourite)
+                        {
+                            Intent back = new Intent(this, typeof(TodayStoryActivity));
+                            back.PutExtra("StoryIndex", _storyIndex); 
+                            StartActivity(back);
+                        }
+                        else
+                        {
+                            Intent exitIntent = new Intent(this, typeof(MainActivity));
+                            StartActivity(exitIntent);
+                        }
                     }
                 };
             }
