@@ -3,6 +3,7 @@ using SQLite;
 using SQLiteNetExtensions.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Picture = ShareMyDay.Database.Models.Picture;
 
 namespace ShareMyDay.Database
@@ -73,6 +74,7 @@ namespace ShareMyDay.Database
                     count += db.Insert(i);
                 }
             }
+           
             db.Close();
             return count; 
         }
@@ -183,7 +185,22 @@ namespace ShareMyDay.Database
             return false; 
         }
 
-        public void DeleteTableValues()
+        public bool RemoveFavourite(string id)
+        {
+            var db = CreateConnection();
+            var story = db.GetWithChildren<Models.Story>(id);
+
+            if (story != null)
+            {
+                story.Favourite = false; 
+                db.Update(story);
+                return true;
+            }
+            db.Close();
+            return false;  
+        }
+
+        public void DeleteAllTableValues()
         {
             var db = CreateConnection();
             db.DeleteAll<Models.Story>();
@@ -193,7 +210,22 @@ namespace ShareMyDay.Database
             db.DeleteAll<Models.VoiceRecording>();
             db.Close();
         }
-        public int InsertStories(List<StoryEvent> storyEventList, bool isExtraStory, bool isTextToSpeech)
+
+        public void DeleteOldStories()
+        {
+            var db = CreateConnection();
+            List<Models.Story> stories = GetAllStories();
+            foreach (var i in stories)
+            {
+                if (i.Favourite.Equals(false))
+                {
+                    db.Delete(i);
+                }
+            }
+            db.Close();
+        }
+        
+        public int InsertStories(List<StoryEvent> storyEventList, bool isExtraStory, bool isTextToSpeech, string defaultPicture)
         {
             int count = 0; 
             var db = CreateConnection();
@@ -237,6 +269,16 @@ namespace ShareMyDay.Database
                 story.TextToSpeech = true; 
             }
 
+            if (defaultPicture != null)
+            {
+                story.DefaultPicture = defaultPicture;
+            }
+            else
+            {
+                story.DefaultPicture = null; 
+            }
+
+            story.DateTime = DateTime.Now;
             story.Favourite = false; 
             db.UpdateWithChildren(story);
 
@@ -269,7 +311,6 @@ namespace ShareMyDay.Database
         public Models.Story FindStoryById(string id)
         {
             var db = CreateConnection();
-            //var result = db.Query<Models.Story>("SELECT * FROM Story WHERE Value == ?" , id );
             var story = db.GetWithChildren<Models.Story>(id);
             db.Close();
             return story; 
@@ -282,7 +323,7 @@ namespace ShareMyDay.Database
             List<Models.Story> stories = new List<Models.Story>();
             foreach (var i in initalStories)
             {
-                stories.Add( db.GetWithChildren<Models.Story>(i.Id));
+                stories.Add(db.GetWithChildren<Models.Story>(i.Id));
 
             }
            db.Close();
@@ -307,6 +348,40 @@ namespace ShareMyDay.Database
             return events;  
         }
 
+        public void UpdateStories(List<Models.Story> stories)
+        {
+            var db = CreateConnection();
+            foreach (var i in stories)
+            {
+                db.Update(i);
+            }
+            db.Close();
+        }
+
+        public void UpdateStory(Models.Story story)
+        {
+            var db = CreateConnection();
+            db.Update(story);
+            db.Close();
+        }
+
+        public Models.Story GetMostPlayed()
+        {
+            var stories = GetAllStories();
+            Models.Story story = new Models.Story(); 
+            if (stories != null && !stories.Count.Equals(0))
+            {
+                int mostPlayed = stories.Max(j => j.TimesPlayed);
+                story = stories.FirstOrDefault(i => i.TimesPlayed.Equals(mostPlayed));
+            }
+            return story; 
+        }
+
+        public int NumberOfEvents()
+        {
+            var events = GetUnfilteredEvents();
+            return events.Count; 
+        }
         //public List<StoryEvent> GetEvents()
         //{
         //    var events = GetUnfilteredEvents();

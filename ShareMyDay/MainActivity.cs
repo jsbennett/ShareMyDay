@@ -4,6 +4,8 @@ using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
 using ShareMyDay.Activities;
+using System;
+using ShareMyDay.Story.StoryFunctions;
 
 namespace ShareMyDay
 {
@@ -17,13 +19,14 @@ namespace ShareMyDay
     {
         private NFC.NFC _nfc;
         private Database.Database _db;
-
+        
         /*
          * Method Name: OnCreate
          * Purpose: It is used for when the app is loading 
          */
         protected override void OnCreate(Bundle savedInstanceState)
         {
+           
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 
@@ -33,20 +36,38 @@ namespace ShareMyDay
             _db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             _db.Create();
             _db.Setup();
-         
+            if(DateTime.Now.Hour.Equals(10) && DateTime.Now.Minute.Equals(12))
+            {
+                _db.DeleteOldStories();
+            }
+
+            if (_db.NumberOfEvents() != 0)
+            {
+                if ((DateTime.Now.Hour >= 15 && DateTime.Now.Minute >= 1))
+                {
+                    StoryGeneration storyGeneration = new StoryGeneration(_db, this);
+                    storyGeneration.Create();
+                }
+            }
+
+
 
             _nfc = new NFC.NFC(this);
 
             Button todayStory = FindViewById<Button>(Resource.Id.latestStoryButton);
             Button favouriteStory = FindViewById<Button>(Resource.Id.favouriteStoryButton);
 
-            todayStory.Click += delegate {
+            todayStory.SetBackgroundResource(Resource.Drawable.TodayStoryButton);
+             todayStory.Click += delegate {
+                todayStory.SetBackgroundResource(Resource.Drawable.TodayStoryButtonPressed);
                 Intent storyIntent = new Intent(this, typeof(TodayStoryActivity));
                 StartActivity(storyIntent);
+                
             };
 
             favouriteStory.Click += delegate
             {
+                favouriteStory.SetBackgroundResource(Resource.Drawable.FaveButtonPressed);
                 Intent storyIntent = new Intent(this, typeof(StoryActivity));
                 storyIntent.PutExtra("Story", "Favourite");
                 StartActivity(storyIntent);
@@ -55,12 +76,34 @@ namespace ShareMyDay
 
         /*
          * Method Name: OnResume
-         * Purpose: This is for when the app has loaded
+         * Purpose: This is for when the app has reloaded
          */
         protected override void OnResume()
         {
             base.OnResume();
             _nfc.Detection(this,this);
+            Button todayStory = FindViewById<Button>(Resource.Id.latestStoryButton);
+            todayStory.SetBackgroundResource(Resource.Drawable.TodayStoryButton);
+            Button favouriteStory = FindViewById<Button>(Resource.Id.favouriteStoryButton);
+            favouriteStory.SetBackgroundResource(Resource.Drawable.FaveButton);
+
+            _db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
+            if(DateTime.Now.Hour.Equals(8) && DateTime.Now.Minute.Equals(1))
+            {
+                _db.DeleteOldStories();
+            }
+
+            if (_db.NumberOfEvents() != 0)
+            {
+                if ((DateTime.Now.Hour >= 15 && DateTime.Now.Minute >= 1))
+                {
+                    StoryGeneration storyGeneration = new StoryGeneration(_db, this);
+                    storyGeneration.Create();
+                }
+            }
+
+
+
         }
 
         /*

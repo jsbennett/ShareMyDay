@@ -2,5 +2,5 @@
     <string name="app_name">Share My Day</string>
     <string name="action_settings">Settings</string>
     <string name="prompt">Choose an event</string>
-    <string name="type_prompt">Please select a type for information for the card from the drop down below:</string>
+    <string name="type_prompt">Please select a type for the information for the card from the drop down below:</string>
 </resources>

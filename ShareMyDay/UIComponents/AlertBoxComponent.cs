@@ -38,12 +38,12 @@ namespace ShareMyDay.UIComponents
         {
             _alertBox.SetTitle (title);
             _alertBox.SetMessage (message);
-            _alertBox.SetPositiveButton ("OK", (senderAlert, args) => {
+            _alertBox.SetPositiveButton ("Yes", (senderAlert, args) => {
                 Intent repeatedActivity = new Intent(context, typeof(T));
                 repeatedActivity.PutExtra("PreviousActivity", previousActivity);
                 activity.StartActivity(repeatedActivity);
             });
-            _alertBox.SetNegativeButton ("Cancel", (senderAlert, args) => {});
+            _alertBox.SetNegativeButton ("No", (senderAlert, args) => {});
             
         }
 

@@ -32,11 +32,18 @@ namespace ShareMyDay.UIComponents
                     case "Generate Stories":
                         AlertDialog.Builder alertBox = new AlertDialog.Builder (_context);
                         alertBox.SetTitle ("Generate Stories");
-                        alertBox.SetMessage ("Do you want to generate stories? Please note that anything added to events which make up the generated stories after this action has been carried out will NOT be added.");
+                        alertBox.SetMessage ("Do you want to generate stories? Stories cannot be edited and any new events will not be added once they have been made.");
                         alertBox.SetPositiveButton ("Yes", (senderAlert, args) => {
                             Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
                             StoryGeneration storyGeneration = new StoryGeneration(db, _context);
                             storyGeneration.Create();
+                            AlertDialog.Builder alertBoxGenerated = new AlertDialog.Builder (_context);
+                            alertBoxGenerated.SetTitle ("Stories Generated");
+                            alertBoxGenerated.SetMessage ("Stories have been generated! Go to the story button to see the stories.");
+                            alertBoxGenerated.SetNeutralButton("OK",(senderAlerts, argss) => {
+                            });
+                            alertBoxGenerated.Create();
+                            alertBoxGenerated.Show();
                         });
                         alertBox.SetNegativeButton ("No", (senderAlert, args) => {
                         });

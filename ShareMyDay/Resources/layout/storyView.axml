@@ -9,17 +9,21 @@
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content">
 		<Button
-		android:text="Close"
+		android:background="@drawable/BigCloseButton"
 		android:layout_width="match_parent"
 		android:layout_height="275dp"
 		android:id="@+id/closeButton"
-		android:visibility="invisible"/>
+		android:visibility="invisible"
+		android:focusable="true"
+		android:contentDescription="Close story"/>
 	<Button
-		android:text="Favourite"
+		android:background="@drawable/unFaveButton"
 		android:layout_width="match_parent"
 		android:layout_height="275dp"
 		android:id="@+id/favouriteButton"
-		android:visibility="invisible"/>
+		android:visibility="invisible"
+		android:focusable="true"
+		android:contentDescription="Make favourite"/>
 		</LinearLayout>
 		<FrameLayout
 			xmlns:android="http://schemas.android.com/apk/res/android"
@@ -33,36 +37,43 @@
 			<TextView
 				android:text="Text"
 				android:layout_width="match_parent"
-				android:layout_height="42.5dp"
+				android:layout_height="76.0dp"
 				android:id="@+id/titleBox"
-				android:layout_marginTop="6.5dp"
-				android:textSize="30sp"
+				android:layout_marginTop="1.5dp"
+				android:textSize="25dp"
 				android:textColor="#000000"
 				android:gravity="center"
-				android:visibility="visible"/>
+				android:visibility="visible"
+			android:contentDescription="Story title"/>
 			<TextView
 				android:text="Text"
 				android:layout_width="match_parent"
 				android:layout_height="50.5dp"
 				android:gravity="center"
-				android:background="#4b6584"
+				android:background="#213f5e"
 				android:textColor="#ffffff"
-				android:textSize="30sp"
+				android:textSize="25dp"
 				android:id="@+id/CountBox"
-				android:layout_marginBottom="7.5dp"
-				android:visibility="visible"/>
+				android:layout_marginBottom="2.5dp"
+				android:visibility="visible"
+			android:contentDescription="Number of clicks"/>
 			<ImageView
 				android:src="@android:drawable/ic_menu_gallery"
 				android:layout_width="match_parent"
-				android:layout_height="363.0dp"
+				android:layout_height="333.0dp"
 				android:id="@+id/pictureBox"
-				android:visibility="visible"/>
+				android:visibility="visible"
+				android:focusable="true"
+			android:contentDescription="Play the story"/>
 			<Button
-				android:text="Finish"
-				android:layout_width="match_parent"
+				android:background="@drawable/FinishButton"
+				android:layout_width="308.0dp"
 				android:layout_height="101.5dp"
 				android:id="@+id/cancelButton"
-				android:visibility="visible"/>
+				android:visibility="visible"
+				android:layout_marginLeft="32.5dp"
+				android:focusable="true"
+			android:contentDescription="Finish the story"/>
 			</LinearLayout>
 		</FrameLayout>
 </FrameLayout>
