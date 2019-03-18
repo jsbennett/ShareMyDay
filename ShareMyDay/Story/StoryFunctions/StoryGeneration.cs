@@ -3,6 +3,7 @@ using Android.Content;
 using ShareMyDay.Database.Models;
 using System;
 using System.Collections.Generic;
+using System.Security.Permissions;
 using Android.Media;
 
 namespace ShareMyDay.Story.StoryFunctions
@@ -103,7 +104,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                                     }
                                                 }
                                             }
-
+                                           
                                             //if (jEvent[1].Equals("Card"))
                                             //{
                                             //    break;
@@ -703,58 +704,149 @@ namespace ShareMyDay.Story.StoryFunctions
                 if (extraStories.Count != 0)
                 {
                     bool hasPicture = false;
-                    bool hasCard = false;
                     bool hasRecording = false;
-                    int extraStoryIndex = 0;
+                    var newExtraEvents = new List<StoryEvent>();
                     for (var index = 0; index < extraStories.Count; index++)
                     {
+                        bool hasCard = false;
                         var i = extraStories[index];
-                        if (i.Pictures != null && i.Pictures.Count != 0)
-                        {
-                            hasPicture = true;
-                        }
-
                         if (i.Cards != null && i.Cards.Count != 0)
                         {
-                            hasCard = true;
-                            extraStoryIndex = index;
-                        }
+                            hasCard = true; 
+                            bool hasPictureSeperate = false;
+                            bool hasCardSeperate = false;
+                            bool hasRecordingSeperate = false;
+                            int extraStoryIndexSeperate = index;
+                            bool cardBefore = false; 
 
-                        if (i.VoiceRecordings != null && i.VoiceRecordings.Count != 0)
+                            var seperateStories = new List<Database.Models.StoryEvent>();
+                            seperateStories.Add(i);
+                            for (var j = 0; j < extraStories.Count; j++)
+                            {
+                                if (j != index)
+                                {
+                                    if (extraStories[j].Cards != null && extraStories[j].Cards.Count != 0)
+                                    {
+                                        if (j > index)
+                                        {
+                                            
+                                            hasCardSeperate = true;
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            
+                                            cardBefore = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (!hasCardSeperate)
+                                        {
+                                            if (extraStories[j].Pictures != null && extraStories[j].Pictures.Count != 0)
+                                            {
+                                                hasPictureSeperate = true;
+                                            }
+                                            if (extraStories[j].VoiceRecordings != null && extraStories[j].VoiceRecordings.Count != 0)
+                                            {
+                                                hasRecordingSeperate = true;
+                                            }
+
+                                            if (!cardBefore)
+                                            {
+                                                seperateStories.Add(extraStories[j]);
+                                            }
+                                            
+                                        }
+                                    }
+                                }
+                            }
+
+                            InsertSeperateStory(seperateStories, hasPictureSeperate, hasRecordingSeperate, hasCard, 0);
+                            
+
+                        }
+                        else
                         {
-                            hasRecording = true;
+                            if (i.Pictures != null && i.Pictures.Count != 0)
+                            {
+                                hasPicture = true;
+                                newExtraEvents.Add(i);
+                            }
+
+                            if (i.VoiceRecordings != null && i.VoiceRecordings.Count != 0)
+                            {
+                                hasRecording = true;
+                                newExtraEvents.Add(i);
+                            }
                         }
                     }
 
-                    if (!hasPicture && hasCard && hasRecording)
+                    if (newExtraEvents.Count != 0)
                     {
-                        string cardImage = FindDefaultPicture(extraStories[extraStoryIndex]);
-                        _db.InsertStories(extraStories, false, false, cardImage);
-                    }
-                    else if (!hasPicture && hasCard && !hasRecording)
-                    {
-                        string cardImage = FindDefaultPicture(extraStories[extraStoryIndex]);
-                        _db.InsertStories(extraStories, true, true, cardImage);
-                    }
-                    else if (hasPicture && !hasCard && !hasRecording)
-                    {
-
-                        _db.InsertStories(extraStories, true, true, null);
-                    }
-                    else if (hasPicture && hasCard && !hasRecording)
-                    {
-                        string cardImage = FindDefaultPicture(extraStories[extraStoryIndex]);
-                        _db.InsertStories(extraStories, false, true, cardImage);
-                    }else if (!hasPicture && !hasCard && hasRecording)
-                    {
-                        string cardImage = FindDefaultPicture(null);
-                        _db.InsertStories(extraStories, false, true, cardImage);
-                    }
-                    else
-                    {
-                        _db.InsertStories(extraStories, false, false, null);
+                        InsertSeperateStory(newExtraEvents, hasPicture, hasRecording, false, 0);
                     }
                 }
+
+                //if (extraStories.Count != 0)
+                //{
+                //    bool hasPicture = false;
+                //    bool hasCard = false;
+                //    bool hasRecording = false;
+                //    int extraStoryIndex = 0;
+                //    for (var index = 0; index < extraStories.Count; index++)
+                //    {
+                //        var i = extraStories[index];
+                //        if (i.Pictures != null && i.Pictures.Count != 0)
+                //        {
+                //            hasPicture = true;
+                //        }
+
+                //        if (i.Cards != null && i.Cards.Count != 0)
+                //        {
+                //            if (!hasCard)
+                //            {
+                //                extraStoryIndex = index;
+                //                hasCard = true;
+                //            }
+                            
+                //        }
+
+                //        if (i.VoiceRecordings != null && i.VoiceRecordings.Count != 0)
+                //        {
+                //            hasRecording = true;
+                //        }
+                //    }
+
+                //    if (!hasPicture && hasCard && hasRecording)
+                //    {
+                //        string cardImage = FindDefaultPicture(extraStories[extraStoryIndex]);
+                //        _db.InsertStories(extraStories, false, false, cardImage);
+                //    }
+                //    else if (!hasPicture && hasCard && !hasRecording)
+                //    {
+                //        string cardImage = FindDefaultPicture(extraStories[extraStoryIndex]);
+                //        _db.InsertStories(extraStories, true, true, cardImage);
+                //    }
+                //    else if (hasPicture && !hasCard && !hasRecording)
+                //    {
+
+                //        _db.InsertStories(extraStories, true, true, null);
+                //    }
+                //    else if (hasPicture && hasCard && !hasRecording)
+                //    {
+                //        string cardImage = FindDefaultPicture(extraStories[extraStoryIndex]);
+                //        _db.InsertStories(extraStories, false, true, cardImage);
+                //    }else if (!hasPicture && !hasCard && hasRecording)
+                //    {
+                //        string cardImage = FindDefaultPicture(null);
+                //        _db.InsertStories(extraStories, false, true, cardImage);
+                //    }
+                //    else
+                //    {
+                //        _db.InsertStories(extraStories, false, false, null);
+                //    }
+                //}
             }
             else
             {
@@ -768,6 +860,37 @@ namespace ShareMyDay.Story.StoryFunctions
             }
         }
 
+        public void InsertSeperateStory(List<StoryEvent> stories, bool hasPicture, bool hasRecording, bool hasCard, int pictureIndex)
+        {
+            if (!hasPicture && hasCard && hasRecording)
+            {
+                string cardImage = FindDefaultPicture(stories[pictureIndex]);
+                _db.InsertStories(stories, false, false, cardImage);
+            }
+            else if (!hasPicture && hasCard && !hasRecording)
+            {
+                string cardImage = FindDefaultPicture(stories[pictureIndex]);
+                _db.InsertStories(stories, true, true, cardImage);
+            }
+            else if (hasPicture && !hasCard && !hasRecording)
+            {
+
+                _db.InsertStories(stories, true, true, null);
+            }
+            else if (hasPicture && hasCard && !hasRecording)
+            {
+                string cardImage = FindDefaultPicture(stories[pictureIndex]);
+                _db.InsertStories(stories, false, true, cardImage);
+            }else if (!hasPicture && !hasCard && hasRecording)
+            {
+                string cardImage = FindDefaultPicture(null);
+                _db.InsertStories(stories, false, true, cardImage);
+            }
+            else
+            {
+                _db.InsertStories(stories, false, false, null);
+            }
+        }
         public List<StoryEvent> GetEvents()
         {
             var events = _db.GetUnfilteredEvents();

@@ -37,13 +37,17 @@ namespace ShareMyDay.UIComponents
                             Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
                             StoryGeneration storyGeneration = new StoryGeneration(db, _context);
                             storyGeneration.Create();
-                            AlertDialog.Builder alertBoxGenerated = new AlertDialog.Builder (_context);
-                            alertBoxGenerated.SetTitle ("Stories Generated");
-                            alertBoxGenerated.SetMessage ("Stories have been generated! Go to the story button to see the stories.");
-                            alertBoxGenerated.SetNeutralButton("OK",(senderAlerts, argss) => {
-                            });
-                            alertBoxGenerated.Create();
-                            alertBoxGenerated.Show();
+                            if (db.GetAllStories()!= null && db.GetAllStories().Count!=0)
+                            {
+                                AlertDialog.Builder alertBoxGenerated = new AlertDialog.Builder (_context);
+                                alertBoxGenerated.SetTitle ("Stories Generated");
+                                alertBoxGenerated.SetMessage ("Stories have been generated! Go to the story button to see the stories.");
+                                alertBoxGenerated.SetNeutralButton("OK",(senderAlerts, argss) => {
+                                });
+                                alertBoxGenerated.Create();
+                                alertBoxGenerated.Show();
+                            }
+                           
                         });
                         alertBox.SetNegativeButton ("No", (senderAlert, args) => {
                         });

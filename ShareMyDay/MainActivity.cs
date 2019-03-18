@@ -36,19 +36,19 @@ namespace ShareMyDay
             _db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             _db.Create();
             _db.Setup();
-            if(DateTime.Now.Hour.Equals(10) && DateTime.Now.Minute.Equals(12))
+            if(DateTime.Now.Hour.Equals(22) && DateTime.Now.Minute.Equals(56))
             {
                 _db.DeleteOldStories();
             }
 
-            if (_db.NumberOfEvents() != 0)
-            {
-                if ((DateTime.Now.Hour >= 15 && DateTime.Now.Minute >= 1))
-                {
-                    StoryGeneration storyGeneration = new StoryGeneration(_db, this);
-                    storyGeneration.Create();
-                }
-            }
+            //if (_db.NumberOfEvents() != 0)
+            //{
+            //    if ((DateTime.Now.Hour >= 15 && DateTime.Now.Minute >= 1))
+            //    {
+            //        StoryGeneration storyGeneration = new StoryGeneration(_db, this);
+            //        storyGeneration.Create();
+            //    }
+            //}
 
 
 
@@ -88,19 +88,19 @@ namespace ShareMyDay
             favouriteStory.SetBackgroundResource(Resource.Drawable.FaveButton);
 
             _db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
-            if(DateTime.Now.Hour.Equals(8) && DateTime.Now.Minute.Equals(1))
+            if(DateTime.Now.Hour.Equals(22) && DateTime.Now.Minute.Equals(56))
             {
                 _db.DeleteOldStories();
             }
 
-            if (_db.NumberOfEvents() != 0)
-            {
-                if ((DateTime.Now.Hour >= 15 && DateTime.Now.Minute >= 1))
-                {
-                    StoryGeneration storyGeneration = new StoryGeneration(_db, this);
-                    storyGeneration.Create();
-                }
-            }
+            //if (_db.NumberOfEvents() != 0)
+            //{
+            //    if ((DateTime.Now.Hour >= 15 && DateTime.Now.Minute >= 1))
+            //    {
+            //        StoryGeneration storyGeneration = new StoryGeneration(_db, this);
+            //        storyGeneration.Create();
+            //    }
+            //}
 
 
 
