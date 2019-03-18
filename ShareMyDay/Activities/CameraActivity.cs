@@ -79,8 +79,8 @@ namespace ShareMyDay.Activities
                     else
                     {
                         AlertBoxComponent errorUplaodingAlertBox = new AlertBoxComponent(this);
-                        errorUplaodingAlertBox.Setup("Error Uploading",
-                            "Please click submit again.");
+                        errorUplaodingAlertBox.Setup("Cannot Add To Event",
+                            "This event has already been made into a story and cannot be updated. Select a different event or make a new event.");
                         errorUplaodingAlertBox.Show();
                     }
                 }

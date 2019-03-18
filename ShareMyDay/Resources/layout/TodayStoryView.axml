@@ -1,33 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
-	android:layout_width="match_parent"
-	android:layout_height="match_parent">
-	<TextView
-		android:text="Text"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+	<LinearLayout
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:orientation="vertical"
 		android:layout_width="match_parent"
-		android:layout_height="86.5dp"
-		android:id="@+id/storyTitle"
-		android:textSize="25sp"
-		android:textColor="#ffffff"
-		android:gravity="center"
-		android:background="#213f5e"
-	/>
-	<ImageView
-		android:src="@android:drawable/ic_menu_gallery"
-		android:layout_width="match_parent"
-		android:layout_height="359.5dp"
-		android:id="@+id/storyButton"
-		android:layout_marginTop="9.5dp"
-		android:focusable="true"/>
-	<Button
-		android:layout_width="328.0dp"
-		android:layout_height="110.5dp"
-		android:id="@+id/changeViewButton"
-		android:layout_marginTop="1.0dp"
-		android:background="@drawable/Next"
-		android:contentDescription="Next"
-		android:layout_marginLeft="19.0dp"
-		android:focusable="true"/>
-</LinearLayout>
+		android:layout_height="match_parent">
+		<TextView
+			android:text="Text"
+			android:layout_width="match_parent"
+			android:layout_height="86.5dp"
+			android:id="@+id/storyTitle"
+			android:textSize="25sp"
+			android:textColor="#ffffff"
+			android:gravity="center"
+			android:background="#213f5e"
+		/>
+		<ImageView
+			android:src="@android:drawable/ic_menu_gallery"
+			android:layout_width="match_parent"
+			android:layout_height="359.5dp"
+			android:id="@+id/storyButton"
+			android:layout_marginTop="9.5dp"
+			android:focusable="false"/>
+		<Button
+			android:layout_width="328.0dp"
+			android:layout_height="110.5dp"
+			android:id="@+id/changeViewButton"
+			android:layout_marginTop="1.0dp"
+			android:background="@drawable/Next"
+			android:contentDescription="Next"
+			android:layout_marginLeft="19.0dp"
+			android:focusable="true"
+		/>
+	</LinearLayout>
+	<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+		<Button
+			android:text = "click here to start"
+			android:textColor= "@android:color/white"
+			android:textStyle="bold"
+			android:textSize = "25dp"
+			android:layout_width="match_parent"
+			android:layout_height="370.5dp"
+			android:id="@+id/storyButtonOverlay"
+			android:layout_marginTop="85.5dp"
+			android:background="#99213f5e"
+			android:contentDescription="Next"
+			android:focusable="true"
+		/>
+	</FrameLayout>
+</FrameLayout>

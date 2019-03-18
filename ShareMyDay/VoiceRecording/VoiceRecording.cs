@@ -137,18 +137,26 @@ namespace ShareMyDay.VoiceRecording
             
             Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             var storyEvent = db.FindEventByValue(spinner.GetSelected());
-            storyEvent.Finished = ticked; 
-            List<Database.Models.VoiceRecording> recordings = new List<Database.Models.VoiceRecording>();
-            foreach (var i in _audioPaths)
+            if (storyEvent.InStory)
             {
-                recordings.Add(new Database.Models.VoiceRecording
-                {
-                    EventId = storyEvent.Id,
-                    Path = i
-                });
+                return false; 
             }
+            else
+            {
+                storyEvent.Finished = ticked; 
+                List<Database.Models.VoiceRecording> recordings = new List<Database.Models.VoiceRecording>();
+                foreach (var i in _audioPaths)
+                {
+                    recordings.Add(new Database.Models.VoiceRecording
+                    {
+                        EventId = storyEvent.Id,
+                        Path = i
+                    });
+                }
 
-            return db.InsertEvent(false, storyEvent, null, null, recordings) != 0;
+                return db.InsertEvent(false, storyEvent, null, null, recordings) != 0;
+            }
+            
         }
         
     }

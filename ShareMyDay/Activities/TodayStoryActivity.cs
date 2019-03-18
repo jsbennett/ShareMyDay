@@ -18,11 +18,14 @@ namespace ShareMyDay.Activities
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.TodayStoryView);
-
+            Typeface buttonFont = Typeface.CreateFromAsset (Assets, "Kano.otf");
             var db = new Database.Database(
                 System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "ShareMyDay.db3");
             var initialStories = db.GetAllStories();
             List<Database.Models.Story> stories = new List<Database.Models.Story>();
+
+            Button buttonOverlay = FindViewById<Button>(Resource.Id.storyButtonOverlay); 
+            buttonOverlay.SetTypeface(buttonFont,TypefaceStyle.Bold);
             foreach (var i in initialStories)
             {
                 if (i.DateTime.Day.Equals(DateTime.Now.Day))
@@ -68,7 +71,7 @@ namespace ShareMyDay.Activities
                 }
 
                 titleBox.Text = "Story: " + stories[storyIndex].TitleValue;
-                latestStory.Click += delegate
+                buttonOverlay.Click += delegate
                 {
                     Intent storyIntent = new Intent(this, typeof(StoryActivity));
                     storyIntent.PutExtra("Story", stories[storyIndex].Id.ToString());

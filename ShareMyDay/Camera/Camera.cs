@@ -201,16 +201,24 @@ namespace ShareMyDay.Camera
             
             Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             var storyEvent = db.FindEventByValue(spinner.GetSelected());
-            storyEvent.Finished = ticked;
+            if (storyEvent.InStory)
+            {
+                return false; 
+            }
+            else
+            {
+                storyEvent.Finished = ticked;
 
-            var picture = new Picture {
-                EventId = storyEvent.Id,
-                Path = GetImageUrl(),
+                var picture = new Picture {
+                    EventId = storyEvent.Id,
+                    Path = GetImageUrl(),
 
 
-            };
+                };
 
-            return db.InsertEvent(false, storyEvent, null, picture, null) != 0;
+                return db.InsertEvent(false, storyEvent, null, picture, null) != 0;
+            }
+            
         }
     }
 }

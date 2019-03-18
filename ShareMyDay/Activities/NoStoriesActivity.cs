@@ -58,7 +58,7 @@ namespace ShareMyDay.Activities
                         {
                             AlertDialog.Builder favouriteChanged = new AlertDialog.Builder(this);
                             favouriteChanged.SetTitle("Favourite Story Saved");
-                            favouriteChanged.SetMessage("This story is now your favourite story. If you do not click ok, this page will refresh automatically in 5 seconds.");
+                            favouriteChanged.SetMessage("This story is now your favourite story. This page will refresh automatically in 5 seconds.");
                             favouriteChanged.SetNeutralButton("Ok", (senderAlerts, argss) => { 
                                 Intent storyIntent = new Intent(this, typeof(StoryActivity));
                                 storyIntent.PutExtra("Story", "Favourite");
