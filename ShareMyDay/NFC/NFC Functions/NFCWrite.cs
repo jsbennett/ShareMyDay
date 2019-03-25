@@ -128,7 +128,7 @@ namespace ShareMyDay.NFC.NFC_Functions
             catch (Exception e)
             {
                 AlertBoxComponent cardFullAlertBox = new AlertBoxComponent(_context);
-                string alertMessage = "An error has occured. Please try again. Error Message:"+ e;
+                string alertMessage = "An error has occured. Please try again.";//+ e;
                 cardFullAlertBox.Setup("Error Writing To Card", alertMessage);
                 cardFullAlertBox.Show();
             }
@@ -158,7 +158,7 @@ namespace ShareMyDay.NFC.NFC_Functions
             catch (Exception e)
             {
                 AlertBoxComponent cardFullAlertBox = new AlertBoxComponent(_context);
-                string alertMessage = "An error has occured. Please try again. Error Message:"+ e;
+                string alertMessage = "An error has occured. Please try again.";//+ e;
                 cardFullAlertBox.Setup("Error Writing To Card", alertMessage);
                 cardFullAlertBox.Show();
             }

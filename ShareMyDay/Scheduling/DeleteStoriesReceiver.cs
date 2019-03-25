@@ -12,7 +12,13 @@ using Android.Widget;
 
 namespace ShareMyDay.Scheduling
 {
-    class DeleteStoriesReceiver
+    [BroadcastReceiver(Enabled = true)]
+    class DeleteStoriesReceiver : BroadcastReceiver
     {
+        public override void OnReceive(Context context, Intent intent)
+        {
+           var _db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
+            _db.DeleteOldStories();
+        }
     }
 }

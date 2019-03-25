@@ -4,8 +4,8 @@
         android:title="Generate Stories" />
   <item android:id="@+id/TakePicture"
         android:title="Take A Picture" />
-  <item android:id="@+id/TakeVoiceRecording"
-        android:title="Take A Voice Recording" />
+  <item android:id="@+id/MakeVoiceRecording"
+        android:title="Make A Voice Recording" />
   <item android:id="@+id/MainMenu"
         android:title="Go To Main Menu" />
 </menu>

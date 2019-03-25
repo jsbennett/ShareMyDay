@@ -48,29 +48,45 @@ namespace ShareMyDay.Activities
             };
             title.SetTextColor(Color.Black);
             buttonLayout.AddView(title);
-            foreach (var i in events)
+
+            if (events != null && events.Count != 0)
             {
-                Button eventButton = new Button(this) {Text = i.Value};
-                eventButton.SetTypeface(buttonFont,TypefaceStyle.Bold);
-                eventButton.Click += delegate
+                foreach (var i in events)
                 {
-                    Intent eventClickIntent = new Intent(this, typeof(EditEventsActivity));
-                    eventClickIntent.PutExtra("Event", eventButton.Text);
-                    StartActivity(eventClickIntent);
-                };
+                    Button eventButton = new Button(this) {Text = i.Value};
+                    eventButton.SetTypeface(buttonFont,TypefaceStyle.Bold);
+                    eventButton.Click += delegate
+                    {
+                        Intent eventClickIntent = new Intent(this, typeof(EditEventsActivity));
+                        eventClickIntent.PutExtra("Event", eventButton.Text);
+                        StartActivity(eventClickIntent);
+                    };
                 
-                eventButton.SetBackgroundResource(Resource.Drawable.ButtonGenerator);
-                eventButton.SetTextColor(Color.ParseColor("#ffffff"));
+                    eventButton.SetBackgroundResource(Resource.Drawable.ButtonGenerator);
+                    eventButton.SetTextColor(Color.ParseColor("#ffffff"));
                 
-                eventButton.TextSize = 15;
+                    eventButton.TextSize = 15;
                 
 
-                buttonLayout.AddView( eventButton,     
-                    1415,    
-                    450);
+                    buttonLayout.AddView( eventButton,     
+                        1415,    
+                        450);
 
                 
+                }
             }
+            else
+            {
+                TextView noStoriesTextView = new TextView(this)
+                {
+                    Text = "You have not made any events yet. Tap an action card, take a picture or make a voice recording for events to be made.", 
+                    TextAlignment = TextAlignment.Center, 
+                    TextSize =  30, 
+                };
+                noStoriesTextView.SetTextColor(Color.Black);
+                buttonLayout.AddView(noStoriesTextView);
+            }
+            
 
             _close = new Button(this);
             _close.SetBackgroundResource(Resource.Drawable.Back);
