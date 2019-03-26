@@ -2462,6 +2462,9 @@ namespace ShareMyDay
 			// aapt resource value: 0x7f0800d4
 			public const int MainMenu = 2131230932;
 			
+			// aapt resource value: 0x7f0800d3
+			public const int MakeVoiceRecording = 2131230931;
+			
 			// aapt resource value: 0x7f080036
 			public const int SHIFT = 2131230774;
 			
@@ -2470,9 +2473,6 @@ namespace ShareMyDay
 			
 			// aapt resource value: 0x7f0800d2
 			public const int TakePicture = 2131230930;
-			
-			// aapt resource value: 0x7f0800d3
-			public const int TakeVoiceRecording = 2131230931;
 			
 			// aapt resource value: 0x7f0800ac
 			public const int action0 = 2131230892;

@@ -43,7 +43,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
 		<Button
-			android:text = "click here to start"
+			android:text = "click here to select the story"
 			android:textColor= "@android:color/white"
 			android:textStyle="bold"
 			android:textSize = "25dp"

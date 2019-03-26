@@ -47,6 +47,16 @@ namespace ShareMyDay.UIComponents
                                 alertBoxGenerated.Create();
                                 alertBoxGenerated.Show();
                             }
+                            else
+                            {
+                                AlertDialog.Builder noStoriesBox = new AlertDialog.Builder(_context);
+                                noStoriesBox.SetTitle("No Stories");
+                                noStoriesBox.SetMessage(
+                                    "No events have been recorded to be able to make stories yet. Please try adding events first.");
+                                noStoriesBox.SetNeutralButton("OK", (senderAlertss, argss) => { });
+                                noStoriesBox.Create();
+                                noStoriesBox.Show();
+                            }
                            
                         });
                         alertBox.SetNegativeButton ("No", (senderAlert, args) => {
@@ -59,7 +69,7 @@ namespace ShareMyDay.UIComponents
                         cameraIntent.PutExtra("PreviousActivity", "QuickMenu");
                         _activity.StartActivity(cameraIntent);
                         break;
-                    case "Take A Voice Recording":
+                    case "Make A Voice Recording":
                         var voiceRecordingIntent = new Intent(_context, typeof(VoiceRecordingActivity));
                         voiceRecordingIntent.PutExtra("PreviousActivity", "QuickMenu");
                         _activity.StartActivity(voiceRecordingIntent);

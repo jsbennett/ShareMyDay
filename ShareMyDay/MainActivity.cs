@@ -5,6 +5,9 @@ using Android.Support.V7.App;
 using Android.Widget;
 using ShareMyDay.Activities;
 using System;
+using Android.Runtime;
+using Java.Util;
+using ShareMyDay.Scheduling;
 using ShareMyDay.Story.StoryFunctions;
 
 namespace ShareMyDay
@@ -36,10 +39,10 @@ namespace ShareMyDay
             _db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             _db.Create();
             _db.Setup();
-            if(DateTime.Now.Hour.Equals(22) && DateTime.Now.Minute.Equals(56))
-            {
-                _db.DeleteOldStories();
-            }
+            //if(DateTime.Now.Hour.Equals(22) && DateTime.Now.Minute.Equals(56))
+            //{
+            //    _db.DeleteOldStories();
+            //}
 
             //if (_db.NumberOfEvents() != 0)
             //{
@@ -50,6 +53,41 @@ namespace ShareMyDay
             //    }
             //}
 
+            //scheduling time logic adapted from https://forums.xamarin.com/discussion/121773/scheduling-repeating-alarms
+            var year = DateTime.Now.Year;
+            var month = DateTime.Now.Month;
+            var day = DateTime.Now.Day; 
+            DateTime deleteStoriesTime = new DateTime(year, month, day, 08, 01,30);
+            if (DateTime.Now > deleteStoriesTime)
+            {
+                deleteStoriesTime = deleteStoriesTime.AddDays(1); 
+            }
+
+            DateTime deleteStoriesUtcTime = TimeZoneInfo.ConvertTimeToUtc(deleteStoriesTime);
+            double epochDate = (new DateTime(1970, 1, 1) - DateTime.MinValue).TotalSeconds;
+            long deleteTime = deleteStoriesUtcTime.AddSeconds(-epochDate).Ticks / 10000;
+           
+            var deleteIntent = new Intent(this, typeof(DeleteStoriesReceiver));
+            var deletePendingIntent =
+                PendingIntent.GetBroadcast(this, 0, deleteIntent, PendingIntentFlags.UpdateCurrent);
+            var deleteAlertManager = (AlarmManager)GetSystemService(AlarmService);
+            deleteAlertManager.SetInexactRepeating(AlarmType.RtcWakeup,deleteTime, AlarmManager.IntervalDay,deletePendingIntent);
+
+            DateTime generateStoriesTime = new DateTime(year, month, day, 15, 01, 30);
+            if (DateTime.Now > generateStoriesTime)
+            {
+                generateStoriesTime = generateStoriesTime.AddDays(1);
+            }
+
+            DateTime generateStoriesUtcTime = TimeZoneInfo.ConvertTimeToUtc(generateStoriesTime);
+
+            long notifyTimeInInMilliseconds = generateStoriesUtcTime.AddSeconds(-epochDate).Ticks / 10000;
+
+            var generateIntent = new Intent(this, typeof(StoryGenerationReceiver));
+            var generatePendingIntent =
+                PendingIntent.GetBroadcast(this, 0, generateIntent, PendingIntentFlags.UpdateCurrent);
+            var generateAlertManager = (AlarmManager)GetSystemService(AlarmService);
+            generateAlertManager.SetInexactRepeating(AlarmType.RtcWakeup, notifyTimeInInMilliseconds, AlarmManager.IntervalDay, generatePendingIntent);
 
 
             _nfc = new NFC.NFC(this);
@@ -87,11 +125,11 @@ namespace ShareMyDay
             Button favouriteStory = FindViewById<Button>(Resource.Id.favouriteStoryButton);
             favouriteStory.SetBackgroundResource(Resource.Drawable.FaveButton);
 
-            _db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
-            if(DateTime.Now.Hour.Equals(22) && DateTime.Now.Minute.Equals(56))
-            {
-                _db.DeleteOldStories();
-            }
+            //_db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
+            //if(DateTime.Now.Hour.Equals(22) && DateTime.Now.Minute.Equals(56))
+            //{
+            //    _db.DeleteOldStories();
+            //}
 
             //if (_db.NumberOfEvents() != 0)
             //{
