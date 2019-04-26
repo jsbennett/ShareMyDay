@@ -4,11 +4,8 @@ using Android.OS;
 using Android.Support.V7.App;
 using Android.Widget;
 using ShareMyDay.Activities;
-using System;
-using Android.Runtime;
-using Java.Util;
 using ShareMyDay.Scheduling;
-using ShareMyDay.Story.StoryFunctions;
+using System;
 
 namespace ShareMyDay
 {
@@ -39,19 +36,6 @@ namespace ShareMyDay
             _db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             _db.Create();
             _db.Setup();
-            //if(DateTime.Now.Hour.Equals(22) && DateTime.Now.Minute.Equals(56))
-            //{
-            //    _db.DeleteOldStories();
-            //}
-
-            //if (_db.NumberOfEvents() != 0)
-            //{
-            //    if ((DateTime.Now.Hour >= 15 && DateTime.Now.Minute >= 1))
-            //    {
-            //        StoryGeneration storyGeneration = new StoryGeneration(_db, this);
-            //        storyGeneration.Create();
-            //    }
-            //}
 
             //scheduling time logic adapted from https://forums.xamarin.com/discussion/121773/scheduling-repeating-alarms
             var year = DateTime.Now.Year;
@@ -124,24 +108,7 @@ namespace ShareMyDay
             todayStory.SetBackgroundResource(Resource.Drawable.TodayStoryButton);
             Button favouriteStory = FindViewById<Button>(Resource.Id.favouriteStoryButton);
             favouriteStory.SetBackgroundResource(Resource.Drawable.FaveButton);
-
-            //_db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
-            //if(DateTime.Now.Hour.Equals(22) && DateTime.Now.Minute.Equals(56))
-            //{
-            //    _db.DeleteOldStories();
-            //}
-
-            //if (_db.NumberOfEvents() != 0)
-            //{
-            //    if ((DateTime.Now.Hour >= 15 && DateTime.Now.Minute >= 1))
-            //    {
-            //        StoryGeneration storyGeneration = new StoryGeneration(_db, this);
-            //        storyGeneration.Create();
-            //    }
-            //}
-
-
-
+        
         }
 
         /*

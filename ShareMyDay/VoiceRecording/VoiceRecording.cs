@@ -21,8 +21,10 @@ namespace ShareMyDay.VoiceRecording
         private MediaPlayer _audioPlayer;
         private List<string> _audioPaths;
       
-        //private List<string> copy; 
-
+        /*
+         * Constructor
+         * Used to set up the global variables
+         */
         public VoiceRecording()
         {
             _audioPaths = new List<string>();
@@ -30,6 +32,10 @@ namespace ShareMyDay.VoiceRecording
             _audioPlayer = null; 
         }
 
+        /*
+         * Method Name: Begin
+         * Purpose: Used to control the start and stopping of a voice recording 
+         */
         public void Begin(Button button, Button submitButton, Button playButton, bool redo)
         {
             if (redo)
@@ -44,6 +50,7 @@ namespace ShareMyDay.VoiceRecording
                 playButton.Enabled = false; 
                 playButton.SetBackgroundResource(Resource.Drawable.ButtonDimmedGenerator);
                 playButton.SetTextColor(Color.ParseColor("#969a90"));
+               
                 _voiceRecorder = new MediaRecorder ();
                 _voiceRecorder.SetAudioSource (AudioSource.Mic);
                 _voiceRecorder.SetOutputFormat (OutputFormat.ThreeGpp);
@@ -52,8 +59,8 @@ namespace ShareMyDay.VoiceRecording
                 _voiceRecorder.SetOutputFile (_audioPath);
                 _voiceRecorder.Prepare ();
                 _voiceRecorder.Start ();
+               
                 button.Text = "Stop Recording";
-                 
                 button.SetBackgroundColor(Color.Red);
             }
             else
@@ -64,16 +71,22 @@ namespace ShareMyDay.VoiceRecording
                 playButton.Enabled = true; 
                 playButton.SetBackgroundResource(Resource.Drawable.ButtonGenerator);
                 playButton.SetTextColor(Color.White);
+                
                 _audioPaths.Add(_audioPath);
                 _voiceRecorder.Stop ();
                 _voiceRecorder.Reset ();
                 _voiceRecorder.Release ();
                 _voiceRecorder = null;
+                
                 button.Text = "Start Recording";
                 button.SetBackgroundColor(Color.Green);
             }
         }
 
+        /*
+         * Method Name: Play
+         * Purpose: To play the voice recording 
+         */
         public void Play()
         {
             List<string> copy = new List<string>();
@@ -85,6 +98,10 @@ namespace ShareMyDay.VoiceRecording
             PlayRecordings(copy);
         }
 
+        /*
+         * Method Name: PlayRecordings
+         * Purpose: To control the audio player when going through an array of voice recordings 
+         */
         public void PlayRecordings(List<string> audio)
         {
             if (audio.Count != 0)
@@ -109,9 +126,13 @@ namespace ShareMyDay.VoiceRecording
             }
         }
         
+        /*
+         * Method Name: SaveNewEvent
+         * Purpose: To save a voice  recording as a separate event 
+         */
         public bool SaveNewEvent(bool ticked)
         {
-            Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
+            Database.Database db = new Database.Database(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             StoryEvent storyEvent = new StoryEvent
             {
                 Value = DateTime.Now.ToLongTimeString() +  "-" + "Voice Recording Taken",
@@ -132,10 +153,14 @@ namespace ShareMyDay.VoiceRecording
 
         }
 
+        /*
+         * Method Name: SaveExistingEvent
+         * Purpose: To save the voice recording to an existing event 
+         */
         public bool SaveExistingEvent(SpinnerComponent spinner, bool ticked)
         {
             
-            Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
+            Database.Database db = new Database.Database(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             var storyEvent = db.FindEventByValue(spinner.GetSelected());
             if (storyEvent.InStory)
             {

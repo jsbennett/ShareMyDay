@@ -5,9 +5,8 @@ using SQLiteNetExtensions.Attributes;
 namespace ShareMyDay.Database.Models
 {
     /*
-     * Class Name: Type
+     * Class Name: CardType
      * Purpose: To be the blueprint of a type of card 
-     * Created 31/01/2019
      */
     class CardType
     {
@@ -17,7 +16,7 @@ namespace ShareMyDay.Database.Models
         public string Type { get; set; }
 
         [OneToMany]	        
-        public List<StoryEvent> NFcEvents { get; set; }
+        public List<StoryEvent> StoryEvents { get; set; }
         
     }
 }

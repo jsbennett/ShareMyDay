@@ -55,6 +55,10 @@ namespace ShareMyDay.NFC
             _nfcAdapter.EnableForegroundDispatch(activity, pendingContextIntent, intentTagFilters, null);
         }
 
+        /*
+         * Method name: WriteDetection 
+         * Purpose: This is used for when a card is wanted to be written to and display popup to instruct the user to tap the card on the back of the device 
+         */
         public void WriteDetection(string type, string input, Context context, Activity activity)
         {
             if (input == "")
@@ -78,12 +82,20 @@ namespace ShareMyDay.NFC
             }
         }
 
+        /*
+         * Method name:  Write
+         * Purpose: This is to write to a card 
+         */
         public async Task Write(Context context, Activity activity, Intent intent)
         {
             NfcWrite writer = new NfcWrite(context, activity,_tapCardAlertBox.GetDialog(), _inputMessage, _typeSelected );
             await writer.Write(intent);
         }
 
+        /*
+         * Method name: GetData
+         * Purpose: This is used to return the data within the NDEF message on the tapped card 
+         */
         public List<string> GetData(Intent intent)
         {
             NFcRead reader = new NFcRead();
@@ -100,10 +112,14 @@ namespace ShareMyDay.NFC
             return cardValues;
         }
 
+        /*
+         * Method name: CheckCard
+         * Purpose: This is used to check if the card is  a Share My Day card and if so to get the type of the card 
+         */
         public void CheckCard(Intent intent, Context context, Activity activity, Database.Database db)
         {
-            List<string> cardInformation = GetData(intent);
-            if (cardInformation[0].Equals("ShareMyDayTest"))
+           List<string> cardInformation = GetData(intent);
+           if (cardInformation[0].Equals("ShareMyDayTest"))
             {
                 if (cardInformation[1] == "8")
                 {

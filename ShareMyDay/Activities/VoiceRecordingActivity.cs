@@ -9,6 +9,11 @@ using ShareMyDay.UIComponents;
 namespace ShareMyDay.Activities
 {
     [Activity(Label = "VoiceRecordingActivity")]
+
+    /*
+     * Class Name: VoiceRecordingActivity
+     * Purpose: To control the UI for voice recording 
+     */
     public class VoiceRecordingActivity : Activity
     {
         protected override void OnCreate(Bundle savedInstanceState)

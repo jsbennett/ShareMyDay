@@ -142,9 +142,10 @@ namespace ShareMyDay.Camera
                     {
                         _imageViewer.SetImageBitmap(image);
                     }
-                    //_imageViewer.SetImageURI (Uri.Parse (camera.GetImage().AbsolutePath));
                     _url = camera.GetImage().AbsolutePath;
-                } else {
+                } 
+                else 
+                {
                     if (_previousActivity == "QuickMenu")
                     {
                         Toast.MakeText (context, "Back to homepage", ToastLength.Short).Show ();
@@ -161,6 +162,11 @@ namespace ShareMyDay.Camera
             }
         }
 
+
+        /*
+         * Method name: GetImage
+         * Purpose: To find the image from the device using the file stream
+         */
         public Bitmap GetImage(BitmapFactory.Options options, string path)
         {
             using (var fs = new System.IO.FileStream(path, System.IO.FileMode.Open))
@@ -171,14 +177,23 @@ namespace ShareMyDay.Camera
             
         }
 
+        /*
+         * Method name: GetImageUrl
+         * Purpose: To return the url of the image 
+         */
         public string GetImageUrl()
         {
             return _url;
 
         }
+
+         /*
+          * Method name: SaveNew Event
+          * Purpose: To save a new picture event
+          */
         public bool SaveNewEvent(bool ticked)
         {
-            Database.Database db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
+            Database.Database db = new Database.Database(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");
             StoryEvent storyEvent = new StoryEvent
             {
                 Value = DateTime.Now.ToLongTimeString() +  "-" + "Picture Taken",
@@ -196,6 +211,10 @@ namespace ShareMyDay.Camera
 
         }
 
+        /*
+         *Method name: SaveExistingEvent
+         * Purpose: To save a picture to an existing event 
+         */
         public bool SaveExistingEvent(SpinnerComponent spinner, bool ticked)
         {
             

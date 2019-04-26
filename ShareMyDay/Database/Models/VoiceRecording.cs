@@ -6,7 +6,6 @@ namespace ShareMyDay.Database.Models
     /*
      * Class Name: VoiceRecording
      * Purpose: To be the blueprint of a voice recording 
-     * Created 31/01/2019
      */
     public class VoiceRecording
     {

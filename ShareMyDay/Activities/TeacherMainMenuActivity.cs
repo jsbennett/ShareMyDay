@@ -7,8 +7,17 @@ using ShareMyDay.UIComponents;
 namespace ShareMyDay.Activities
 {
     [Activity(Label = "TeacherMainMenuActivity")]
+
+    /*
+     * Class name: TeacherMainMenuActivity
+     * Purpose: To display the teacher main menu 
+     */
     public class TeacherMainMenuActivity : Activity
     {
+        /*
+         * Method Name: OnCreate
+         * Purpose: To set up the elements on the main menu layout
+         */
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);

@@ -5,6 +5,10 @@ using SQLiteNetExtensions.Attributes;
 
 namespace ShareMyDay.Database.Models
 {
+    /*
+     * Class Name: Story
+     * Purpose: To be the blueprint of an event of a story
+     */
     public class Story
     {
         [PrimaryKey,AutoIncrement]

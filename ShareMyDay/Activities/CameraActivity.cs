@@ -7,6 +7,10 @@ using ShareMyDay.UIComponents;
 
 namespace ShareMyDay.Activities
 {
+    /*
+     * Class name: Camera Activity
+     * Purpose: To be the activity for displaying the camera and submit page 
+     */
     [Activity(Label = "CameraActivity")]
     public class CameraActivity : Activity
     {
@@ -14,12 +18,19 @@ namespace ShareMyDay.Activities
         private readonly Camera.Camera _camera = new Camera.Camera();
         private string _previousActivity;
 
+        /*
+         * Method name: OnCreate
+         * Purpose: Used to add functionality to the camera page 
+         */
         protected override void OnCreate(Bundle savedInstanceState)
         {
+            //To allow the use of picture URL, found from https://stackoverflow.com/questions/39242026/fileuriexposedexception-in-android-n-with-camera/42632654
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.SetVmPolicy(builder.Build());
+            
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.PictureViewer);
+            
             Typeface buttonFont = Typeface.CreateFromAsset(Assets, "Kano.otf");
             _previousActivity = Intent.GetStringExtra("PreviousActivity");
 
@@ -39,6 +50,7 @@ namespace ShareMyDay.Activities
                     ticked = false;
                 }
             };
+
             _imageViewer = _camera.GetImageViewer(Resource.Id.imageView, this);
             _camera.Start(_imageViewer, this, _previousActivity);
 
@@ -49,6 +61,7 @@ namespace ShareMyDay.Activities
             Button submitButton = FindViewById<Button>(Resource.Id.submitButton);
             submitButton.SetTypeface(buttonFont, TypefaceStyle.Bold);
             bool anotherPicture = false;
+            
             submitButton.Click += (o, e) =>
             {
                 if (anotherPicture == false)
@@ -93,6 +106,10 @@ namespace ShareMyDay.Activities
             };
         }
 
+        /*
+         * Method name:  OnActivityResult
+         * Purpose: The action to occur after a picture has been taken i.e. display the picture and submission options 
+         */
         protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
         {
             _camera.DisplayPicture(requestCode, resultCode, this, _camera, this);

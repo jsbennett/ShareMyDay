@@ -10,15 +10,25 @@ using System.Threading.Tasks;
 namespace ShareMyDay.Activities
 {
     [Activity(Label = "TodayStoryActivity")]
+
+    /*
+     * Class name: TodayStoryActivity
+     * Purpose: Used to display the list of stories made during the day 
+     */
     public class TodayStoryActivity : Activity
     {
         private bool _closeClicked;
 
+        /*
+         * Method name: OnCreate
+         * Purpose: To set up the moving between the different stories and displaying their cover photo
+         */
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             SetContentView(Resource.Layout.TodayStoryView);
             Typeface buttonFont = Typeface.CreateFromAsset (Assets, "Kano.otf");
+           
             var db = new Database.Database(
                 System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments), "ShareMyDay.db3");
             var initialStories = db.GetAllStories();
@@ -36,6 +46,7 @@ namespace ShareMyDay.Activities
 
             bool eventsFromToday = stories.Count != 0;
             Button next = FindViewById<Button>(Resource.Id.changeViewButton);
+            
             if (eventsFromToday)
             {
                 var options = new BitmapFactory.Options {InJustDecodeBounds = true};
@@ -159,6 +170,11 @@ namespace ShareMyDay.Activities
             }
         }
 
+
+        /*
+         * Method name: GetImage
+         * Purpose: To get the image using a url path 
+         */
         public Bitmap GetImage(BitmapFactory.Options options, string path)
         {
             using (var fs = new System.IO.FileStream(path, System.IO.FileMode.Open))

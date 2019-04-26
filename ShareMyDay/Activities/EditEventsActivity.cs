@@ -9,10 +9,20 @@ using System.Threading.Tasks;
 
 namespace ShareMyDay.Activities
 {
+
+    /*
+     * Class Name:EditEventsActivity
+     * Purpose: Used to display the contents of an event - initially was suppose to be able to delete events but functionality never implemented 
+     */
     [Activity(Label = "EditEventsActivity")]
     public class EditEventsActivity : Activity
     {
         private Button _close;
+
+        /*
+         * Method name: OnCreate
+         * Purpose: Used to display the events in a story - this is done dynamically through layouts 
+         */
         protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -30,6 +40,7 @@ namespace ShareMyDay.Activities
                 Intent back = new Intent(this, typeof(EventListActivity));
                 StartActivity(back);
             };
+            
             LinearLayout outerLayout = new LinearLayout(this)
             {
                 Orientation = Orientation.Vertical
@@ -42,6 +53,7 @@ namespace ShareMyDay.Activities
                 Orientation = Orientation.Vertical
             };
             informationLayout.SetPadding(0,0,0,50);
+           
             if (eventInformation != null)
             {
                 TextView title = new TextView(this)
@@ -54,6 +66,7 @@ namespace ShareMyDay.Activities
                 title.SetTextColor(Color.White);
                 title.SetBackgroundColor(Color.ParseColor("#213f5e"));
                 informationLayout.AddView(title);
+                
                 if (eventInformation.Cards != null && eventInformation.Cards.Count != 0)
                 {
                     TextView cardTitle = new TextView(this)
@@ -96,10 +109,10 @@ namespace ShareMyDay.Activities
                         Button voiceRecording = new Button(this)
                         {
                             Text = "Play recording " + count,
-                            
                         };
                         voiceRecording.SetTextColor(Color.White);
                         voiceRecording.SetBackgroundResource(Resource.Drawable.ButtonGenerator);
+                        
                         voiceRecording.Click += delegate
                         {
                             List<string> copy = new List<string>();
@@ -238,7 +251,11 @@ namespace ShareMyDay.Activities
            _close.SetBackgroundResource(Resource.Drawable.Back);
             
         }
-        
+
+        /*
+         * Method name: GetImage
+         * Purpose: to get the image from a path to the image 
+         */
         public async Task<Bitmap> GetImage(BitmapFactory.Options options, string path)
         {
             using (var fs = new System.IO.FileStream(path, System.IO.FileMode.Open))

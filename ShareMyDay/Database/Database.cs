@@ -11,7 +11,7 @@ namespace ShareMyDay.Database
     /*
      * Class Name: Database
      * Purpose: To Control the SQLite database functionality
-     * Created: 31/01/2019
+
      * Adapted from https://docs.microsoft.com/en-us/xamarin/android/data-cloud/data-access/configuration and https://docs.microsoft.com/en-us/xamarin/android/data-cloud/data-access/using-sqlite-orm
      */
     public class Database
@@ -28,7 +28,6 @@ namespace ShareMyDay.Database
             string dbName = name;
             _dbLocation = System.IO.Path.Combine (
                 folderLocation,dbName);
-            Console.WriteLine("Location:" + _dbLocation);
         }
 
         /*
@@ -67,7 +66,7 @@ namespace ShareMyDay.Database
             var db = CreateConnection();
             CardType[] types = {new CardType{Type = "Leisure Activity"}, new CardType{Type = "Class Activity"},new CardType{Type = "Class"}, new CardType{Type = "Item"},new CardType{Type = "Teacher"},new CardType{Type = "Friend"}, new CardType{Type = "Visitor"}, new CardType{Type = "Admin"} };
             var count = 0;
-            if (db.Table<CardType>().Count() == 0)
+            if (!db.Table<CardType>().Any())
             {
                 foreach (var i in types)
                 {
@@ -149,6 +148,10 @@ namespace ShareMyDay.Database
 
         }
 
+        /*
+         * Method Name: FindFavouriteStory
+         * Purpose: To find the story which has been indicated as the favourite story  
+         */
         public Models.Story FindFavouriteStory()
         {
             var db = CreateConnection();
@@ -161,6 +164,10 @@ namespace ShareMyDay.Database
 
         }
 
+        /*
+         * Method Name: UpdateFavourite 
+         * Purpose: To set a story to be the only favourite
+         */
         public bool UpdateFavourite(int storyId)
         {
             var db = CreateConnection();
@@ -185,6 +192,10 @@ namespace ShareMyDay.Database
             return false; 
         }
 
+        /*
+         * Method Name: RemoveFavourite
+         * Purpose: To find the current fsvourite and remove it as the favourite story 
+         */
         public bool RemoveFavourite(string id)
         {
             var db = CreateConnection();
@@ -200,17 +211,10 @@ namespace ShareMyDay.Database
             return false;  
         }
 
-        public void DeleteAllTableValues()
-        {
-            var db = CreateConnection();
-            db.DeleteAll<Models.Story>();
-            db.DeleteAll<StoryEvent>();
-            db.DeleteAll<Card>();
-            db.DeleteAll<Picture>();
-            db.DeleteAll<Models.VoiceRecording>();
-            db.Close();
-        }
-
+        /*
+         * Method Name: DeleteOldStories
+         * Purpose: To delete the stories from the Story table 
+         */
         public void DeleteOldStories()
         {
             var db = CreateConnection();
@@ -225,6 +229,10 @@ namespace ShareMyDay.Database
             db.Close();
         }
         
+        /*
+         * Method Name: InsertStories
+         * Purpose: To insert a story into the story table 
+         */
         public int InsertStories(List<StoryEvent> storyEventList, bool isExtraStory, bool isTextToSpeech, string defaultPicture)
         {
             int count = 0; 
@@ -287,6 +295,10 @@ namespace ShareMyDay.Database
             return count;
         }
 
+        /*
+         * Method Name: FindEventByValue
+         * Purpose: To find an event by the value field
+         */
         public StoryEvent FindEventByValue(string value)
         {
             var db = CreateConnection();
@@ -295,6 +307,11 @@ namespace ShareMyDay.Database
             db.Close();
             return storyEvent; 
         }
+
+        /*
+         * Method Name: FindEventsFromStory
+         * Purpose: To find the events which are assigned to a single story
+         */
         public List<StoryEvent> FindEventsFromStory(string value)
         {
             var db = CreateConnection();
@@ -308,6 +325,10 @@ namespace ShareMyDay.Database
             return events; 
         }
 
+        /*
+         * Method Name: FindStoryById
+         * Purpose: To find a story by the id field
+         */
         public Models.Story FindStoryById(string id)
         {
             var db = CreateConnection();
@@ -316,6 +337,10 @@ namespace ShareMyDay.Database
             return story; 
         }
 
+        /*
+         * Method Name: GetAllStories
+         * Purpose: To return all the stories from the story table 
+         */
         public List<Models.Story> GetAllStories()
         {
             var db = CreateConnection();
@@ -330,16 +355,10 @@ namespace ShareMyDay.Database
            return stories; 
         }
 
-        public int UpdateEvent(StoryEvent storyEvent)
-        {
-            var db = CreateConnection();
-            db.Update(storyEvent); 
-            var result = db.Table<StoryEvent>().FirstOrDefault(x => x.Id == storyEvent.Id);
-            Console.WriteLine(result.Value + " Pictures: " + result.Pictures.Count + " VCs: " + result.VoiceRecordings.Count);
-            db.Close();
-            return 1; 
-        }
-
+        /*
+         * Method Name: GetUnfilteredEvents
+         * Purpose: To get all the events from the table, including duplicates 
+         */
         public List<StoryEvent> GetUnfilteredEvents()
         {
             var db = CreateConnection();
@@ -348,6 +367,10 @@ namespace ShareMyDay.Database
             return events;  
         }
 
+        /*
+         * Method Name: UpdateStories
+         * Purpose: To update a list of stories  
+         */
         public void UpdateStories(List<Models.Story> stories)
         {
             var db = CreateConnection();
@@ -358,6 +381,10 @@ namespace ShareMyDay.Database
             db.Close();
         }
 
+        /*
+         * Method Name: UpdateStory
+         * Purpose: To update a single story
+         */
         public void UpdateStory(Models.Story story)
         {
             var db = CreateConnection();
@@ -365,6 +392,10 @@ namespace ShareMyDay.Database
             db.Close();
         }
 
+        /*
+         * Method Name: GetMostPlayed
+         * Purpose: To return the story that has been the most played
+         */
         public Models.Story GetMostPlayed()
         {
             var stories = GetAllStories();
@@ -376,94 +407,5 @@ namespace ShareMyDay.Database
             }
             return story; 
         }
-
-        public int NumberOfEvents()
-        {
-            var events = GetUnfilteredEvents();
-            return events.Count; 
-        }
-        //public List<StoryEvent> GetEvents()
-        //{
-        //    var events = GetUnfilteredEvents();
-        //    if (events.Count != 0)
-        //    {
-        //        for (int i = 0; i < events.Count; i++)
-        //        {
-        //            for (int j = 0; j < events.Count; j++)
-        //            {
-        //                if (j != i)
-        //                {
-        //                    int limit;
-        //                    if (events[i].DateTime.AddHours(1).Hour.Equals(events[i].DateTime.AddMinutes(10).Hour))
-        //                    {
-        //                        limit = 100 + events[i].DateTime.AddMinutes(10).Minute;
-        //                    }
-        //                    else
-        //                    {
-        //                        limit = events[i].DateTime.AddMinutes(10).Minute;
-        //                    }
-        //                    string[] outerLoopValues = events[i].Value.Split('-');
-        //                    string[] innerLoopValues = events[j].Value.Split('-');
-        //                    if(outerLoopValues[1].Equals("Card") && innerLoopValues[1].Equals("Card") &&
-        //                       events[i].DateTime.Hour.Equals(events[j].DateTime.Hour) && events[j].DateTime.Minute >= events[i].DateTime.Minute && events[j].DateTime.Minute <= limit)
-        //                    {
-        //                        events.Remove(events[j]);
-        //                        j--;
-        //                    }
-        //                }
-
-        //            }
-        //        }
-        //    }
-
-        //    foreach (var i in events)
-        //    {
-        //        Console.WriteLine(i.DateTime + " " + i.Value);
-        //    }
-        //    return events;
-        //}
-
-        //public void EventGrouping()
-        //{
-        //    var events = GetFilteredEvents();
-        //    Dictionary<StoryEvent,List<StoryEvent>> eventGroups = new Dictionary<StoryEvent, List<StoryEvent>>();
-
-        //    foreach (var i in events)
-        //    {
-        //        List<StoryEvent> partsOfEvent = new List<StoryEvent>();
-        //        if (i.TypeId.Equals(3))
-        //        {
-        //            foreach (var j in events)
-        //            {
-        //                if (j.TypeId.Equals(1) || j.TypeId.Equals(2) || j.TypeId.Equals(4) ||
-        //                    j.TypeId.Equals(5) || j.TypeId.Equals(6) || j.TypeId.Equals(7) && j.DateTime.Hour.Equals(i.DateTime.Hour))
-        //                {
-        //                    partsOfEvent.Add(j);
-        //                }
-        //            }
-        //            eventGroups.Add(i,partsOfEvent);
-        //        }
-        //    }
-
-        //    foreach (var i in eventGroups)
-        //    {
-        //        if (i.Key.TypeId.Equals(3))
-        //        {
-        //            Console.WriteLine("class or activity: " + i.Key.Value);
-
-        //            if (i.Value.Count.Equals(0))
-        //            {
-        //                Console.WriteLine("No Assisting Activities");
-        //            }
-        //            else
-        //            {
-        //                foreach (var j in i.Value)
-        //                {
-        //                    Console.WriteLine("Has additional events: " + j.Value);
-        //                }
-        //            }
-        //        }
-        //    }
-        //}
     }
 }

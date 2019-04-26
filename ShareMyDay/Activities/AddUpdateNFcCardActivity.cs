@@ -1,30 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Android.App;
+﻿using Android.App;
 using Android.Content;
 using Android.Graphics;
-using Android.Nfc;
-using Android.Nfc.Tech;
 using Android.OS;
-using Android.Runtime;
 using Android.Util;
-using Android.Views;
 using Android.Widget;
 using ShareMyDay.UIComponents;
 
 namespace ShareMyDay.Activities
 {
     /*
-     *
-     */
+    * Class Name: AddUpdateNFcCardActivity 
+    * Purpose: To be the activity for adding and updating a NFC Card
+    */
     [Activity(Label = "AddUpdateNFcCardActivity")]
     public class AddUpdateNFcCardActivity : Activity
     {
         private NFC.NFC _nfc;
 
+        /*
+         * Method Name: OnCreate
+         * Purpose: To set up the add/update nfc card layout
+         */
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -70,9 +66,18 @@ namespace ShareMyDay.Activities
             };
         }
 
+        /*
+         * Method Name: OnNewIntent
+         * Purpose: To detect when a NFC card has been tapped and write to it  
+         */
         protected override async void OnNewIntent(Intent intent)
         {
            await _nfc.Write( this, this, intent);
+        }
+
+        private void ConfigureUserInterface()
+        {
+
         }
 
      

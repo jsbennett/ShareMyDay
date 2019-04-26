@@ -1,38 +1,44 @@
-﻿using Android.App;
-using Android.Content;
+﻿using Android.Content;
 using ShareMyDay.Database.Models;
 using System;
 using System.Collections.Generic;
-using System.Security.Permissions;
-using Android.Media;
 
 namespace ShareMyDay.Story.StoryFunctions
 {
+    /*
+     * Class name: StoryGeneration
+     * Purpose: To control the story generation form events 
+     */
     public class StoryGeneration
     {
         private readonly Database.Database _db;
         private readonly Context _context;
 
+
+        /*
+         * Constructor
+         * To create a database and context instance 
+         */
         public StoryGeneration(Database.Database db, Context context)
         {
             _db = db;
             _context = context;
         }
 
+
+        /*
+         * Method Name: Create
+         * Purpose: To create the stories from the events of the day 
+         */
         public bool Create()
         {
             var initialStoryEvents = GetEvents();
             if (initialStoryEvents != null && initialStoryEvents.Count > 0)
             {
-                List<StoryEvent> storyEvents = new List<StoryEvent>();
+                List<StoryEvent> storyEvents = GetStoryEvents(initialStoryEvents);
 
                 var extraStories = new List<StoryEvent>();
-                foreach (var i in initialStoryEvents)
-                {
-                    storyEvents.Add(_db.FindEventByValue(i.Value));
-                }
-
-
+                
                 for (var i = 0; i < storyEvents.Count; i++)
                 {
                     //if it has not been added to a story or if the story has not been marked as finished 
@@ -57,31 +63,18 @@ namespace ShareMyDay.Story.StoryFunctions
                                     {
                                         if (i != j)
                                         {
-                                            //split it
-                                            int limit;
-                                            if (storyEvents[i].DateTime.AddHours(1).Hour
-                                                .Equals(storyEvents[i].DateTime.AddMinutes(10).Hour))
-                                            {
-                                                limit = 100 + storyEvents[i].DateTime.AddMinutes(10).Minute;
-                                            }
-                                            else
-                                            {
-                                                limit = storyEvents[i].DateTime.AddMinutes(10).Minute;
-                                            }
-
-                                            string[] jEvent = storyEvents[j].Value.Split("-");
-                                            if ((jEvent[1].Equals("Picture Taken") ||
-                                                 jEvent[1].Equals("Voice Recording Taken")) &&
-                                                !jEvent[1].Equals("Card") &&
-                                                storyEvents[i].DateTime.Hour.Equals(storyEvents[j].DateTime.Hour) &&
-                                                storyEvents[j].DateTime.Minute >= storyEvents[i].DateTime.Minute &&
-                                                storyEvents[j].DateTime.Minute <= limit)
+                                            int limit = CalculateTimeLimit(storyEvents[i]);
+                                           
+                                            string[] eventType = storyEvents[j].Value.Split("-");
+                                            if ((eventType[1].Equals("Picture Taken") ||
+                                                 eventType[1].Equals("Voice Recording Taken")) &&
+                                                !eventType[1].Equals("Card") && CheckTime(limit, storyEvents[i], storyEvents[j]))
                                             {
                                                 if (!storyEvents[j].InStory.Equals(true))
                                                 {
                                                     if (!storyEvents[j].Finished.Equals(true))
                                                     {
-                                                        if (jEvent[1].Equals("Picture Taken"))
+                                                        if (eventType[1].Equals("Picture Taken"))
                                                         {
                                                             hasPicture = true;
                                                         }
@@ -92,7 +85,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                                     }
                                                     else
                                                     {
-                                                        if (jEvent[1].Equals("Picture Taken"))
+                                                        if (eventType[1].Equals("Picture Taken"))
                                                         {
                                                             hasPicture = true;
                                                         }
@@ -104,11 +97,6 @@ namespace ShareMyDay.Story.StoryFunctions
                                                     }
                                                 }
                                             }
-                                           
-                                            //if (jEvent[1].Equals("Card"))
-                                            //{
-                                            //    break;
-                                            //}
                                         }
                                     }
 
@@ -127,10 +115,8 @@ namespace ShareMyDay.Story.StoryFunctions
                                                     break;
                                                 }
                                             }
-
-                                            string defaultPicture;
-
-                                            defaultPicture = FindDefaultPicture(finalEvents[cardEvent]);
+                                            
+                                            string defaultPicture = FindDefaultPicture(finalEvents[cardEvent]);
 
                                             _db.InsertStories(finalEvents, false, false, defaultPicture);
                                         }
@@ -180,30 +166,17 @@ namespace ShareMyDay.Story.StoryFunctions
                                     {
                                         if (i != j)
                                         {
-                                            int limit;
-                                            if (storyEvents[i].DateTime.AddHours(1).Hour
-                                                .Equals(storyEvents[i].DateTime.AddMinutes(10).Hour))
-                                            {
-                                                limit = 100 + storyEvents[i].DateTime.AddMinutes(10).Minute;
-                                            }
-                                            else
-                                            {
-                                                limit = storyEvents[i].DateTime.AddMinutes(10).Minute;
-                                            }
+                                            int limit = CalculateTimeLimit(storyEvents[i]);
 
                                             string[] jEvent = storyEvents[j].Value.Split("-");
                                             if ((jEvent[1].Equals("Card") ||
                                                  jEvent[1].Equals("Voice Recording Taken") ||
-                                                 jEvent[1].Equals("Picture Taken")) &&
-                                                storyEvents[i].DateTime.Hour.Equals(storyEvents[j].DateTime.Hour) &&
-                                                storyEvents[j].DateTime.Minute >= storyEvents[i].DateTime.Minute &&
-                                                storyEvents[j].DateTime.Minute <= limit)
+                                                 jEvent[1].Equals("Picture Taken")) && CheckTime(limit, storyEvents[i], storyEvents[j]))
                                             {
                                                 if (!storyEvents[j].InStory.Equals(true))
                                                 {
                                                     if (!storyEvents[j].Finished.Equals(true))
                                                     {
-                                                        //check if is a card and if the story being created already has a card 
                                                         finalEvents.Add(storyEvents[j]);
                                                         storyEvents.Remove(storyEvents[j]);
                                                         j--;
@@ -265,30 +238,17 @@ namespace ShareMyDay.Story.StoryFunctions
                                     {
                                         if (i != j)
                                         {
-                                            int limit;
-                                            if (storyEvents[i].DateTime.AddHours(1).Hour
-                                                .Equals(storyEvents[i].DateTime.AddMinutes(10).Hour))
-                                            {
-                                                limit = 100 + storyEvents[i].DateTime.AddMinutes(10).Minute;
-                                            }
-                                            else
-                                            {
-                                                limit = storyEvents[i].DateTime.AddMinutes(10).Minute;
-                                            }
+                                            int limit = CalculateTimeLimit(storyEvents[i]);
 
                                             string[] jEvent = storyEvents[j].Value.Split("-");
                                             if ((jEvent[1].Equals("Card") ||
                                                  jEvent[1].Equals("Voice Recording Taken") ||
-                                                 jEvent[1].Equals("Picture Taken")) &&
-                                                storyEvents[i].DateTime.Hour.Equals(storyEvents[j].DateTime.Hour) &&
-                                                storyEvents[j].DateTime.Minute >= storyEvents[i].DateTime.Minute &&
-                                                storyEvents[j].DateTime.Minute <= limit)
+                                                 jEvent[1].Equals("Picture Taken")) && CheckTime(limit, storyEvents[i], storyEvents[j]))
                                             {
                                                 if (!storyEvents[j].InStory.Equals(true))
                                                 {
                                                     if (!storyEvents[j].Finished.Equals(true))
                                                     {
-                                                        //check if is a card and if the story being created already has a card 
                                                         finalEvents.Add(storyEvents[j]);
                                                         storyEvents.Remove(storyEvents[j]);
                                                         j--;
@@ -364,24 +324,12 @@ namespace ShareMyDay.Story.StoryFunctions
                                 {
                                     if (i != j)
                                     {
-                                        int limit;
-                                        if (storyEvents[i].DateTime.AddHours(1).Hour
-                                            .Equals(storyEvents[i].DateTime.AddMinutes(10).Hour))
-                                        {
-                                            limit = 100 + storyEvents[i].DateTime.AddMinutes(10).Minute;
-                                        }
-                                        else
-                                        {
-                                            limit = storyEvents[i].DateTime.AddMinutes(10).Minute;
-                                        }
+                                        int limit = CalculateTimeLimit(storyEvents[i]);
 
                                         string[] jEvent = storyEvents[j].Value.Split("-");
                                         if ((jEvent[1].Equals("Card") ||
                                              jEvent[1].Equals("Voice Recording Taken") ||
-                                             jEvent[1].Equals("Picture Taken")) &&
-                                            storyEvents[i].DateTime.Hour.Equals(storyEvents[j].DateTime.Hour) &&
-                                            storyEvents[j].DateTime.Minute >= storyEvents[i].DateTime.Minute &&
-                                            storyEvents[j].DateTime.Minute <= limit)
+                                             jEvent[1].Equals("Picture Taken")) && CheckTime(limit, storyEvents[i], storyEvents[j]))
                                         {
                                             if (!storyEvents[j].InStory.Equals(true))
                                             {
@@ -429,23 +377,11 @@ namespace ShareMyDay.Story.StoryFunctions
                                 {
                                     if (i != j)
                                     {
-                                        int limit;
-                                        if (storyEvents[i].DateTime.AddHours(1).Hour
-                                            .Equals(storyEvents[i].DateTime.AddMinutes(10).Hour))
-                                        {
-                                            limit = 100 + storyEvents[i].DateTime.AddMinutes(10).Minute;
-                                        }
-                                        else
-                                        {
-                                            limit = storyEvents[i].DateTime.AddMinutes(10).Minute;
-                                        }
+                                        int limit = CalculateTimeLimit(storyEvents[i]);
 
                                         string[] jEvent = storyEvents[j].Value.Split("-");
                                         if ((jEvent[1].Equals("Voice Recording Taken") ||
-                                             jEvent[1].Equals("Picture Taken")) && !jEvent[1].Equals("Card") &&
-                                            storyEvents[i].DateTime.Hour.Equals(storyEvents[j].DateTime.Hour) &&
-                                            storyEvents[j].DateTime.Minute >= storyEvents[i].DateTime.Minute &&
-                                            storyEvents[j].DateTime.Minute <= limit)
+                                             jEvent[1].Equals("Picture Taken")) && !jEvent[1].Equals("Card") && CheckTime(limit, storyEvents[i], storyEvents[j]))
                                         {
                                             if (jEvent[1].Equals("Picture Taken"))
                                             {
@@ -468,11 +404,6 @@ namespace ShareMyDay.Story.StoryFunctions
                                                 }
                                             }
                                         }
-
-                                        //if(jEvent[1].Equals("Card"))
-                                        //{
-                                        //    break;
-                                        //}
                                     }
                                 }
 
@@ -525,23 +456,11 @@ namespace ShareMyDay.Story.StoryFunctions
                                 {
                                     if (i != j)
                                     {
-                                        int limit;
-                                        if (storyEvents[i].DateTime.AddHours(1).Hour
-                                            .Equals(storyEvents[i].DateTime.AddMinutes(10).Hour))
-                                        {
-                                            limit = 100 + storyEvents[i].DateTime.AddMinutes(10).Minute;
-                                        }
-                                        else
-                                        {
-                                            limit = storyEvents[i].DateTime.AddMinutes(10).Minute;
-                                        }
+                                        int limit = CalculateTimeLimit(storyEvents[i]);
 
                                         string[] jEvent = storyEvents[j].Value.Split("-");
                                         if ((jEvent[1].Equals("Voice Recording Taken") ||
-                                             jEvent[1].Equals("Picture Taken")) && !jEvent[1].Equals("Card") &&
-                                            storyEvents[i].DateTime.Hour.Equals(storyEvents[j].DateTime.Hour) &&
-                                            storyEvents[j].DateTime.Minute >= storyEvents[i].DateTime.Minute &&
-                                            storyEvents[j].DateTime.Minute <= limit)
+                                             jEvent[1].Equals("Picture Taken")) && !jEvent[1].Equals("Card") && CheckTime(limit, storyEvents[i], storyEvents[j]))
                                         {
                                             if (jEvent[1].Equals("Voice Recording Taken"))
                                             {
@@ -600,23 +519,11 @@ namespace ShareMyDay.Story.StoryFunctions
                                 {
                                     if (i != j)
                                     {
-                                        int limit;
-                                        if (storyEvents[i].DateTime.AddHours(1).Hour
-                                            .Equals(storyEvents[i].DateTime.AddMinutes(10).Hour))
-                                        {
-                                            limit = 100 + storyEvents[i].DateTime.AddMinutes(10).Minute;
-                                        }
-                                        else
-                                        {
-                                            limit = storyEvents[i].DateTime.AddMinutes(10).Minute;
-                                        }
+                                        int limit = CalculateTimeLimit(storyEvents[i]);
 
                                         string[] jEvent = storyEvents[j].Value.Split("-");
                                         if ((jEvent[1].Equals("Voice Recording Taken") ||
-                                             jEvent[1].Equals("Picture Taken")) && !jEvent[1].Equals("Card") &&
-                                            storyEvents[i].DateTime.Hour.Equals(storyEvents[j].DateTime.Hour) &&
-                                            storyEvents[j].DateTime.Minute >= storyEvents[i].DateTime.Minute &&
-                                            storyEvents[j].DateTime.Minute <= limit)
+                                             jEvent[1].Equals("Picture Taken")) && !jEvent[1].Equals("Card") && CheckTime(limit, storyEvents[i], storyEvents[j]))
                                         {
                                             if (!storyEvents[j].InStory.Equals(true))
                                             {
@@ -634,11 +541,6 @@ namespace ShareMyDay.Story.StoryFunctions
                                                 }
                                             }
                                         }
-
-                                        //if(jEvent[1].Equals("Card"))
-                                        //{
-                                        //    break;
-                                        //}
                                     }
                                 }
 
@@ -654,10 +556,12 @@ namespace ShareMyDay.Story.StoryFunctions
                                 bool hasCard = false;
                                 bool hasRecording = false; 
                                 int extraStoryIndex = 0;
+                                
                                 List<StoryEvent> finalEvents = new List<StoryEvent>
                                 {
                                     storyEvents[i]
                                 };
+                                
                                 if (storyEvents[i].Cards != null && storyEvents[i].Cards.Count != 0)
                                 {
                                     hasCard = true;
@@ -793,44 +697,16 @@ namespace ShareMyDay.Story.StoryFunctions
 
                                 if (hasCard)
                                 {
-                                    InsertSeperateStory(finalEvents, hasPicture, hasRecording, hasCard, extraStoryIndex);
+                                    InsertStory(finalEvents, hasPicture, hasRecording, hasCard, extraStoryIndex);
                                 }
                                 else
                                 {
-                                    InsertSeperateStory(finalEvents, hasPicture, hasRecording, hasCard, 0);
+                                    InsertStory(finalEvents, hasPicture, hasRecording, hasCard, 0);
                                 }
 
                                 hasPicture = false;
-                                 hasCard = false;
-                                 hasRecording = false; 
-                                //if (!hasPicture && hasCard)
-                                //{
-                                //    List<StoryEvent> finalEvents = new List<StoryEvent>
-                                //    {
-                                //        storyEvents[i]
-                                //    };
-                                //    string cardImage = FindDefaultPicture(storyEvents[extraStoryIndex]);
-                                //    _db.InsertStories(finalEvents, false, false, cardImage);
-                                //}
-                                //else if (!hasPicture && !hasCard)
-                                //{
-                                //    List<StoryEvent> finalEvents = new List<StoryEvent>
-                                //    {
-                                //        storyEvents[i]
-                                //    };
-                                //    string cardImage = FindDefaultPicture(null);
-                                //    _db.InsertStories(finalEvents, false, false, cardImage);
-                                //}
-                                //else if()
-                                //else
-                                //{
-                                //    List<StoryEvent> finalEvents = new List<StoryEvent>
-                                //    {
-                                //        storyEvents[i]
-                                //    };
-                                //    _db.InsertStories(finalEvents, false, false, null);
-                                //}
-
+                                hasCard = false;
+                                hasRecording = false; 
                             }
                         }
                     }
@@ -898,9 +774,7 @@ namespace ShareMyDay.Story.StoryFunctions
                                 }
                             }
 
-                            InsertSeperateStory(seperateStories, hasPictureSeperate, hasRecordingSeperate, hasCard, 0);
-                            
-
+                            InsertStory(seperateStories, hasPictureSeperate, hasRecordingSeperate, hasCard, 0);
                         }
                         else
                         {
@@ -920,77 +794,35 @@ namespace ShareMyDay.Story.StoryFunctions
 
                     if (newExtraEvents.Count != 0)
                     {
-                        InsertSeperateStory(newExtraEvents, hasPicture, hasRecording, false, 0);
+                        InsertStory(newExtraEvents, hasPicture, hasRecording, false, 0);
                     }
                 }
-
-                //if (extraStories.Count != 0)
-                //{
-                //    bool hasPicture = false;
-                //    bool hasCard = false;
-                //    bool hasRecording = false;
-                //    int extraStoryIndex = 0;
-                //    for (var index = 0; index < extraStories.Count; index++)
-                //    {
-                //        var i = extraStories[index];
-                //        if (i.Pictures != null && i.Pictures.Count != 0)
-                //        {
-                //            hasPicture = true;
-                //        }
-
-                //        if (i.Cards != null && i.Cards.Count != 0)
-                //        {
-                //            if (!hasCard)
-                //            {
-                //                extraStoryIndex = index;
-                //                hasCard = true;
-                //            }
-                            
-                //        }
-
-                //        if (i.VoiceRecordings != null && i.VoiceRecordings.Count != 0)
-                //        {
-                //            hasRecording = true;
-                //        }
-                //    }
-
-                //    if (!hasPicture && hasCard && hasRecording)
-                //    {
-                //        string cardImage = FindDefaultPicture(extraStories[extraStoryIndex]);
-                //        _db.InsertStories(extraStories, false, false, cardImage);
-                //    }
-                //    else if (!hasPicture && hasCard && !hasRecording)
-                //    {
-                //        string cardImage = FindDefaultPicture(extraStories[extraStoryIndex]);
-                //        _db.InsertStories(extraStories, true, true, cardImage);
-                //    }
-                //    else if (hasPicture && !hasCard && !hasRecording)
-                //    {
-
-                //        _db.InsertStories(extraStories, true, true, null);
-                //    }
-                //    else if (hasPicture && hasCard && !hasRecording)
-                //    {
-                //        string cardImage = FindDefaultPicture(extraStories[extraStoryIndex]);
-                //        _db.InsertStories(extraStories, false, true, cardImage);
-                //    }else if (!hasPicture && !hasCard && hasRecording)
-                //    {
-                //        string cardImage = FindDefaultPicture(null);
-                //        _db.InsertStories(extraStories, false, true, cardImage);
-                //    }
-                //    else
-                //    {
-                //        _db.InsertStories(extraStories, false, false, null);
-                //    }
-                //}
                 return true; 
             }
-            
-                return false;
-            
+            return false;
         }
 
-        public void InsertSeperateStory(List<StoryEvent> stories, bool hasPicture, bool hasRecording, bool hasCard, int pictureIndex)
+        /*
+         * Method name: CheckTime
+         * Purpose: To check whether the event occurs within 10 minutes of the event being made into a story 
+         */
+        public bool CheckTime(int limit, StoryEvent currentStory, StoryEvent storyToCheck)
+        {
+            if (currentStory.DateTime.Hour.Equals(storyToCheck.DateTime.Hour) &&
+                storyToCheck.DateTime.Minute >= currentStory.DateTime.Minute &&
+                storyToCheck.DateTime.Minute <= limit)
+            {
+                return true;
+            }
+
+            return false; 
+        }
+
+        /*
+         * Method name: InsertStory
+         * Purpose: To check what type of story has been made and to insert it
+         */
+        public void InsertStory(List<StoryEvent> stories, bool hasPicture, bool hasRecording, bool hasCard, int pictureIndex)
         {
             if (!hasPicture && hasCard && hasRecording)
             {
@@ -1009,7 +841,6 @@ namespace ShareMyDay.Story.StoryFunctions
             }
             else if (hasPicture && hasCard && !hasRecording)
             {
-                //string cardImage = FindDefaultPicture(stories[pictureIndex]);
                 _db.InsertStories(stories, false, true, null);
             }else if (!hasPicture && !hasCard && hasRecording)
             {
@@ -1021,6 +852,50 @@ namespace ShareMyDay.Story.StoryFunctions
                 _db.InsertStories(stories, false, false, null);
             }
         }
+        
+        /*
+         * Method name: GetStoryEvents
+         * Purpose: To return the events which make up a story 
+         */
+        public List<StoryEvent> GetStoryEvents(List<StoryEvent> initialStoryEvents)
+        {
+            List<StoryEvent> storyEvents = new List<StoryEvent>();
+            foreach (var i in initialStoryEvents)
+            {
+                storyEvents.Add(_db.FindEventByValue(i.Value));
+            }
+
+            return storyEvents; 
+
+        }
+
+        /*
+         * Method name: CalculateTimeLimit
+         * Purpose: To Calculate the 10 minute time from the event to be created as a story
+         */
+        public int CalculateTimeLimit(StoryEvent story)
+        {
+            int limit; 
+
+            if (story.DateTime.AddHours(1).Hour
+                .Equals(story.DateTime.AddMinutes(10).Hour))
+            {
+                limit = 100 + story.DateTime.AddMinutes(10).Minute;
+            }
+            else
+            {
+                limit = story.DateTime.AddMinutes(10).Minute;
+            }
+
+            return limit; 
+
+        }
+
+        /*
+         *
+         * Method name: GetEvents
+         * Purpose: To return the events 
+         */
         public List<StoryEvent> GetEvents()
         {
             var events = _db.GetUnfilteredEvents();
@@ -1058,20 +933,13 @@ namespace ShareMyDay.Story.StoryFunctions
                 }
             }
 
-            foreach (var i in events)
-            {
-                Console.WriteLine(i.DateTime + " " + i.Value);
-            }
-
             return events;
         }
 
-        public List<Database.Models.Story> GetStories()
-        {
-            List<Database.Models.Story> stories = _db.GetAllStories();
-            return stories;
-        }
-
+        /*
+         * Method Name: FindDefaultPicture
+         * Purpose: To determine the source of the picture to use when there is no picture within the events 
+         */
         public string FindDefaultPicture(StoryEvent cardStory)
         {
             string cardTitle = " ";
@@ -1102,9 +970,6 @@ namespace ShareMyDay.Story.StoryFunctions
                         cardTitle = "visitorCard";
                         break;
                 }
-                //find out the type 
-                //make new picture event 
-                //insert it into db
 
             }
             else

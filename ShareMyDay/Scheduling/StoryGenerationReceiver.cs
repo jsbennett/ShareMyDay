@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
+﻿using Android.Content;
 using ShareMyDay.Story.StoryFunctions;
 
 namespace ShareMyDay.Scheduling
 {
+    /*
+     * Class Name: StoryGenerationReceiver 
+     * Purpose: When the alarm manager triggers at 3pm, this is the functionality to carry out to generate stories
+     */
     [BroadcastReceiver]
     class StoryGenerationReceiver : BroadcastReceiver
     {
+        /*
+         * Method name: OnReceive
+         * Purpose: To generate stories when the alarm manager is triggered
+         */
         public override void OnReceive(Context context, Intent intent)
         {
             var _db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),"ShareMyDay.db3");

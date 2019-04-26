@@ -3,6 +3,10 @@ using SQLiteNetExtensions.Attributes;
 
 namespace ShareMyDay.Database.Models
 {
+    /*
+     * Class Name: Card
+     * Purpose: To be the blueprint of a card
+     */
     public class Card
     {
         [PrimaryKey,AutoIncrement]

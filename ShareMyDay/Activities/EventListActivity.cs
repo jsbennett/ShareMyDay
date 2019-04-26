@@ -14,10 +14,19 @@ using ShareMyDay.Story.StoryFunctions;
 
 namespace ShareMyDay.Activities
 {
+    /*
+     * Class Name: EventListActivity
+     * Purpose: To display a list of events 
+     */
     [Activity(Label = "EventListActivity")]
     public class EventListActivity : Activity
     {
         private Button _close;
+
+        /*
+         * Method Name: OnCreate
+         * Purpose: To dynamically create the list of events page
+         */
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);

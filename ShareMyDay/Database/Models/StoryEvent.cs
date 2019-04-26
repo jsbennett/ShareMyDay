@@ -7,8 +7,7 @@ namespace ShareMyDay.Database.Models
 {
     /*
      * Class Name: StoryEvent
-     * Purpose: To be the blueprint of an event of a story
-     * Created 31/01/2019
+     * Purpose: To be the blueprint of an event of an event within a story 
      */
     public class StoryEvent
     {

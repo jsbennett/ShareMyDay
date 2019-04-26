@@ -7,17 +7,30 @@ using ShareMyDay.Story.StoryFunctions;
 
 namespace ShareMyDay.UIComponents
 {
+    /*
+     * Class name: QuickMenuComponent
+     * Purpose: To control the teacher quick menu 
+     */
     public class QuickMenuComponent
     {
         private readonly Activity _activity;
         private readonly Context _context;
 
+        /*
+         * Constructor
+         * Used to set the context and activity for the quick menu 
+         */
         public QuickMenuComponent(Activity activity, Context context)
         {
             _activity = activity;
             _context = context;
         }
 
+
+        /*
+         * Method name: Show
+         * Purpose: To display the quick menu
+         */
         public void Show()
         {
             Button button = _activity.FindViewById<Button>(Resource.Id.quickMenuButton);

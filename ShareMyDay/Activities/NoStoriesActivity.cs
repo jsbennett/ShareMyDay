@@ -8,12 +8,23 @@ using Android.Widget;
 namespace ShareMyDay.Activities
 {
     [Activity(Label = "NoStoriesActivity")]
+
+    /*
+     * Class: NoStoriesActivity
+     * Purpose: To display the content for when there are no stories to be displayed
+     */
     public class NoStoriesActivity : Activity
     {
+
+        /*
+         * Method name: OnCreate
+         * Purpose: To dynamically create the layout, depending if te user has selected the  todays story and favourite stories button 
+         */
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             var type = Intent.GetStringExtra("StoryType");
+            
             Typeface buttonFont = Typeface.CreateFromAsset (Assets, "Kano.otf");
             var db = new Database.Database(System.Environment.GetFolderPath(System.Environment.SpecialFolder.MyDocuments),
                 "ShareMyDay.db3");
@@ -35,6 +46,7 @@ namespace ShareMyDay.Activities
                 Button mostPlayed = FindViewById<Button>(Resource.Id.mostPlayedButton);
                 mostPlayed.SetTypeface(buttonFont,TypefaceStyle.Bold);
                 var mostPlayedStory = db.GetMostPlayed();
+                
                 if (mostPlayedStory.TimesPlayed.Equals(0))
                 {
                     mostPlayed.Text = "You have not played any stories yet!";

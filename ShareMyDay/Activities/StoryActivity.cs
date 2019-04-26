@@ -14,6 +14,11 @@ using String = System.String;
 namespace ShareMyDay.Activities
 {
     [Activity(Label = "StoryActivity")]
+
+    /*
+     * Class name: StoryActivity
+     * Purpose: To be the activity for playing a story 
+     */
     public class StoryActivity : Activity, TextToSpeech.IOnInitListener
     {
         private string _storyId;
@@ -22,6 +27,10 @@ namespace ShareMyDay.Activities
         private Database.Database _db;
         private string _storyIndex; 
 
+        /*
+         * Method name: OnCreate
+         * Purpose: To set up the story page depending whether the user has selected the favourite or todays story button 
+         */
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -64,6 +73,10 @@ namespace ShareMyDay.Activities
             }
         }
 
+        /*
+         * Method name: GetImage
+         * Purpose: To get the image from a specified path 
+         */
         public Bitmap GetImage(BitmapFactory.Options options, string path)
         {
             using (var fs = new System.IO.FileStream(path, System.IO.FileMode.Open))
@@ -74,6 +87,10 @@ namespace ShareMyDay.Activities
             }
         }
 
+        /*
+         * Method name: SetupStory
+         * Purpose: Used to set up the story page with all the story information 
+         */
         public void SetupStory(Database.Models.Story story, BitmapFactory.Options options, ImageView pictureButton,
             Database.Database db, bool favourite)
         {
@@ -250,8 +267,6 @@ namespace ShareMyDay.Activities
                     {
                         if (totalSteps.Equals(0))
                         {
-                            //pictureButton.Enabled = false;
-                            //totalSteps++;
                             totalSteps--;
                         }
                         else
@@ -715,6 +730,10 @@ namespace ShareMyDay.Activities
             }
         }
 
+        /*
+         * Method Name: SetLastPlayed
+         * Purpose: Used to set the currenrly played story to be the last played story
+         */
         public void SetLastPlayed(Database.Models.Story currentStory)
         {
             var stories = _db.GetAllStories();
@@ -735,6 +754,10 @@ namespace ShareMyDay.Activities
 
         }
 
+        /*
+         * Method Name: Create Sentence
+         * Purpose: Used to create a sentence form the card type
+         */
         public string CreateSentence(Card card)
         {
             string sentence = " ";
@@ -769,6 +792,10 @@ namespace ShareMyDay.Activities
             return sentence;
         }
 
+        /*
+         * Method name: OnInit
+         * Purpose: Used to play the voice iF voice synthesis used 
+         */
         public void OnInit(OperationResult status)
         {
             if (status.Equals(OperationResult.Success))
@@ -777,6 +804,10 @@ namespace ShareMyDay.Activities
             }
         }
 
+        /*
+         * Method Name: Speak
+         * Purpose: Used to use the voice synthesisor to say the sentence 
+         */
         private void Speak(string text)
         {
             if (!String.IsNullOrEmpty(text))

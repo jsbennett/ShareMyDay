@@ -4,16 +4,28 @@ using ShareMyDay.Activities;
 
 namespace ShareMyDay.UIComponents
 {
+    /*
+     * Class name: AlertBoxComponent
+     * Purpose: To hold the logic for an alert box UI element 
+     */
     public class AlertBoxComponent
     {
         private readonly AlertDialog.Builder _alertBox;
         private Dialog _dialog;  
 
+        /*
+         * Constructor
+         * Sets the context for the alert box to be displayed on
+         */
         public AlertBoxComponent(Context context)
         {
             _alertBox = new AlertDialog.Builder (context);
         }
 
+        /*
+         * Method name: Setup
+         * Purpose: To set up the alert box with a title and message with basic ok and cancel buttons 
+         */
         public void Setup(string title, string message)
         {
             _alertBox.SetTitle (title);
@@ -24,6 +36,10 @@ namespace ShareMyDay.UIComponents
             });
         }
 
+        /*
+         * Method name: MenuOptionSetup
+         * Purpose: To set up the quick access menu options on the alert box 
+         */
         public void MenuOptionSetup(string title, string message, Context context, Activity activity)
         {
             _alertBox.SetTitle (title);
@@ -34,6 +50,10 @@ namespace ShareMyDay.UIComponents
             });
         }
 
+        /*
+         * Method name: RepeateFunctionSetup
+         * Purpose: Used for the suggestion of a voice recording or picture alert box 
+         */
         public void RepeateFunctionSetup<T>(string title, string message, Context context, Activity activity, string previousActivity)
         {
             _alertBox.SetTitle (title);
@@ -47,12 +67,20 @@ namespace ShareMyDay.UIComponents
             
         }
 
+        /*
+         * Method name: Show
+         * Purpose: Used to display the alert box to the user 
+         */
         public void Show()
         {
             _dialog = _alertBox.Create();
             _dialog.Show();
         }
 
+        /*
+         * Method name: GetDialog
+         * Purpose:  to return the dialog for the alert box
+         */
         public Dialog GetDialog()
         {
             return _dialog;
