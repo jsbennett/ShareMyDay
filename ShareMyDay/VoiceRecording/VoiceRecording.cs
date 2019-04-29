@@ -14,7 +14,7 @@ namespace ShareMyDay.VoiceRecording
      * Purpose: To provide voice recording functionality
      * NFC Code adapted from Xamarin Mobile Development for Android Cookbook by Matthew Leibowitz pages 246-250, 260 - 262
      */
-    class VoiceRecording
+    public class VoiceRecording
     {
         private string _audioPath;
         private MediaRecorder _voiceRecorder;

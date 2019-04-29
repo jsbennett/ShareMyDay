@@ -9,6 +9,10 @@ using ShareMyDay.UIComponents;
 
 namespace ShareMyDay.NFC.NFC_Functions
 {
+    /*
+     * Class Name: NFcWrite
+     * Purpose: To control the write functionality to a NFC card 
+     */
     public class NfcWrite
     {
         private readonly Context _context;
@@ -21,6 +25,10 @@ namespace ShareMyDay.NFC.NFC_Functions
 
         private static string _typeSelected; 
 
+        /*
+         * Constructor 
+         * This sets up the current context, activity, dialogue for the popup box, the message for the card and the type to be put on the card 
+         */
         public NfcWrite(Context context, Activity activity, Dialog tapCardAlertBox, string inputMessage, string type)
         {
             _context = context;
@@ -30,6 +38,10 @@ namespace ShareMyDay.NFC.NFC_Functions
             _typeSelected = type; 
         }
 
+        /*
+         * Method name: Write
+         * Purpose: To detect when the card has been tapped to begin writing to
+         */
          public async Task Write(Intent intent)
         {
             _tapCardAlertBox.Dismiss();
@@ -50,7 +62,11 @@ namespace ShareMyDay.NFC.NFC_Functions
             }
         }
 
-        private static NdefMessage CreateCardContent()
+        /*
+         * Method name: CreateCardContent
+         * Purpose: To be able to create the content for the card in the correct form of ShareMyDay:CardType:CardMessage
+         */
+        public static NdefMessage CreateCardContent()
         {
             switch (_typeSelected)
             {
@@ -64,7 +80,7 @@ namespace ShareMyDay.NFC.NFC_Functions
                     _typeSelected = "3";
                     break; 
                 case "Item":
-                    _typeSelected = "4";
+                    _typeSelected = "4"; 
                     break; 
                 case "Teacher":
                     _typeSelected = "5";
@@ -88,6 +104,10 @@ namespace ShareMyDay.NFC.NFC_Functions
             return ndefMessage;
         }
 
+        /*
+         * Method Name: Write Message
+         * Purpose: This is to control the writing of a card once a NDE tag has been detected 
+         */
         private async Task<bool> WriteMessage(Tag cardTag, NdefMessage cardContent)
         {
             try
@@ -128,7 +148,8 @@ namespace ShareMyDay.NFC.NFC_Functions
             catch (Exception e)
             {
                 AlertBoxComponent cardFullAlertBox = new AlertBoxComponent(_context);
-                string alertMessage = "An error has occured. Please try again.";//+ e;
+                string alertMessage = "An error has occured. Please try again. Error" + e;
+                
                 cardFullAlertBox.Setup("Error Writing To Card", alertMessage);
                 cardFullAlertBox.Show();
             }
@@ -136,6 +157,10 @@ namespace ShareMyDay.NFC.NFC_Functions
             return false;
         }
 
+        /*
+         * Method Name: FormatCard
+         * Purpose: To format the card to be able to be written to 
+         */
         private async Task FormatCard(Tag cardTag, NdefMessage cardContent)
         {
             try
@@ -158,7 +183,7 @@ namespace ShareMyDay.NFC.NFC_Functions
             catch (Exception e)
             {
                 AlertBoxComponent cardFullAlertBox = new AlertBoxComponent(_context);
-                string alertMessage = "An error has occured. Please try again.";//+ e;
+                string alertMessage = "An error has occured. Please try again.Error: " + e;
                 cardFullAlertBox.Setup("Error Writing To Card", alertMessage);
                 cardFullAlertBox.Show();
             }

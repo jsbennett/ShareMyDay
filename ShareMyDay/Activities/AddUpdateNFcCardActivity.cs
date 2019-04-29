@@ -74,12 +74,6 @@ namespace ShareMyDay.Activities
         {
            await _nfc.Write( this, this, intent);
         }
-
-        private void ConfigureUserInterface()
-        {
-
-        }
-
      
     }
 }

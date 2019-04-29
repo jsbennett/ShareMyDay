@@ -11,7 +11,7 @@ namespace ShareMyDay.UIComponents
      * Class name: SpinnerComponent
      * Purpose: To control the spinner UI element 
      */
-    class SpinnerComponent
+    public class SpinnerComponent
     {
         private readonly Spinner _spinner;
         private readonly Context _context;

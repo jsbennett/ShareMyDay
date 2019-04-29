@@ -19,7 +19,7 @@ namespace ShareMyDay.Camera
      * Purpose: To provide camera functionality
      * NFC Code adapted from Xamarin Mobile Development for Android Cookbook by Matthew Leibowitz page 272 - 275
      */
-    class Camera
+    public class Camera
     {
         private readonly int _photoCode;
         private File _image;
